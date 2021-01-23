@@ -1,0 +1,5 @@
+# Vim undo files. Python#
+# #######################
+*.un~
+*.pyc
+*.swp
