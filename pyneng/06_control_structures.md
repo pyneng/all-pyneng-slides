@@ -47,7 +47,7 @@ Out[8]: True
 In [9]: 'vlan' in 'switchport trunk allowed vlan 10,20'
 Out[9]: True
 
-In [10]: 1 in [ 1, 2, 3 ]
+In [10]: 1 in [1, 2, 3]
 Out[10]: True
 
 In [11]: 0 in [ 1, 2, 3 ]
@@ -244,10 +244,10 @@ Out[31]: {}
 
 Важная особенность работы оператора ```or``` - операнды, которые находятся после истинного, не вычисляются:
 ```python
-In [33]: '' or sorted([44,1,67])
+In [33]: '' or sorted([44, 1, 67])
 Out[33]: [1, 44, 67]
 
-In [34]: '' or 'string1' or sorted([44,1,67])
+In [34]: '' or 'string1' or sorted([44, 1, 67])
 Out[34]: 'string1'
 ```
 
@@ -256,8 +256,6 @@ Out[34]: 'string1'
 
 check_password.py:
 ```python
-# -*- coding: utf-8 -*-
-
 username = input('Введите имя пользователя: ')
 password = input('Введите пароль: ')
 
@@ -448,12 +446,12 @@ model => 4451
 
 ```python
 In [7]: commands = ['switchport mode access', 'spanning-tree portfast', 'spanning-tree bpduguard enable']
-In [8]: fast_int = ['0/1','0/3','0/4','0/7','0/9','0/10','0/11']
+In [8]: fast_int = ['0/1', '0/3', '0/4', '0/7']
 
 In [9]: for intf in fast_int:
-   ...:     print('interface FastEthernet {}'.format(intf))
+   ...:     print(f'interface FastEthernet {intf}')
    ...:     for command in commands:
-   ...:         print(' {}'.format(command))
+   ...:         print(f' {command}')
    ...:
 interface FastEthernet 0/1
  switchport mode access
@@ -480,18 +478,15 @@ access_template = ['switchport mode access',
                    'spanning-tree portfast',
                    'spanning-tree bpduguard enable']
 
-fast_int = {'access': { '0/12':10,
-                        '0/14':11,
-                        '0/16':17,
-                        '0/17':150}}
+access = {'0/12': 10, '0/14': 11, '0/16': 17, '0/17': 150}
 
-for intf, vlan in fast_int['access'].items():
-    print('interface FastEthernet' + intf)
+for intf, vlan in access.items():
+    print(f'interface FastEthernet{intf}')
     for command in access_template:
         if command.endswith('access vlan'):
-            print(' {} {}'.format(command, vlan))
+            print(f' {command} {vlan}')
         else:
-            print(' {}'.format(command))
+            print(' {command}')
 
 ```
 
@@ -559,8 +554,6 @@ In [2]: while a > 0:
 
 Файл check_password_with_while.py:
 ```python
-# -*- coding: utf-8 -*-
-
 username = input('Введите имя пользователя: ' )
 password = input('Введите пароль: ' )
 
@@ -724,7 +717,7 @@ while not password_correct:
     elif username in password:
         print('Пароль содержит имя пользователя\n')
     else:
-        print('Пароль для пользователя {} установлен'.format(username))
+        print(f'Пароль для пользователя {username} установлен')
         password_correct = True
         continue
     password = input('Введите пароль еще раз: ')
@@ -830,8 +823,6 @@ You can't divide by zero
 В конструкции try/except может быть много except, если нужны разные действия в зависимости от типа ошибки.
 
 ```python
-# -*- coding: utf-8 -*-
-
 try:
     a = input("Введите первое число: ")
     b = input("Введите второе число: ")
@@ -868,8 +859,6 @@ $ python divide.py
 
 Если нет необходимости выводить различные сообщения на ошибки ValueError и ZeroDivisionError, можно сделать так (файл divide_ver2.py):
 ```python
-# -*- coding: utf-8 -*-
-
 try:
     a = input("Введите первое число: ")
     b = input("Введите второе число: ")
@@ -901,8 +890,6 @@ $ python divide_ver2.py
 
 Например, если необходимо выполнять в дальнейшем какие-то операции с данными, которые ввел пользователь, можно записать их в блоке else (файл divide_ver3.py): 
 ```python
-# -*- coding: utf-8 -*-
-
 try:
     a = input("Введите первое число: ")
     b = input("Введите второе число: ")
@@ -938,8 +925,6 @@ $ python divide_ver3.py
 
 Файл divide_ver4.py с блоком finally:
 ```python
-# -*- coding: utf-8 -*-
-
 try:
     a = input("Введите первое число: ")
     b = input("Введите второе число: ")
