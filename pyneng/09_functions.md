@@ -45,7 +45,7 @@
 ### Пример функции
 
 ```python
-In [1]: def open_file( filename ):
+In [1]: def open_file(filename):
    ...:     """Documentation string"""
    ...:     with open(filename) as f:
    ...:         print(f.read())
@@ -67,7 +67,7 @@ In [1]: def open_file( filename ):
 ### Вызов функции
 
 ```python
-In [1]: def open_file( filename ):
+In [1]: def open_file(filename):
    ...:     """Documentation string"""
    ...:     with open(filename) as f:
    ...:         print(f.read())
@@ -122,7 +122,7 @@ None
 
 Для того, чтобы функция возвращала значение, которое потом можно, например, присвоить переменной, используется оператор ```return```:
 ```python
-In [7]: def open_file( filename ):
+In [7]: def open_file(filename):
    ...:     """Documentation string"""
    ...:     with open(filename) as f:
    ...:         return f.read()
@@ -148,7 +148,7 @@ ip ssh version 2
 
 Выражения, которые идут после return, не выполняются:
 ```python
-In [10]: def open_file( filename ):
+In [10]: def open_file(filename):
     ...:     print("Reading file", filename)
     ...:     with open(filename) as f:
     ...:         return f.read()
@@ -199,7 +199,7 @@ Python ищет переменную в таком порядке по обла�
 ```python
 In [1]: result = 'test string'
 
-In [2]: def open_file( filename ):
+In [2]: def open_file(filename):
    ...:     with open(filename) as f:
    ...:         result = f.read()
    ...:         return result
@@ -322,7 +322,7 @@ __Обязательные параметры__ - определяют, каки
 ```python
 In [1]: def cfg_to_list(cfg_file, delete_exclamation):
   ....:     result = []
-  ....:     with open( cfg_file ) as f:
+  ....:     with open(cfg_file) as f:
   ....:         for line in f:
   ....:             if delete_exclamation and line.startswith('!'):
   ....:                 pass
@@ -579,7 +579,7 @@ def check_passwd(username, password, *, min_length=8, check_username=True):
 Имя параметра может быть любым, но, по договоренности, чаще всего, используют имя ```*args```
 
 ```python
-In [1]: def sum_arg(a,*args):
+In [1]: def sum_arg(a, *args):
   ....:     print(a, args)
   ....:     return a + sum(args)
   ....: 
@@ -590,11 +590,11 @@ In [1]: def sum_arg(a,*args):
 
 Вызов функции с разным количеством аргументов:
 ```python
-In [2]: sum_arg(1,10,20,30)
+In [2]: sum_arg(1, 10, 20, 30)
 1 (10, 20, 30)
 Out[2]: 61
 
-In [3]: sum_arg(1,10)
+In [3]: sum_arg(1, 10)
 1 (10,)
 Out[3]: 11
 
@@ -629,7 +629,7 @@ Out[7]: 0
 
 
 ```python
-In [8]: def sum_arg(a,**kwargs):
+In [8]: def sum_arg(a, **kwargs):
   ....:     print(a, kwargs)
   ....:     return a + sum(kwargs.values())
   ....: 
@@ -640,11 +640,11 @@ In [8]: def sum_arg(a,**kwargs):
 
 Вызов функции с разным количеством ключевых аргументов:
 ```python
-In [9]: sum_arg(a=10,b=10,c=20,d=30)
+In [9]: sum_arg(a=10, b=10, c=20, d=30)
 10 {'c': 20, 'b': 10, 'd': 30}
 Out[9]: 70
 
-In [10]: sum_arg(b=10,c=20,d=30,a=10)
+In [10]: sum_arg(b=10, c=20, d=30, a=10)
 10 {'c': 20, 'b': 10, 'd': 30}
 Out[10]: 70
 ```
@@ -654,11 +654,11 @@ Out[10]: 70
 
 Нельзя указывать позиционный аргумент после ключевого:
 ```python
-In [11]: sum_arg(10,b=10,c=20,d=30)
+In [11]: sum_arg(10, b=10, c=20, d=30)
 10 {'c': 20, 'b': 10, 'd': 30}
 Out[11]: 70
 
-In [12]: sum_arg(b=10,c=20,d=30,10)
+In [12]: sum_arg(b=10, c=20, d=30, 10)
   File "<ipython-input-14-71c121dc2cf7>", line 1
     sum_arg(b=10,c=20,d=30,10)
                           ^
@@ -686,7 +686,7 @@ SyntaxError: positional argument follows keyword argument
 И часто эти аргументы уже находятся в списке или кортеже.
 Чтобы их передать методу format, приходится использовать индексы таким образом:
 ```python
-In [1]: items = [1,2,3]
+In [1]: items = [1, 2, 3]
 
 In [2]: print('One: {}, Two: {}, Three: {}'.format(items[0], items[1], items[2]))
 One: 1, Two: 2, Three: 3
@@ -697,7 +697,7 @@ One: 1, Two: 2, Three: 3
 
 Вместо этого, можно воспользоваться распаковкой аргументов и сделать так:
 ```python
-In [4]: items = [1,2,3]
+In [4]: items = [1, 2, 3]
 
 In [5]: print('One: {}, Two: {}, Three: {}'.format(*items))
 One: 1, Two: 2, Three: 3
@@ -753,10 +753,10 @@ Out[5]: ['interface Fa0/3', 'no shutdown', 'ip address 10.0.0.1 255.255.255.252'
 Например, список interfaces_info, в котором находятся параметры для настройки интерфейсов:
 ```python
 In [6]: interfaces_info = [['Fa0/1', '10.0.1.1', '/24'],
-   ....:                    ['Fa0/2', '10.0.2.1', '/24'],
-   ....:                    ['Fa0/3', '10.0.3.1', '/24'],
-   ....:                    ['Fa0/4', '10.0.4.1', '/24'],
-   ....:                    ['Lo0', '10.0.0.1', '/32']]
+  ....:                    ['Fa0/2', '10.0.2.1', '/24'],
+  ....:                    ['Fa0/3', '10.0.3.1', '/24'],
+  ....:                    ['Fa0/4', '10.0.4.1', '/24'],
+  ....:                    ['Lo0', '10.0.0.1', '/32']]
 ```
 
 ---
