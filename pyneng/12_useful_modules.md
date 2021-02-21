@@ -3,6 +3,13 @@
 ---
 ## Полезные модули
 
+* subprocess
+* os
+* glob
+* ipaddress
+* pprint
+* tabulate
+
 ---
 ## Модуль subprocess
 
