@@ -392,9 +392,11 @@ Out[11]: 'привет'
 * внутри программы работать с юникод
 * юникод надо преобразовать в байты как можно позже, перед передачей
 
----?image=http://engineering.cerner.com/assets/2014-08-02-the-plain-text-is-a-lie/unicode-sandwich.png&size=auto 80%
+---
 
----?image=https://astrodsg.github.io/static/img/blog/unicode_sandwich.jpg&size=auto 80%
+[unicodesandwich](http://engineering.cerner.com/assets/2014-08-02-the-plain-text-is-a-lie/unicode-sandwich.png)
+
+[us](https://astrodsg.github.io/static/img/blog/unicode_sandwich.jpg)
 
 
 ---
