@@ -96,8 +96,7 @@ ASCII (American standard code for information interchange) - описывает 
 
 ### &#128579; &#8238; Unicode, ты супер!
 
----?image=https://imgs.xkcd.com/comics/rtl_2x.png&size=auto 80%
-@title[U+202e переворачивает текст]
+![xkcd](https://imgs.xkcd.com/comics/rtl_2x.png)
 
 ---
 ### Кодировки
