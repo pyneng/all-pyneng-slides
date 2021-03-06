@@ -48,8 +48,6 @@ ASCII (American standard code for information interchange) - описывает 
 * коды от 32 до 127 описывали печатные символы
 * коды до 32 описывали специальные управляющие символы
 
----
-
 ![ascii](https://upload.wikimedia.org/wikipedia/commons/4/4f/ASCII_Code_Chart.svg)
 
 ---
