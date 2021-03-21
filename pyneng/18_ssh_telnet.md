@@ -7,6 +7,15 @@
 
 ---
 
+## Модули для подключения SSH/Telnet
+
+* pexpect
+* telnetlib
+* paramiko
+* netmiko
+
+---
+
 ## Ввод пароля
 
 ---
@@ -41,16 +50,16 @@ testpass
 
 Например, таким образом логин и пароль записываются в переменные:
 ```
-$ export SSH_USER=user
-$ export SSH_PASSWORD=userpass
+$ export SSH_user=user
+$ export SSH_password=userpass
 ```
 
 А затем, в Python, считываются значения в переменные в скрипте:
 ```python
 import os
 
-USERNAME = os.environ.get('SSH_USER')
-PASSWORD = os.environ.get('SSH_PASSWORD')
+username = os.environ.get('SSH_user')
+password = os.environ.get('SSH_password')
 ```
 
 ---
@@ -222,7 +231,7 @@ Out[16]: 0
 Вывод команды находится в атрибуте before:
 ```python
 In [17]: ssh.before
-Out[17]: b'sh ip int br\r\nInterface                  IP-Address      OK? Method Status                Protocol\r\nEthernet0/0                192.168.100.1   YES NVRAM  up                    up      \r\nEthernet0/1                192.168.200.1   YES NVRAM  up                    up      \r\nEthernet0/2                19.1.1.1        YES NVRAM  up                    up      \r\nEthernet0/3                192.168.230.1   YES NVRAM  up                    up      \r\nEthernet0/3.100            10.100.0.1      YES NVRAM  up                    up      \r\nEthernet0/3.200            10.200.0.1      YES NVRAM  up                    up      \r\nEthernet0/3.300            10.30.0.1       YES NVRAM  up                    up      \r\nR1'
+Out[17]: b'sh ip int br\r\nInterface                  ip-Address      OK? Method Status                Protocol\r\nEthernet0/0                192.168.100.1   YES NVRAM  up                    up      \r\nEthernet0/1                192.168.200.1   YES NVRAM  up                    up      \r\nEthernet0/2                19.1.1.1        YES NVRAM  up                    up      \r\nEthernet0/3                192.168.230.1   YES NVRAM  up                    up      \r\nEthernet0/3.100            10.100.0.1      YES NVRAM  up                    up      \r\nEthernet0/3.200            10.200.0.1      YES NVRAM  up                    up      \r\nEthernet0/3.300            10.30.0.1       YES NVRAM  up                    up      \r\nR1'
 ```
 
 ---
@@ -234,7 +243,7 @@ In [18]: show_output = ssh.before.decode('utf-8')
 
 In [19]: print(show_output)
 sh ip int br
-Interface                  IP-Address      OK? Method Status                Protocol
+Interface                  ip-Address      OK? Method Status                Protocol
 Ethernet0/0                192.168.100.1   YES NVRAM  up                    up
 Ethernet0/1                192.168.200.1   YES NVRAM  up                    up
 Ethernet0/2                19.1.1.1        YES NVRAM  up                    up
@@ -342,12 +351,12 @@ import pexpect
 import getpass
 import sys
 
-COMMAND = sys.argv[1]
-USER = input("Username: ")
-PASSWORD = getpass.getpass()
-ENABLE_PASS = getpass.getpass(prompt='Enter enable password: ')
+command = sys.argv[1]
+user = input("Username: ")
+password = getpass.getpass()
+enable_pass = getpass.getpass(prompt='Enter enable password: ')
 
-DEVICES_IP = ['192.168.100.1','192.168.100.2','192.168.100.3']
+devices_ip = ['192.168.100.1','192.168.100.2','192.168.100.3']
 ```
 
 ---
@@ -355,24 +364,24 @@ DEVICES_IP = ['192.168.100.1','192.168.100.2','192.168.100.3']
 
 Файл 1_pexpect.py:
 ```python
-for IP in DEVICES_IP:
-    print("Connection to device {}".format( IP ))
-    t = pexpect.spawn('ssh {}@{}'.format( USER, IP ))
+for ip in devices_ip:
+    print("Connection to device {}".format(ip))
+    t = pexpect.spawn('ssh {}@{}'.format(user, ip))
 
     t.expect('Password:')
-    t.sendline(PASSWORD)
+    t.sendline(password)
 
     t.expect('>')
     t.sendline('enable')
 
     t.expect('Password:')
-    t.sendline(ENABLE_PASS)
+    t.sendline(enable_pass)
 
     t.expect('#')
     t.sendline("terminal length 0")
 
     t.expect('#')
-    t.sendline(COMMAND)
+    t.sendline(command)
 
     t.expect('#')
     print(t.before.decode('utf-8'))
@@ -390,7 +399,7 @@ Password:
 Enter enable secret:
 Connection to device 192.168.100.1
 sh ip int br
-Interface              IP-Address      OK? Method Status                Protocol
+Interface              ip-Address      OK? Method Status                Protocol
 FastEthernet0/0        192.168.100.1   YES NVRAM  up                    up
 FastEthernet0/1        unassigned      YES NVRAM  up                    up
 FastEthernet0/1.10     10.1.10.1       YES manual up                    up
@@ -403,7 +412,7 @@ FastEthernet0/1.70     10.1.70.1       YES manual up                    up
 R1
 Connection to device 192.168.100.2
 sh ip int br
-Interface              IP-Address      OK? Method Status                Protocol
+Interface              ip-Address      OK? Method Status                Protocol
 FastEthernet0/0        192.168.100.2   YES NVRAM  up                    up
 FastEthernet0/1        unassigned      YES NVRAM  up                    up
 FastEthernet0/1.10     10.2.10.1       YES manual up                    up
@@ -416,7 +425,7 @@ FastEthernet0/1.70     10.2.70.1       YES manual up                    up
 R2
 Connection to device 192.168.100.3
 sh ip int br
-Interface              IP-Address      OK? Method Status                Protocol
+Interface              ip-Address      OK? Method Status                Protocol
 FastEthernet0/0        192.168.100.3   YES NVRAM  up                    up
 FastEthernet0/1        unassigned      YES NVRAM  up                    up
 FastEthernet0/1.10     10.3.10.1       YES manual up                    up
@@ -498,7 +507,7 @@ In [7]: telnet.write(b'sh ip int br\n')
 После отправки команды можно продолжать использовать метод read_until:
 ```python
 In [8]: telnet.read_until(b'>')
-Out[8]: b'sh ip int br\r\nInterface                  IP-Address      OK? Method Status                Protocol\r\nEthernet0/0                192.168.100.1   YES NVRAM  up                    up      \r\nEthernet0/1                192.168.200.1   YES NVRAM  up                    up      \r\nEthernet0/2                19.1.1.1        YES NVRAM  up                    up      \r\nEthernet0/3                192.168.230.1   YES NVRAM  up                    up      \r\nEthernet0/3.100            10.100.0.1      YES NVRAM  up                    up      \r\nEthernet0/3.200            10.200.0.1      YES NVRAM  up                    up      \r\nEthernet0/3.300            10.30.0.1       YES NVRAM  up                    up      \r\nR1>'
+Out[8]: b'sh ip int br\r\nInterface                  ip-Address      OK? Method Status                Protocol\r\nEthernet0/0                192.168.100.1   YES NVRAM  up                    up      \r\nEthernet0/1                192.168.200.1   YES NVRAM  up                    up      \r\nEthernet0/2                19.1.1.1        YES NVRAM  up                    up      \r\nEthernet0/3                192.168.230.1   YES NVRAM  up                    up      \r\nEthernet0/3.100            10.100.0.1      YES NVRAM  up                    up      \r\nEthernet0/3.200            10.200.0.1      YES NVRAM  up                    up      \r\nEthernet0/3.300            10.30.0.1       YES NVRAM  up                    up      \r\nR1>'
 ```
 
 ---
@@ -531,7 +540,7 @@ Internet  192.168.230.1           -   aabb.cc00.6530  ARPA   Ethernet0/3
 R1>sh clock
 *19:18:57.980 UTC Fri Nov 3 2017
 R1>sh ip int br
-Interface                  IP-Address      OK? Method Status                Protocol
+Interface                  ip-Address      OK? Method Status                Protocol
 Ethernet0/0                192.168.100.1   YES NVRAM  up                    up
 Ethernet0/1                192.168.200.1   YES NVRAM  up                    up
 Ethernet0/2                19.1.1.1        YES NVRAM  up                    up
@@ -561,7 +570,7 @@ In [18]: telnet.read_until(b'>')
 Out[18]: b'sh clock\r\n*19:20:39.388 UTC Fri Nov 3 2017\r\nR1>'
 
 In [19]: telnet.read_until(b'>')
-Out[19]: b'sh ip int br\r\nInterface                  IP-Address      OK? Method Status                Protocol\r\nEthernet0/0                192.168.100.1   YES NVRAM  up                    up      \r\nEthernet0/1                192.168.200.1   YES NVRAM  up                    up      \r\nEthernet0/2                19.1.1.1        YES NVRAM  up                    up      \r\nEthernet0/3                192.168.230.1   YES NVRAM  up                    up      \r\nEthernet0/3.100            10.100.0.1      YES NVRAM  up                    up      \r\nEthernet0/3.200            10.200.0.1      YES NVRAM  up                    up      \r\nEthernet0/3.300            10.30.0.1       YES NVRAM  up                    up      \r\nR1>'
+Out[19]: b'sh ip int br\r\nInterface                  ip-Address      OK? Method Status                Protocol\r\nEthernet0/0                192.168.100.1   YES NVRAM  up                    up      \r\nEthernet0/1                192.168.200.1   YES NVRAM  up                    up      \r\nEthernet0/2                19.1.1.1        YES NVRAM  up                    up      \r\nEthernet0/3                192.168.230.1   YES NVRAM  up                    up      \r\nEthernet0/3.100            10.100.0.1      YES NVRAM  up                    up      \r\nEthernet0/3.200            10.200.0.1      YES NVRAM  up                    up      \r\nEthernet0/3.300            10.30.0.1       YES NVRAM  up                    up      \r\nR1>'
 
 ```
 
@@ -654,12 +663,12 @@ import time
 import getpass
 import sys
 
-COMMAND = sys.argv[1].encode('utf-8')
-USER = input("Username: ").encode('utf-8')
-PASSWORD = getpass.getpass().encode('utf-8')
-ENABLE_PASS = getpass.getpass(prompt='Enter enable password: ').encode('utf-8')
+command = sys.argv[1].encode('utf-8')
+user = input("Username: ").encode('utf-8')
+password = getpass.getpass().encode('utf-8')
+enable_pass = getpass.getpass(prompt='Enter enable password: ').encode('utf-8')
 
-DEVICES_IP = ['192.168.100.1','192.168.100.2','192.168.100.3']
+devices_ip = ['192.168.100.1','192.168.100.2','192.168.100.3']
 
 ```
 
@@ -668,21 +677,21 @@ DEVICES_IP = ['192.168.100.1','192.168.100.2','192.168.100.3']
 
 Файл 2_telnetlib.py:
 ```python
-for IP in DEVICES_IP:
-    print("Connection to device {}".format( IP ))
-    t = telnetlib.Telnet(IP)
+for ip in devices_ip:
+    print("Connection to device {}".format(ip))
+    t = telnetlib.Telnet(ip)
 
     t.read_until(b"Username:")
-    t.write(USER + b'\n')
+    t.write(user + b'\n')
 
     t.read_until(b"Password:")
-    t.write(PASSWORD + b'\n')
+    t.write(password + b'\n')
     t.write(b"enable\n")
 
     t.read_until(b"Password:")
-    t.write(ENABLE_PASS + b'\n')
+    t.write(enable_pass + b'\n')
     t.write(b"terminal length 0\n")
-    t.write(COMMAND + b'\n')
+    t.write(command + b'\n')
 
     time.sleep(5)
 
@@ -703,7 +712,7 @@ Connection to device 192.168.100.1
 
 R1#terminal length 0
 R1#sh ip int br
-Interface              IP-Address      OK? Method Status                Protocol
+Interface              ip-Address      OK? Method Status                Protocol
 FastEthernet0/0        192.168.100.1   YES NVRAM  up                    up
 FastEthernet0/1        unassigned      YES NVRAM  up                    up
 FastEthernet0/1.10     10.1.10.1       YES manual up                    up
@@ -718,7 +727,7 @@ Connection to device 192.168.100.2
 
 R2#terminal length 0
 R2#sh ip int br
-Interface              IP-Address      OK? Method Status                Protocol
+Interface              ip-Address      OK? Method Status                Protocol
 FastEthernet0/0        192.168.100.2   YES NVRAM  up                    up
 FastEthernet0/1        unassigned      YES NVRAM  up                    up
 FastEthernet0/1.10     10.2.10.1       YES manual up                    up
@@ -733,7 +742,7 @@ Connection to device 192.168.100.3
 
 R3#terminal length 0
 R3#sh ip int br
-Interface              IP-Address      OK? Method Status                Protocol
+Interface              ip-Address      OK? Method Status                Protocol
 FastEthernet0/0        192.168.100.3   YES NVRAM  up                    up
 FastEthernet0/1        unassigned      YES NVRAM  up                    up
 FastEthernet0/1.10     10.3.10.1       YES manual up                    up
@@ -771,12 +780,12 @@ import getpass
 import sys
 import time
 
-COMMAND = sys.argv[1]
-USER = input("Username: ")
-PASSWORD = getpass.getpass()
-ENABLE_PASS = getpass.getpass(prompt='Enter enable password: ')
+command = sys.argv[1]
+user = input("Username: ")
+password = getpass.getpass()
+enable_pass = getpass.getpass(prompt='Enter enable password: ')
 
-DEVICES_IP = ['192.168.100.1','192.168.100.2','192.168.100.3']
+devices_ip = ['192.168.100.1','192.168.100.2','192.168.100.3']
 
 ```
 
@@ -785,24 +794,24 @@ DEVICES_IP = ['192.168.100.1','192.168.100.2','192.168.100.3']
 
 Пример использования Paramiko (файл 3_paramiko.py):
 ```python
-for IP in DEVICES_IP:
-    print("Connection to device {}".format( IP ))
+for ip in devices_ip:
+    print("Connection to device {}".format(ip))
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-    client.connect(hostname=IP, username=USER, password=PASSWORD,
+    client.connect(hostname=ip, username=user, password=password,
                    look_for_keys=False, allow_agent=False)
     ssh = client.invoke_shell()
 
     ssh.send("enable\n")
-    ssh.send(ENABLE_PASS + '\n')
+    ssh.send(enable_pass + '\n')
     time.sleep(1)
 
     ssh.send("terminal length 0\n")
     time.sleep(1)
     print(ssh.recv(1000).decode('utf-8'))
 
-    ssh.send(COMMAND + "\n")
+    ssh.send(command + "\n")
     time.sleep(2)
     result = ssh.recv(5000).decode('utf-8')
     print(result)
@@ -821,7 +830,7 @@ for IP in DEVICES_IP:
 ### Модуль paramiko
 
 * ```client.connect``` - метод, который выполняет подключение к SSH-серверу и аутентифицирует подключение
-  * ```hostname``` - имя хоста или IP-адрес
+  * ```hostname``` - имя хоста или ip-адрес
   * ```username``` - имя пользователя
   * ```password``` - пароль
   * ```look_for_keys``` - по умолчанию paramiko выполняет аутентификацию по ключам. Чтобы отключить это, надо поставить поставив False
@@ -859,7 +868,7 @@ R1#terminal length 0
 
 R1#
 sh ip int br
-Interface              IP-Address      OK? Method Status                Protocol
+Interface              ip-Address      OK? Method Status                Protocol
 FastEthernet0/0        192.168.100.1   YES NVRAM  up                    up
 FastEthernet0/1        unassigned      YES NVRAM  up                    up
 FastEthernet0/1.10     10.1.10.1       YES manual up                    up
@@ -894,7 +903,7 @@ Password:
 R3#terminal length 0
 R3#
 sh ip int br
-Interface                  IP-Address      OK? Method Status                Protocol
+Interface              IP-Address      OK? Method Status                Protocol
 FastEthernet0/0        192.168.100.3   YES NVRAM  up                    up
 FastEthernet0/1        unassigned      YES NVRAM  up                    up
 FastEthernet0/1.10     10.3.10.1       YES manual up                    up
@@ -923,7 +932,7 @@ R3#
 Поэтому, если нужно получить только вывод команды sh ip int br, то надо оставить ```recv```, но не делать print:
 ```python
     ssh.send("enable\n")
-    ssh.send(ENABLE_PASS + '\n')
+    ssh.send(enable_pass + '\n')
     time.sleep(1)
 
     ssh.send("terminal length 0\n")
@@ -931,7 +940,7 @@ R3#
     #Тут мы вызываем recv, но не выводим содержимое буфера
     ssh.recv(1000)
 
-    ssh.send(COMMAND + "\n")
+    ssh.send(command + "\n")
     time.sleep(3)
     result = ssh.recv(5000).decode('utf-8')
     print(result)
@@ -963,12 +972,12 @@ import getpass
 import sys
 
 
-COMMAND = sys.argv[1]
-USER = input("Username: ")
-PASSWORD = getpass.getpass()
-ENABLE_PASS = getpass.getpass(prompt='Enter enable password: ')
+command = sys.argv[1]
+user = input("Username: ")
+password = getpass.getpass()
+enable_pass = getpass.getpass(prompt='Enter enable password: ')
 
-DEVICES_IP = ['192.168.100.1','192.168.100.2','192.168.100.3']
+devices_ip = ['192.168.100.1','192.168.100.2','192.168.100.3']
 
 ```
 
@@ -977,36 +986,36 @@ DEVICES_IP = ['192.168.100.1','192.168.100.2','192.168.100.3']
 
 Пример использования netmiko (файл 4_netmiko.py):
 ```python
-for IP in DEVICES_IP:
-    print("Connection to device {}".format( IP ))
-    DEVICE_PARAMS = {'device_type': 'cisco_ios',
-                     'ip': IP,
-                     'username':USER,
-                     'password':PASSWORD,
-                     'secret':ENABLE_PASS }
+for ip in devices_ip:
+    print("Connection to device {}".format( ip ))
+    device_params = {'device_type': 'cisco_ios',
+                     'ip': ip,
+                     'username': user,
+                     'password': password,
+                     'secret': enable_pass}
 
-    ssh = ConnectHandler(**DEVICE_PARAMS)
+    ssh = ConnectHandler(**device_params)
     ssh.enable()
 
-    result = ssh.send_command(COMMAND)
+    result = ssh.send_command(command)
     print(result)
 ```
 
 ---
 ### Модуль netmiko
 
-* DEVICE_PARAMS - это словарь, в котором указываются параметры устройства
+* device_params - это словарь, в котором указываются параметры устройства
  * device_type - это предопределенные значения, которые понимает netmiko
     * в данном случае, так как подключение выполняется к устройству с Cisco IOS, используется значение 'cisco_ios'
 
 ---
 ### Модуль netmiko
 
-* ```ssh = ConnectHandler(**DEVICE_PARAMS)``` - устанавливается соединение с устройством, на основе параметров, которые находятся в словаре
+* ```ssh = ConnectHandler(**device_params)``` - устанавливается соединение с устройством, на основе параметров, которые находятся в словаре
 * ```ssh.enable()``` - переход в режим enable
  * пароль передается автоматически
- * используется значение ключа secret, который указан в словаре DEVICE_PARAMS
-* ```result = ssh.send_command(COMMAND)``` - отправка команды и получение вывода
+ * используется значение ключа secret, который указан в словаре device_params
+* ```result = ssh.send_command(command)``` - отправка команды и получение вывода
 
 В этом примере не передается команда terminal length, так как netmiko по умолчанию, выполняет эту команду.
 
@@ -1020,7 +1029,7 @@ Username: cisco
 Password:
 Enter enable password:
 Connection to device 192.168.100.1
-Interface              IP-Address      OK? Method Status                Protocol
+Interface              ip-Address      OK? Method Status                Protocol
 FastEthernet0/0        192.168.100.1   YES NVRAM  up                    up
 FastEthernet0/1        unassigned      YES NVRAM  up                    up
 FastEthernet0/1.10     10.1.10.1       YES manual up                    up
@@ -1031,7 +1040,7 @@ FastEthernet0/1.50     10.1.50.1       YES manual up                    up
 FastEthernet0/1.60     10.1.60.1       YES manual up                    up
 FastEthernet0/1.70     10.1.70.1       YES manual up                    up
 Connection to device 192.168.100.2
-Interface              IP-Address      OK? Method Status                Protocol
+Interface              ip-Address      OK? Method Status                Protocol
 FastEthernet0/0        192.168.100.2   YES NVRAM  up                    up
 FastEthernet0/1        unassigned      YES NVRAM  up                    up
 FastEthernet0/1.10     10.2.10.1       YES manual up                    up
@@ -1042,7 +1051,7 @@ FastEthernet0/1.50     10.2.50.1       YES manual up                    up
 FastEthernet0/1.60     10.2.60.1       YES manual up                    up
 FastEthernet0/1.70     10.2.70.1       YES manual up                    up
 Connection to device 192.168.100.3
-Interface              IP-Address      OK? Method Status                Protocol
+Interface              ip-Address      OK? Method Status                Protocol
 FastEthernet0/0        192.168.100.3   YES NVRAM  up                    up
 FastEthernet0/1        unassigned      YES NVRAM  up                    up
 FastEthernet0/1.10     10.3.10.1       YES manual up                    up
@@ -1077,12 +1086,12 @@ Netmiko поддерживает несколько типов устройст�
 
 В словаре могут указываться такие параметры:
 ```python
-cisco_router = {'device_type': 'cisco_ios', # предопределенный тип устройства
-                'ip': '192.168.1.1', # адрес устройства
-                'username': 'user', # имя пользователя
-                'password': 'userpass', # пароль пользователя
-                'secret': 'enablepass', # пароль режима enable
-                'port': 20022, # порт SSH, по умолчанию 22
+cisco_router = {'device_type': 'cisco_ios',
+                'ip': '192.168.1.1',
+                'username': 'user',
+                'password': 'userpass',
+                'secret': 'enablepass',
+                'port': 20022,
                  }
 ```
 
@@ -1217,11 +1226,11 @@ result = ssh.send_config_from_file("config_ospf.txt")
 ### Telnet
 Для того, чтобы подключиться по Telnet, достаточно в словаре, который определяет параметры подключения, указать тип устройства 'cisco_ios_telnet':
 ```python
-DEVICE_PARAMS = {'device_type': 'cisco_ios_telnet',
-                 'ip': IP,
-                 'username':USER,
-                 'password':PASSWORD,
-                 'secret':ENABLE_PASS }
+device_params = {'device_type': 'cisco_ios_telnet',
+                 'ip': ip,
+                 'username':user,
+                 'password':password,
+                 'secret':enable_pass }
 ```
 
 ---
@@ -1233,12 +1242,12 @@ import getpass
 import sys
 import time
 
-COMMAND = sys.argv[1]
-USER = input("Username: ")
-PASSWORD = getpass.getpass()
-ENABLE_PASS = getpass.getpass(prompt='Enter enable password: ')
+command = sys.argv[1]
+user = input("Username: ")
+password = getpass.getpass()
+enable_pass = getpass.getpass(prompt='Enter enable password: ')
 
-DEVICES_IP = ['192.168.100.1','192.168.100.2','192.168.100.3']
+devices_ip = ['192.168.100.1','192.168.100.2','192.168.100.3']
 
 ```
 
@@ -1247,18 +1256,18 @@ DEVICES_IP = ['192.168.100.1','192.168.100.2','192.168.100.3']
 
 Файл 4_netmiko_telnet.py:
 ```python
-for IP in DEVICES_IP:
-    print("Connection to device {}".format( IP ))
-    DEVICE_PARAMS = {'device_type': 'cisco_ios_telnet',
-                     'ip': IP,
-                     'username':USER,
-                     'password':PASSWORD,
-                     'secret':ENABLE_PASS,
+for ip in devices_ip:
+    print("Connection to device {}".format( ip ))
+    device_params = {'device_type': 'cisco_ios_telnet',
+                     'ip': ip,
+                     'username':user,
+                     'password':password,
+                     'secret':enable_pass,
                      'verbose': True}
-    ssh = ConnectHandler(**DEVICE_PARAMS)
+    ssh = ConnectHandler(**device_params)
     ssh.enable()
 
-    result = ssh.send_command(COMMAND)
+    result = ssh.send_command(command)
     print(result)
 ```
 
