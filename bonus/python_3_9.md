@@ -2,11 +2,78 @@
 
 ---
 
-## Новые методы строк to remove prefixes and suffixes
+## Новые методы строк removeprefix, removesuffix
+
+```python
+In [24]: s1 = "interface Gi0/1"
+
+In [25]: s1.removeprefix("interface")
+Out[25]: ' Gi0/1'
+
+In [26]: s1.removeprefix("interface ")
+Out[26]: 'Gi0/1'
+
+In [27]: s1.removeprefix("test")
+Out[27]: 'interface Gi0/1'
+
+In [28]: s1.removesuffix("0/1")
+Out[28]: 'interface Gi'
+```
 
 ---
 
 ## Dict union operators
+
+---
+
+### Operator `|`
+
+```python
+In [1]: d1 = {"name": "R1", "vendor": "Cisco"}
+
+In [2]: d2 = {"location": "Globe Str", "vendor": "Cisco IOS"}
+
+In [3]: d1 | d2
+Out[3]: {'name': 'R1', 'vendor': 'Cisco IOS', 'location': 'Globe Str'}
+
+In [4]: d1
+Out[4]: {'name': 'R1', 'vendor': 'Cisco'}
+
+In [5]: d2
+Out[5]: {'location': 'Globe Str', 'vendor': 'Cisco IOS'}
+```
+
+---
+
+### Operator `|=`
+
+```python
+In [6]: d1 |= d2
+
+In [7]: d1
+Out[7]: {'name': 'R1', 'vendor': 'Cisco IOS', 'location': 'Globe Str'}
+
+In [8]: d2
+Out[8]: {'location': 'Globe Str', 'vendor': 'Cisco IOS'}
+```
+
+---
+
+### Операторы работают не только на обычных словарях
+
+```python
+In [11]: vlans1 = defaultdict(list, {"sw1": [1, 2, 3, 4], "sw2": [3, 4], "sw3": [1, 3]})
+
+In [12]: vlans2 = defaultdict(list, {"sw1": [1, 2, 3, 4, 5], "sw4": [1, 2, 3]})
+
+In [13]: vlans1 | vlans2
+Out[13]:
+defaultdict(list,
+            {'sw1': [1, 2, 3, 4, 5],
+             'sw2': [3, 4],
+             'sw3': [1, 3],
+             'sw4': [1, 2, 3]})
+```
 
 ---
 
