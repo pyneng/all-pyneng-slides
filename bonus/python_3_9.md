@@ -82,6 +82,36 @@ defaultdict(list,
 * [PEP 585, type hinting generics in standard collections](https://www.python.org/dev/peps/pep-0585)
 * [PEP 593, flexible function and variable annotations](https://www.python.org/dev/peps/pep-0593)
 
+
+---
+
+### Начиная с 3.9 вместо List/Dict/Tuple можно писать list/dict/tuple
+
+```python
+def ping_ip_list(ip_list: list[str], limit: int = 3) -> tuple[list[str], list[str]]:
+    reachable = []
+    unreachable = []
+    with ThreadPoolExecutor(max_workers=limit) as executor:
+        results = executor.map(ping_ip, ip_list)
+    for ip, status in zip(ip_list, results):
+        if status:
+            reachable.append(ip)
+        else:
+            unreachable.append(ip)
+    return reachable, unreachable
+```
+
+Вместо
+
+```python
+from typing import List, Tuple
+
+def ping_ip_list_2(ip_list: List[str], limit: int = 3) -> Tuple[List[str], List[str]]:
+```
+
+### typing.Annotated
+
+
 ---
 
 ## Синтаксис декораторов
