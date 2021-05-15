@@ -212,8 +212,32 @@ SyntaxError: invalid syntax
 
 ## Обновления в asyncio
 
-* new coroutine loop.shutdown_default_executor()
-* new coroutine asyncio.to_thread()
+* new coroutine [loop.shutdown_default_executor](https://docs.python.org/3/library/asyncio-eventloop.html#asyncio.loop.shutdown_default_executor)
+* new coroutine [asyncio.to_thread](https://docs.python.org/3/library/asyncio-task.html#asyncio.to_thread)
+
+---
+
+## asyncio.to_thread
+
+Сопрограмма asyncio.to_thread позволяет запустить блокирующую операцию в потоке.
+
+До Python 3.9 использовалась loop.run_in_executor. При этом to_thread это по
+сути обертка вокруг loop.run_in_executor с использованием ThreadPoolExecutor
+по умолчанию, с максимальным количеством потоков по умолчанию:
+
+```python
+async def to_thread(func, /, *args, **kwargs):
+    loop = events.get_running_loop()
+    ctx = contextvars.copy_context()
+    func_call = functools.partial(ctx.run, func, *args, **kwargs)
+    return await loop.run_in_executor(None, func_call)
+```
+
+Начиная с версии Python 3.8 значение по умолчанию для max_workers высчитывается так
+
+```
+min(32, os.cpu_count() + 4)
+```
 
 ---
 
