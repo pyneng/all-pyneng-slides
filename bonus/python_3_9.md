@@ -133,6 +133,36 @@ def ping_ip_list_2(ip_list: List[str], limit: int = 3) -> Tuple[List[str], List[
 
 ### [typing.Annotated](https://docs.python.org/3/library/typing.html#typing.Annotated)
 
+Annotated позволяет добавлять в аннотации не только тип, но и другую информацию.
+
+```python
+from typing import Annotated, get_type_hints
+
+
+IPAddress = Annotated[str, "IP address"]
+
+
+def ping_ip(ip: IPAddress) -> bool:
+    param = "-n" if system_name().lower() == "windows" else "-c"
+    command = ["ping", param, "1", ip]
+    reply = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    ip_is_reachable = reply.returncode == 0
+    return ip_is_reachable
+```
+
+---
+
+### В typing.get_type_hints добавлен параметр include_extras
+
+```python
+get_type_hints(ping_ip)
+{'ip': <class 'str'>, 'return': <class 'bool'>}
+```
+
+```python
+get_type_hints(ping_ip, include_extras=True)
+{'ip': typing.Annotated[str, 'IP address'], 'return': <class 'bool'>}
+```
 
 ---
 
