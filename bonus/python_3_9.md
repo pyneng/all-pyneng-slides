@@ -77,6 +77,26 @@ defaultdict(list,
 
 ---
 
+### Union как специальный метод
+
+```python
+class Topology:
+    def __init__(self, topology_dict):
+        self.topology = self._normalize(topology_dict)
+
+    def _normalize(self, topology_dict):
+        normalized_topology = {}
+        for box, neighbor in topology_dict.items():
+            if not neighbor in normalized_topology:
+                normalized_topology[box] = neighbor
+        return normalized_topology
+
+    def __or__(self, other):
+        return Topology(self.topology | other.topology)
+```
+
+---
+
 ## Аннотация типов
 
 * [PEP 585, type hinting generics in standard collections](https://www.python.org/dev/peps/pep-0585)
