@@ -296,6 +296,12 @@ Out[6]: datetime.datetime(2021, 5, 16, 17, 0, tzinfo=zoneinfo.ZoneInfo(key='Aust
 
 ---
 
+## Annual release cycle
+
+[PEP 602, CPython adopts an annual release cycle](https://www.python.org/dev/peps/pep-0602)
+
+---
+
 ## Performance
 
 ```
@@ -343,3 +349,130 @@ Timing loop:
     loop_overhead                    0.5     0.6     0.4     0.3     0.3    0.3
 ```
 
+---
+
+## Мелкие изменения
+
+script.py
+
+```python
+print(__file__)
+```
+
+```python
+$ python3.8 script.py
+ex01_dict_union_class.py
+
+$ python3.9 script.py
+/home/vagrant/repos/pyneng-bonus-lectures/examples/08_python39/ex01_dict_union_class.py
+
+```
+
+---
+
+## Улучшен help в typing
+
+Python 3.8
+```python
+In [4]: Union?
+Signature:   Union(*args, **kwds)
+Type:        _SpecialForm
+String form: typing.Union
+File:        /usr/local/lib/python3.8/typing.py
+Docstring:
+Internal indicator of special typing constructs.
+See _doc instance attribute for specific docs.
+
+```
+
+Python 3.9
+```python
+In [3]: Union?
+Signature:   Union(*args, **kwds)
+Type:        _SpecialForm
+String form: typing.Union
+File:        /usr/local/lib/python3.9/typing.py
+Docstring:
+Union type; Union[X, Y] means either X or Y.
+
+To define a union, use e.g. Union[int, str].  Details:
+- The arguments must be types and there must be at least one.
+- None as an argument is a special case and is replaced by
+  type(None).
+- Unions of unions are flattened, e.g.::
+
+    Union[Union[int, str], float] == Union[int, str, float]
+
+- Unions of a single argument vanish, e.g.::
+
+    Union[int] == int  # The constructor actually returns int
+
+- Redundant arguments are skipped, e.g.::
+
+    Union[int, str, int] == Union[int, str]
+
+- When comparing unions, the argument order is ignored, e.g.::
+
+    Union[int, str] == Union[str, int]
+
+- You cannot subclass or instantiate a union.
+- You can use Optional[X] as a shorthand for Union[X, None].
+```
+
+---
+
+### Новый параметр cancel_futures в concurrent.futures.Executor.shutdown
+
+Cancels all pending futures which have not started running, instead of waiting
+for them to complete before shutting down the executor.
+
+```python
+In [1]: from concurrent.futures import ThreadPoolExecutor
+
+In [2]: ex = ThreadPoolExecutor()
+
+In [3]: ex.shutdown?
+Signature: ex.shutdown(wait=True, *, cancel_futures=False)
+Docstring:
+Clean-up the resources associated with the Executor.
+
+It is safe to call this method several times. Otherwise, no other
+methods can be called after this one.
+
+Args:
+    wait: If True then shutdown will not return until all running
+        futures have finished executing and the resources used by the
+        executor have been reclaimed.
+    cancel_futures: If True then shutdown will cancel all pending
+        futures. Futures that are completed or running will not be
+        cancelled.
+File:      /usr/local/lib/python3.9/concurrent/futures/thread.py
+Type:      method
+
+```
+
+---
+
+## Модуль ipaddress
+
+До 3.9.5
+
+```python
+In [4]: import ipaddress
+
+In [6]: ipaddress.ip_address("02.1.1.1")
+Out[6]: IPv4Address('2.1.1.1')
+```
+
+Начиная с 3.9.5
+
+```python
+In [3]: ipaddress.ip_address("02.1.1.1")
+---------------------------------------------------------------------------
+ValueError                                Traceback (most recent call last)
+<ipython-input-3-d2deb7abae82> in <module>
+----> 1 ipaddress.ip_address("02.1.1.1")
+...
+
+ValueError: '02.1.1.1' does not appear to be an IPv4 or IPv6 address
+```
