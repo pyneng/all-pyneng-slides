@@ -109,7 +109,9 @@ from typing import List, Tuple
 def ping_ip_list_2(ip_list: List[str], limit: int = 3) -> Tuple[List[str], List[str]]:
 ```
 
-### typing.Annotated
+---
+
+### [typing.Annotated](https://docs.python.org/3/library/typing.html#typing.Annotated)
 
 
 ---
