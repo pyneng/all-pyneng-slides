@@ -152,7 +152,7 @@ def ping_ip(ip: IPAddress) -> bool:
 
 ---
 
-### В typing.get_type_hints добавлен параметр include_extras
+### В [typing.get_type_hints](https://docs.python.org/3/library/typing.html#typing.get_type_hints) добавлен параметр include_extras
 
 ```python
 get_type_hints(ping_ip)
