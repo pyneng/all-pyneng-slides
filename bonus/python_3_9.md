@@ -243,8 +243,56 @@ min(32, os.cpu_count() + 4)
 
 ## Новые модули
 
-* graphlib
-* zoneinfo
+* [graphlib](https://docs.python.org/3/library/graphlib.html#module-graphlib)
+* [zoneinfo](https://docs.python.org/3/library/zoneinfo.html#module-zoneinfo)
+
+---
+
+### zoneinfo
+
+```python
+In [1]: import zoneinfo
+
+In [2]: len(zoneinfo.available_timezones())
+Out[2]: 608
+```
+
+---
+
+### zoneinfo
+
+```python
+from datetime import datetime, timezone, timedelta
+from zoneinfo import ZoneInfo
+
+In [16]: meeting = datetime(2021, 5, 16, 10, 0, tzinfo=ZoneInfo("Europe/Kiev"))
+
+In [17]: meeting
+Out[17]: datetime.datetime(2021, 5, 16, 10, 0, tzinfo=zoneinfo.ZoneInfo(key='Europe/Kiev'))
+
+In [18]: meeting.tzinfo
+Out[18]: zoneinfo.ZoneInfo(key='Europe/Kiev')
+
+In [19]: meeting.utcoffset()
+Out[19]: datetime.timedelta(seconds=10800)
+
+In [21]: h = timedelta(hours=1)
+
+In [22]: meeting.utcoffset() / h
+Out[22]: 3.0
+```
+---
+
+### zoneinfo
+
+```python
+
+In [5]: meeting
+Out[5]: datetime.datetime(2021, 5, 16, 10, 0, tzinfo=zoneinfo.ZoneInfo(key='Europe/Kiev'))
+
+In [6]: meeting.astimezone(ZoneInfo("Australia/Melbourne"))
+Out[6]: datetime.datetime(2021, 5, 16, 17, 0, tzinfo=zoneinfo.ZoneInfo(key='Australia/Melbourne'))
+```
 
 ---
 
