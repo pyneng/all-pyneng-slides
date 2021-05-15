@@ -168,6 +168,46 @@ get_type_hints(ping_ip, include_extras=True)
 
 ## Синтаксис декораторов
 
+[PEP 614 Relaxing Grammar Restrictions On Decorators](https://www.python.org/dev/peps/pep-0614/)
+
+```python
+def force_arg_type(required_type):
+    def decorator(func):
+        @wraps(func)
+        def inner(*args):
+            if not all([isinstance(arg, required_type) for arg in args]):
+                raise ValueError(
+                    f"Все аргументы должны быть {required_type.__name__}"
+                )
+            return func(*args)
+        return inner
+    return decorator
+
+
+force_type = {
+    "numbers": force_arg_type(int),
+    "strings": force_arg_type(str),
+}
+
+
+@force_type["numbers"]
+def summ(a, b):
+    return a + b
+```
+
+---
+
+### До Python3.9 это ошибка синтаксиса
+
+```python
+$ python3.8 ex05_decorator.py
+  File "ex05_decorator.py", line 23
+    @force_type["numbers"]
+               ^
+SyntaxError: invalid syntax
+
+```
+
 ---
 
 ## Обновления в asyncio
