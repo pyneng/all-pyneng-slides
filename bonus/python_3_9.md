@@ -268,10 +268,6 @@ SW1 -|
              |- SW14
 ```
 
----
-
-### graphlib
-
 ```python
 from graphlib import TopologicalSorter
 
