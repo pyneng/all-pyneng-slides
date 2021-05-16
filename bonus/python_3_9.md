@@ -354,6 +354,11 @@ In [2]: len(zoneinfo.available_timezones())
 Out[2]: 608
 ```
 
+Если во второй строке значение 0, можно поставить локальную базу из pip:
+```
+pip install tzdata
+```
+
 ---
 
 ### zoneinfo
