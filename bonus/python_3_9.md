@@ -302,7 +302,7 @@ Out[6]: datetime.datetime(2021, 5, 16, 17, 0, tzinfo=zoneinfo.ZoneInfo(key='Aust
 
 ---
 
-## Performance
+## Performance ([microseconds](https://en.wikipedia.org/wiki/Microsecond))
 
 ```
 Python version                       3.4     3.5     3.6     3.7     3.8    3.9
@@ -370,7 +370,7 @@ $ python3.9 script.py
 
 ---
 
-## Улучшен help в typing
+### Улучшен help в typing
 
 Python 3.8
 ```python
@@ -453,7 +453,7 @@ Type:      method
 
 ---
 
-## Модуль ipaddress
+### Модуль ipaddress
 
 До 3.9.5
 
