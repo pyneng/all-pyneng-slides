@@ -5,19 +5,19 @@
 ## Новые методы строк removeprefix, removesuffix
 
 ```python
-In [24]: s1 = "interface Gi0/1"
+In [4]: s1 = "interface Gi0/1"
 
-In [25]: s1.removeprefix("interface")
-Out[25]: ' Gi0/1'
+In [5]: s1.removeprefix("interface")
+Out[5]: ' Gi0/1'
 
-In [26]: s1.removeprefix("interface ")
-Out[26]: 'Gi0/1'
+In [6]: s1.removeprefix("interface ")
+Out[6]: 'Gi0/1'
 
-In [27]: s1.removeprefix("test")
-Out[27]: 'interface Gi0/1'
+In [7]: s1.removeprefix("test")
+Out[7]: 'interface Gi0/1'
 
-In [28]: s1.removesuffix("0/1")
-Out[28]: 'interface Gi'
+In [8]: s1.removesuffix("0/1")
+Out[8]: 'interface Gi'
 ```
 
 ---
@@ -248,6 +248,86 @@ min(32, os.cpu_count() + 4)
 
 ---
 
+### graphlib
+
+Модуль graphlib предоставляет функциональность топологической
+сортировки графа.
+
+Топологическая сортировка — упорядочивание вершин бесконтурного ориентированного
+графа согласно частичному порядку, заданному ребрами орграфа на множестве его вершин.
+
+---
+
+### graphlib
+
+```
+             |- SW11
+     |- SW2 -|- SW12
+SW1 -|
+     |- SW3 -|- SW13
+             |- SW14
+```
+
+---
+
+### graphlib
+
+```python
+from graphlib import TopologicalSorter
+
+
+topology = {
+    "SW1": ["SW2", "SW3"],
+    "SW2": ["SW11", "SW12"],
+    "SW3": ["SW13", "SW14"]
+}
+
+top = TopologicalSorter(topology)
+print(list(top.static_order()))
+# ['SW11', 'SW12', 'SW13', 'SW14', 'SW2', 'SW3', 'SW1']
+```
+
+---
+
+### graphlib
+
+```python
+tasks_dict = {
+    "Подготовка VM": [
+        "Обновить Python до 3.9",
+        "Клонировать репозиторий курса",
+        "Установить pyneng.py",
+    ],
+    "Клонировать репозиторий курса": [
+        "Подготовка репозитория",
+    ],
+    "Подготовка репозитория": [
+        "Исправить ошибки в тестах",
+        "Исправить ошибки в заданиях",
+    ],
+    "Исправить ошибки в тестах": [
+        "Изменить в тестах порядок в assert",
+        "Вынести общие функции в pyneng_common_functions",
+    ],
+    "Исправить ошибки в заданиях": ["Исправить ошибки в заданиях из списка todo"],
+}
+
+tasks = TopologicalSorter(tasks_dict)
+pprint(list(tasks.static_order()))
+['Обновить Python до 3.9',
+ 'Установить pyneng.py',
+ 'Изменить в тестах порядок в assert',
+ 'Вынести общие функции в pyneng_common_functions',
+ 'Исправить ошибки в заданиях из списка todo',
+ 'Исправить ошибки в тестах',
+ 'Исправить ошибки в заданиях',
+ 'Подготовка репозитория',
+ 'Клонировать репозиторий курса',
+ 'Подготовка VM']
+```
+
+---
+
 ### zoneinfo
 
 ```python
@@ -365,7 +445,6 @@ ex01_dict_union_class.py
 
 $ python3.9 script.py
 /home/vagrant/repos/pyneng-bonus-lectures/examples/08_python39/ex01_dict_union_class.py
-
 ```
 
 ---
@@ -382,10 +461,10 @@ File:        /usr/local/lib/python3.8/typing.py
 Docstring:
 Internal indicator of special typing constructs.
 See _doc instance attribute for specific docs.
-
 ```
 
 Python 3.9
+
 ```python
 In [3]: Union?
 Signature:   Union(*args, **kwds)
