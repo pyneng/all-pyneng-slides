@@ -452,7 +452,7 @@ script.py
 print(__file__)
 ```
 
-```python
+```
 $ python3.8 script.py
 ex01_dict_union_class.py
 
