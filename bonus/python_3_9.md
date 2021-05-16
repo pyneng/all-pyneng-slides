@@ -260,6 +260,23 @@ min(32, os.cpu_count() + 4)
 
 ### graphlib
 
+```python
+from graphlib import TopologicalSorter
+
+dependencies = {
+    "realpython-reader": {"feedparser", "html2text"},
+    "feedparser": {"sgmllib3k"},
+}
+
+ts = TopologicalSorter(dependencies)
+print(list(ts.static_order()))
+# ['html2text', 'sgmllib3k', 'feedparser', 'realpython-reader']
+```
+
+---
+
+### graphlib
+
 ```
              |- SW11
      |- SW2 -|- SW12
