@@ -108,7 +108,9 @@ class Topology:
 ### Начиная с 3.9 вместо List/Dict/Tuple можно писать list/dict/tuple
 
 ```python
-def ping_ip_list(ip_list: list[str], limit: int = 3) -> tuple[list[str], list[str]]:
+def ping_ip_list(
+    ip_list: list[str], limit: int = 3
+) -> tuple[list[str], list[str]]:
     reachable = []
     unreachable = []
     with ThreadPoolExecutor(max_workers=limit) as executor:
@@ -126,7 +128,9 @@ def ping_ip_list(ip_list: list[str], limit: int = 3) -> tuple[list[str], list[st
 ```python
 from typing import List, Tuple
 
-def ping_ip_list_2(ip_list: List[str], limit: int = 3) -> Tuple[List[str], List[str]]:
+def ping_ip_list_2(
+    ip_list: List[str], limit: int = 3
+) -> Tuple[List[str], List[str]]:
 ```
 
 ---
@@ -568,3 +572,31 @@ ValueError                                Traceback (most recent call last)
 
 ValueError: '02.1.1.1' does not appear to be an IPv4 or IPv6 address
 ```
+
+---
+
+### replace с явным count
+
+python 3.8
+
+```python
+Python 3.8.0 (default, Nov  9 2019, 12:40:50)
+Type 'copyright', 'credits' or 'license' for more information
+IPython 7.18.1 -- An enhanced Interactive Python. Type '?' for help.
+
+In [1]: "".replace("", "a", 1)
+Out[1]: ''
+```
+
+python 3.9
+
+```python
+$ ipython
+Python 3.9.4 (default, Apr 15 2021, 06:05:52)
+Type 'copyright', 'credits' or 'license' for more information
+IPython 7.23.1 -- An enhanced Interactive Python. Type '?' for help.
+
+In [1]: "".replace("", "a", 1)
+Out[1]: 'a'
+```
+
