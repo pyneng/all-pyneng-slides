@@ -2,6 +2,18 @@
 
 ---
 
+## Коротко о новых возможностях
+
+* новые модули graphlib, zoneinfo
+* новые методы строк removeprefix, removesuffix
+* новые операции со словарями `|` и `|=`
+* в аннотации типов вместо List/Dict/Tuple можно писать list/dict/tuple
+* новый тип typing.Annotated
+* в декораторах можно писать плюс-минус любое выражение, которое возвращает правильный вызываемый объект
+* в asyncio новые корутины: asyncio.to_thread (вместо loop.run_in_executor), loop.shutdown_default_executor
+
+---
+
 ## Новые методы строк removeprefix, removesuffix
 
 ```python
