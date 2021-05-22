@@ -203,8 +203,6 @@ def main(ip_address: str, count: int = 3):
 
 ### Опции
 
-Вывод:
-
 ```
 $ python ex01_ping_ip_count_option.py --help
 Usage: ex01_ping_ip_count_option.py [OPTIONS] IP_ADDRESS
@@ -217,7 +215,9 @@ Arguments:
 Options:
   --count INTEGER                 [default: 3]
   --help                          Show this message and exit.
+```
 
+```
 $ python ex01_ping_ip_count_option.py 8.8.8.8
 IP-адрес 8.8.8.8         пингуется
 
