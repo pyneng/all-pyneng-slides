@@ -2,7 +2,7 @@
 
 ---
 
-## Коротко о новых возможностях
+# What's new in Python 3.9
 
 * новые модули graphlib, zoneinfo
 * новые методы строк removeprefix, removesuffix
