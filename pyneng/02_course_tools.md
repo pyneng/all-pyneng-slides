@@ -27,9 +27,6 @@
 * широко используется
 * выпущен под лицензией GNU GPL v2
 
----
-
-![stream of snapshots](https://git-scm.com/figures/18333fig0105-tn.png)
 
 ---
 ### Git
