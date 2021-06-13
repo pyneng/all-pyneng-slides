@@ -878,7 +878,7 @@ NameError                                 Traceback (most recent call last)
 <ipython-input-1-e6f8e01ac9c4> in <module>()
 ----> 1 f"IP: {ip}, mask: {mask}"
 
-NameError: name 'ip' is not defined
+NameError: name 'ip' == not defined
 ```
 
 ---
@@ -994,7 +994,7 @@ Out[8]: 'При выполнении команды "{}" возникла так
 * последовательность элементов, разделенных между собой запятой и заключенных в квадратные скобки.
 
 ```python
-In [1]: list1 = [10,20,30,77]
+In [1]: list1 = [10, 20, 30, 77]
 In [2]: list2 = ['one', 'dog', 'seven']
 In [3]: list3 = [1, 20, 4.0, 'word']
 ```
@@ -2124,7 +2124,7 @@ Out[12]: True
 In [13]: type("string")
 Out[13]: str
 
-In [14]: type("string") is str
+In [14]: type("string") == str
 Out[14]: True
 ```
 
@@ -2133,13 +2133,13 @@ Out[14]: True
 
 Аналогично с кортежем (и другими типами данных):
 ```python
-In [15]: type((1,2,3))
+In [15]: type((1, 2, 3))
 Out[15]: tuple
 
-In [16]: type((1,2,3)) is tuple
+In [16]: type((1, 2, 3)) == tuple
 Out[16]: True
 
-In [17]: type((1,2,3)) is list
+In [17]: type((1, 2, 3)) == list
 Out[17]: False
 ```
 

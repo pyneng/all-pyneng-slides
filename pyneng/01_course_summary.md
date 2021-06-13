@@ -152,7 +152,7 @@
 
 * Slack
 * Git, GitHub
-* Linux/Unix
+* Linux/Unix, Windows, Mac OS
 
 ---
 ### Необходимое время
