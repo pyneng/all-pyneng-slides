@@ -11,12 +11,12 @@ Rich позволяет создавать красивые приложения
 * rich print
 * более понятные traceback
 * inspect
-* добавление цвета/стиля при выводе в терминал
-
+* добавление цвета/стиля при выводе в терминал (console, spinner (status))
 * Handler для logging
 * prompt
 * progress bar
-* spinner
 * вывод красивых таблиц
-* отображение markdown
 * tree
+* отображение markdown
+* вывод кода с подсветкой
+* Live
