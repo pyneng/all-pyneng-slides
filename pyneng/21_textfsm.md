@@ -63,7 +63,7 @@ Start
 
 После строки Start начинается сам шаблон. В данном случае, он очень простой:
 * ```^  ${ID} ${Hop} -> Record```
- * сначала идет символ начала строки, затем два пробела и переменные ID и Hop
+ * сначала идет символ начала строки, затем один или два пробела и переменные ID и Hop
  * в TextFSM переменные описываются таким образом: ```${имя переменной}```
  * слово ```Record``` в конце означает, что строки, которые попадут под описанный шаблон, будут обработаны и выведены в результаты TextFSM (с этим подробнее мы разберемся в [следующем разделе](./1_textfsm_syntax.md))
 
@@ -435,6 +435,56 @@ Time      Timezone    WeekDay    Month      MonthDay    Year
 ```
 
 ---
+### show ip interface brief
+
+В случае, когда нужно обработать данные, которые выведены столбцами, шаблон TextFSM, наиболее удобен.
+
+Шаблон для вывода команды show ip interface brief (файл templates/sh_ip_int_br.template):
+```
+Value INT (\S+)
+Value ADDR (\S+)
+Value STATUS (up|down|administratively down)
+Value PROTO (up|down)
+
+Start
+  ^${INTF}\s+${ADDR}\s+\w+\s+\w+\s+${STATUS}\s+${PROTO} -> Record
+```
+
+---
+### show ip interface brief
+
+В этом случае, правило можно описать одной строкой.
+
+Вывод команды (файл output/sh_ip_int_br.txt):
+```
+R1#show ip interface brief
+Interface                  IP-Address      OK? Method Status                Protocol
+FastEthernet0/0            15.0.15.1       YES manual up                    up
+FastEthernet0/1            10.0.12.1       YES manual up                    up
+FastEthernet0/2            10.0.13.1       YES manual up                    up
+FastEthernet0/3            unassigned      YES unset  up                    up
+Loopback0                  10.1.1.1        YES manual up                    up
+Loopback100                100.0.0.1       YES manual up                    up
+```
+
+---
+### show ip interface brief
+
+Результат выполнения будет таким:
+```
+$ python parse_output.py templates/sh_ip_int_br.template output/sh_ip_int_br.txt
+INT              ADDR        STATUS    PROTO
+---------------  ----------  --------  -------
+FastEthernet0/0  15.0.15.1   up        up
+FastEthernet0/1  10.0.12.1   up        up
+FastEthernet0/2  10.0.13.1   up        up
+FastEthernet0/3  unassigned  up        up
+Loopback0        10.1.1.1    up        up
+Loopback100      100.0.0.1   up        up
+```
+
+
+---
 ### show cdp neighbors detail
 
 Теперь попробуем обработать вывод команды show cdp neighbors detail.
@@ -677,56 +727,6 @@ SW1           SW2          10.1.1.2    cisco WS-C2960-8TC-L  GigabitEthernet1/0/
 SW1           R1           10.1.1.1    Cisco 3825            GigabitEthernet1/0/22  GigabitEthernet0/0  12.4(24)T1
 SW1           R2           10.2.2.2    Cisco 2911            GigabitEthernet1/0/21  GigabitEthernet0/0  15.2(2)T1
 ```
-
----
-### show ip interface brief
-
-В случае, когда нужно обработать данные, которые выведены столбцами, шаблон TextFSM, наиболее удобен.
-
-Шаблон для вывода команды show ip interface brief (файл templates/sh_ip_int_br.template):
-```
-Value INT (\S+)
-Value ADDR (\S+)
-Value STATUS (up|down|administratively down)
-Value PROTO (up|down)
-
-Start
-  ^${INTF}\s+${ADDR}\s+\w+\s+\w+\s+${STATUS}\s+${PROTO} -> Record
-```
-
----
-### show ip interface brief
-
-В этом случае, правило можно описать одной строкой.
-
-Вывод команды (файл output/sh_ip_int_br.txt):
-```
-R1#show ip interface brief
-Interface                  IP-Address      OK? Method Status                Protocol
-FastEthernet0/0            15.0.15.1       YES manual up                    up
-FastEthernet0/1            10.0.12.1       YES manual up                    up
-FastEthernet0/2            10.0.13.1       YES manual up                    up
-FastEthernet0/3            unassigned      YES unset  up                    up
-Loopback0                  10.1.1.1        YES manual up                    up
-Loopback100                100.0.0.1       YES manual up                    up
-```
-
----
-### show ip interface brief
-
-Результат выполнения будет таким:
-```
-$ python parse_output.py templates/sh_ip_int_br.template output/sh_ip_int_br.txt
-INT              ADDR        STATUS    PROTO
----------------  ----------  --------  -------
-FastEthernet0/0  15.0.15.1   up        up
-FastEthernet0/1  10.0.12.1   up        up
-FastEthernet0/2  10.0.13.1   up        up
-FastEthernet0/3  unassigned  up        up
-Loopback0        10.1.1.1    up        up
-Loopback100      100.0.0.1   up        up
-```
-
 ---
 ### show ip route ospf
 
