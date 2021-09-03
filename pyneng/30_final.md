@@ -49,28 +49,6 @@ Python позволяет делать достаточно многое обл�
 
 
 ---
-### Блоги
-
-* [Kirk Byers](https://pynet.twb-tech.com/)
-* [Jason Edelman](http://jedelman.com/)
-* [Matt Oswalt](https://keepingitclassless.net/)
-* [Michael Kashin](http://networkop.co.uk/)
-* [Henry Ölsner](https://codingnetworker.com/)
-* [Mat Wood](https://thepacketgeek.com/)
-
-
----
-### Подкасты об автоматизации
-
-* [Show 176 – Intro To Python & Automation For Network Engineers](http://packetpushers.net/podcast/podcasts/show-176-intro-to-python-automation-for-network-engineers/)
-* [Show 198 – Kirk Byers On Network Automation With Python & Ansible](http://packetpushers.net/podcast/podcasts/show-198-kirk-byers-network-automation-python-ansible/)
-* [Show 270: Design & Build 9: Automation With Python And Netmiko](http://packetpushers.net/podcast/podcasts/show-270-design-build-9-automation-python-netmiko/)
-* [Show 332: Don’t Believe The Programming Hype](http://packetpushers.net/podcast/podcasts/show-332-dont-believe-programming-hype/)
-* [Show 333: Automation & Orchestration In Networking](http://packetpushers.net/podcast/podcasts/show-333-orchestration-vs-automation/)
-* [PQ Show 99: Netmiko & NAPALM For Network Automation](http://packetpushers.net/podcast/podcasts/pq-show-99-netmiko-napalm-network-automation/)
-
-
----
 ### Проекты:
 
 * [CiscoConfParse](https://github.com/mpenning/ciscoconfparse) - библиотека, которая парсит конфигурации типа Cisco IOS. С ее помощью можно: проверять существующие конфигурации маршрутизаторов/коммутаторов, получать определенную часть конфигурации, изменять конфигурацию
@@ -142,6 +120,12 @@ Python позволяет делать достаточно многое обл�
 * [HackerRank](https://www.hackerrank.com/) - на этом сайте задачи разбиты по областям: алгоритмы, регулярные выражения, базы данных и другие. Но есть и базовые задачи 
 * [CheckIO - online game for Python and JavaScript coders](https://checkio.org/)
 
+
+---
+### Полезные ресурсы
+
+* [Real Python](https://realpython.com/)
+* [Corey Schafer](https://www.youtube.com/channel/UCCezIgC97PvUuR4_gbFUs5g)
 
 ---
 ### Подкасты
