@@ -1,4 +1,4 @@
-## Advanced Python для сетевых инженеров
+# Advanced Python для сетевых инженеров
 
 ---
 ### О курсе
@@ -480,6 +480,6 @@ test_task_8_6.py::test_total_order_methods PASSED                  [100%]
 
 ## Бонусные лекции
 
-* [Создание CLI с помощью Typer](https://www.youtube.com/playlist?list=PLah0HUih_ZRnp0HI2TxbQ549Ty-P8soUV)
 * [Модуль Rich - создание красивых приложений в CLI](https://www.youtube.com/playlist?list=PLah0HUih_ZRkzS7TouDvcgK79WiYZSgpk)
 * [Основы pdb](https://natenka.github.io/pyneng/pdb-basics/)
+* [Создание CLI с помощью Typer](https://www.youtube.com/playlist?list=PLah0HUih_ZRnp0HI2TxbQ549Ty-P8soUV)
