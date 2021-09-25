@@ -409,6 +409,73 @@ collected 9 items
 ```
 
 ---
+### Структура теста
+
+AAA (Arrange, Act, Assert)
+
+```python
+def test_function_return_value(r1_test_connection, first_router_from_devices_yaml):
+    """
+    Тест проверяет работу функции send_show_command
+    first_router_from_devices_yaml - это первое устройство из файла devices.yaml
+    r1_test_connection - это сессия SSH с первым устройством из файла devices.yaml
+                         Используется для проверки вывода
+    """
+    correct_return_value = strip_empty_lines(
+        r1_test_connection.send_command("sh ip int br")
+    )
+    return_value = strip_empty_lines(
+        task_18_1.send_show_command(first_router_from_devices_yaml, "sh ip int br")
+    )
+    assert return_value != None, "Функция ничего не возвращает"
+    assert (
+        type(return_value) == str
+    ), f"По заданию функция должна возвращать строку, а возвращает {type(return_value).__name__}"
+    assert (
+        correct_return_value == return_value
+    ), "Функция возвращает неправильное значение"
+```
+
+---
+### Параметризация теста
+
+```python
+@pytest.mark.parametrize("username,password,min_length,result",[
+    ('nata', '12345', 3, True),
+    ('nata', '12345nata', 3, False)
+])
+def test_password_min_length(username, password, min_length, result):
+    assert result == check_passwd(username, password, min_length=min_length)
+```
+
+---
+### pytest fixture
+
+Fixtures это функции, которые выполняют что-то до теста и, при необходимости, после.
+
+Два самых распространенных применения fixture:
+
+* для передачи каких-то данных для теста
+* setup and teardown
+
+---
+### fixture scope
+
+* function (default)
+* class
+* module
+* package
+* session
+
+---
+### Полезные команды для работы с fixture
+
+```
+$ pytest --fixtures
+$ pytest --setup-show
+```
+
+---
 ### pytest fixture
 
 ```python
@@ -487,9 +554,10 @@ def first_router_wrong_ip(first_router_from_devices_yaml):
 ---
 ### Встроенные fixture
 
-```python
-
-```
+* capsys
+* monkeypatch
+* tmp_path
+* [и другие](https://docs.pytest.org/en/6.2.x/fixture.html)
 
 ---
 ### Подделка функций (Mocking)
@@ -571,4 +639,26 @@ def test_password_min_length(monkeypatch):
     assert check_passwd(min_length=3)
 ```
 
+---
+### tracebackhide
 
+```python
+def count_calls(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        __tracebackhide__ = True
+        wrapper.total_calls += 1
+        result = func(*args, **kwargs)
+        return result
+    wrapper.total_calls = 0
+    return wrapper
+
+
+@count_calls
+def monkey_input_r2(prompt):
+    __tracebackhide__ = True
+    if monkey_input_r2.total_calls == 1:
+        return "r2"
+    elif monkey_input_r2.total_calls == 2:
+        return "ip"
+```
