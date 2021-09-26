@@ -550,9 +550,8 @@ def first_router_wrong_ip(first_router_from_devices_yaml):
 ```python
 @pytest.fixture(scope='module')
 def r1_test_connection(first_router_from_devices_yaml):
-    r1 = ConnectHandler(**first_router_from_devices_yaml)
-    r1.enable()
-    yield r1
-    r1.disconnect()
+    with ConnectHandler(**first_router_from_devices_yaml) as r1:
+        r1.enable()
+        yield r1
 ```
 

@@ -2,6 +2,256 @@
 ## Тестирование кода и сети с помощью pytest
 
 ---
+### Структура теста
+
+AAA (Arrange, Act, Assert)
+
+```python
+def test_function_return_value(r1_test_connection, first_router_from_devices_yaml):
+    """
+    Тест проверяет работу функции send_show_command
+    first_router_from_devices_yaml - это первое устройство из файла devices.yaml
+    r1_test_connection - это сессия SSH с первым устройством из файла devices.yaml
+                         Используется для проверки вывода
+    """
+    correct_return_value = strip_empty_lines(
+        r1_test_connection.send_command("sh ip int br")
+    )
+    return_value = strip_empty_lines(
+        send_show_command(first_router_from_devices_yaml, "sh ip int br")
+    )
+    assert (
+        correct_return_value == return_value
+    ), "Функция возвращает неправильное значение"
+```
+
+---
+### Параметризация теста
+
+```python
+@pytest.mark.parametrize(
+    ("user", "passwd", "min_len", "result"),
+    [
+        ("user1", "123456", 4, True),
+        ("user1", "123456", 8, False),
+        ("user1", "123456", 6, True),
+    ],
+)
+def test_min_len_param(user, passwd, min_len, result):
+    assert check_passwd(user, passwd, min_length=min_len) == result
+```
+
+---
+### pytest fixture
+
+Fixtures это функции, которые выполняют что-то до теста и, при необходимости, после.
+
+Два самых распространенных применения fixture:
+
+* для передачи каких-то данных для теста
+* setup and teardown
+
+---
+### fixture scope
+
+* function (default)
+* class
+* module
+* package
+* session
+
+---
+### pytest fixture
+
+```python
+@pytest.fixture(scope='module')
+def first_router_from_devices_yaml():
+    with open('devices.yaml') as f:
+        devices = yaml.safe_load(f)
+        r1 = devices[0]
+        #options = {'timeout': 5, 'fast_cli': True}
+        r1.update(options)
+    return r1
+
+
+@pytest.fixture(scope='module')
+def r1_test_connection(first_router_from_devices_yaml):
+    with ConnectHandler(**first_router_from_devices_yaml) as r1:
+        r1.enable()
+        yield r1
+```
+
+---
+### Fixture может смотреть в тест/модуль, который "вызвал" fixture
+
+conftest.py
+```python
+@pytest.fixture(scope="module")
+def smtp_connection(request):
+    server = getattr(request.module, "smtpserver", "smtp.gmail.com")
+
+    smtp_connection = smtplib.SMTP(server, 587, timeout=5)
+    yield smtp_connection
+    print("finalizing {} ({})".format(smtp_connection, server))
+    smtp_connection.close()
+```
+
+test_smtp.py
+```python
+smtpserver = "mail.python.org"  # will be read by smtp fixture
+
+
+def test_showhelo(smtp_connection):
+    assert 0, smtp_connection.helo()
+```
+
+---
+### factory as fixture
+
+```python
+@pytest.fixture
+def make_customer_record():
+    def _make_customer_record(name):
+        return {"name": name, "orders": []}
+
+    return _make_customer_record
+
+
+def test_customer_records(make_customer_record):
+    customer_1 = make_customer_record("Lisa")
+    customer_2 = make_customer_record("Mike")
+    customer_3 = make_customer_record("Meredith")
+```
+
+---
+### Параметризация fixture
+
+```python
+with open("devices.yaml") as f:
+    devices_params = yaml.safe_load(f)
+ip_list = [d["host"] for d in devices_params]
+
+
+@pytest.fixture(params=devices_params, scope="session", ids=ip_list)
+def ssh_connection(request):
+    with ConnectHandler(**request.param) as ssh:
+        ssh.enable()
+        yield ssh
+
+
+def test_ospf_enabled(ssh_connection):
+    output = ssh_connection.send_command("sh ip ospf")
+    assert "routing process" in output.lower()
+
+
+def test_loopback(ssh_connection):
+    output = ssh_connection.send_command("sh ip int br | i up +up")
+    assert "Loopback0" in output
+```
+
+---
+### Параметризация fixture
+
+```python
+with open("devices.yaml") as f:
+    devices_params = yaml.safe_load(f)
+ip_list = [d["host"] for d in devices_params]
+
+
+@pytest.fixture(params=devices_params, scope="session", ids=ip_list)
+def ssh_connection(request):
+    ssh = ConnectHandler(**request.param)
+    ssh.enable()
+    yield ssh
+    ssh.disconnect()
+
+
+@pytest.mark.parametrize(
+    "ip",
+    ["192.168.100.100", "192.168.100.2", "192.168.100.3"],
+    ids=["ISP1", "ISP2", "FW"],
+)
+def test_ping(ssh_connection, ip):
+    output = ssh_connection.send_command(f"ping {ip}")
+    assert "success rate is 100 percent" in output.lower()
+```
+
+---
+### Переопределение fixture в conftest.py
+
+```python
+tests/
+    __init__.py
+
+    conftest.py
+        # content of tests/conftest.py
+        import pytest
+
+        @pytest.fixture
+        def username():
+            return 'username'
+
+    test_something.py
+        # content of tests/test_something.py
+        def test_username(username):
+            assert username == 'username'
+
+    subfolder/
+        __init__.py
+
+        conftest.py
+            # content of tests/subfolder/conftest.py
+            import pytest
+
+            @pytest.fixture
+            def username(username):
+                return 'overridden-' + username
+
+        test_something.py
+            # content of tests/subfolder/test_something.py
+            def test_username(username):
+                assert username == 'overridden-username'
+```
+
+---
+### Переопределение fixture в тестах
+
+```python
+tests/
+    __init__.py
+
+    conftest.py
+        # content of tests/conftest.py
+        import pytest
+
+        @pytest.fixture
+        def username():
+            return 'username'
+
+    test_something.py
+        # content of tests/test_something.py
+        import pytest
+
+        @pytest.fixture
+        def username(username):
+            return 'overridden-' + username
+
+        def test_username(username):
+            assert username == 'overridden-username'
+
+    test_something_else.py
+        # content of tests/test_something_else.py
+        import pytest
+
+        @pytest.fixture
+        def username(username):
+            return 'overridden-else-' + username
+
+        def test_username(username):
+            assert username == 'overridden-else-username'
+```
+
+---
 ### Встроенные fixture
 
 * [capsys](https://docs.pytest.org/en/6.2.x/reference.html#std-fixture-capsys)
@@ -121,40 +371,21 @@ def test_password_min_length(monkeypatch,
 ```
 
 ---
-### Параметризация fixture
+### tmp_path
 
 ```python
-with open("devices.yaml") as f:
-    devices_params = yaml.safe_load(f)
-ip_list = [d["host"] for d in devices_params]
+# content of test_tmp_path.py
+CONTENT = "content"
 
 
-@pytest.fixture(params=devices_params, scope="session", ids=ip_list)
-def ssh_connection(request):
-    ssh = ConnectHandler(**request.param)
-    ssh.enable()
-    yield ssh
-    ssh.disconnect()
-
-
-def test_ospf_enabled(ssh_connection):
-    output = ssh_connection.send_command("sh ip ospf")
-    assert "routing process" in output.lower()
-
-
-def test_loopback(ssh_connection):
-    output = ssh_connection.send_command("sh ip int br | i up +up")
-    assert "Loopback0" in output
-
-
-@pytest.mark.parametrize(
-    "ip",
-    ["192.168.100.100", "192.168.100.2", "192.168.100.3"],
-    ids=["ISP1", "ISP2", "FW"],
-)
-def test_ping(ssh_connection, ip):
-    output = ssh_connection.send_command(f"ping {ip}")
-    assert "success rate is 100 percent" in output.lower()
+def test_create_file(tmp_path):
+    d = tmp_path / "sub"
+    d.mkdir()
+    p = d / "hello.txt"
+    p.write_text(CONTENT)
+    assert p.read_text() == CONTENT
+    assert len(list(tmp_path.iterdir())) == 1
+    assert False
 ```
 
 ---
