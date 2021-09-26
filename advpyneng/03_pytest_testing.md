@@ -533,7 +533,6 @@ def test_method__add__(normalized_topology_example):
 ### [pytest.ini](https://docs.pytest.org/en/6.2.x/reference.html#ini-options-ref)
 
 ```
-# pytest.ini
 [pytest]
 minversion = 6.0
 addopts = -ra -q
