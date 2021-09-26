@@ -528,3 +528,16 @@ def test_method__add__(normalized_topology_example):
         len(top2.topology) == top2_size_before_add
     ), "После сложения изменился размер второй топологии. Метод __add__ не должен менять исходные топологии"
 ```
+
+---
+### [pytest.ini](https://docs.pytest.org/en/6.2.x/reference.html#ini-options-ref)
+
+```
+# pytest.ini
+[pytest]
+minversion = 6.0
+addopts = -ra -q
+testpaths =
+    tests
+    integration
+```
