@@ -121,6 +121,16 @@ Found 1 error in 1 file (checked 1 source file)
 ```
 
 ---
+### Статический анализ кода
+
+Статический анализ кода (static code analysis) - анализ кода, производимый без выполнения кода.
+
+* linters [pylint](https://github.com/PyCQA/pylint), pycodestyle, Pyflakes, mccabe, Flake8.
+* анализ безопасности [pysa](https://engineering.fb.com/2020/08/07/security/pysa/)
+* проверка типов данных: mypy, pyre (facebook), pyright (microsoft), pytype (google)
+
+
+---
 ## Синтаксис аннотации типов
 
 
@@ -220,6 +230,7 @@ class IPAddress:
         return f"IPAddress({self.ip}/{self.mask})"
 ```
 
+
 ---
 ### Аннотация в сложных случаях
 
@@ -258,6 +269,12 @@ example_01_function_check_ip.py:13: error: Argument 1 to "check_ip" has incompat
 Found 1 error in 1 file (checked 1 source file)
 ```
 
+---
+### Игнорирование ошибок
+
+```python
+import somemodule # type: ignore
+```
 
 ---
 ### strict
