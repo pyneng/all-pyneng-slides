@@ -2,14 +2,13 @@
 ## Автоматическое форматирование кода
 
 ---
-## Линтеры
+## Линтеры и другие утилиты для анализа кода
 
 * [pycodestyle](https://github.com/PyCQA/pycodestyle)
 * [pylint](https://github.com/PyCQA/pylint) 
+* [isort - сортировка строк import](https://github.com/PyCQA/isort)
 * [Pyflakes](https://github.com/PyCQA/pyflakes)
 * [Flake8](https://github.com/PyCQA/flake8) - glues together pycodestyle, pyflakes, mccabe
-
-[isort - сортировка строк import](https://github.com/PyCQA/isort)
 
 ---
 ### pycodestyle
