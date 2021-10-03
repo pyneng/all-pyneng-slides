@@ -7,9 +7,9 @@
 * [pycodestyle](https://github.com/PyCQA/pycodestyle)
 * [pylint](https://github.com/PyCQA/pylint) 
 * [Pyflakes](https://github.com/PyCQA/pyflakes)
-* [Flake8](https://github.com/PyCQA/flake8) - flake8 is a python tool that glues together pycodestyle, pyflakes, mccabe
+* [Flake8](https://github.com/PyCQA/flake8) - glues together pycodestyle, pyflakes, mccabe
 
-[Сортировка строк import](https://github.com/PyCQA/isort)
+[isort - сортировка строк import](https://github.com/PyCQA/isort)
 
 ---
 ### pycodestyle
