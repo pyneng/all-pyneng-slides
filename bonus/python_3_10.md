@@ -12,7 +12,7 @@
 * аннотация типов: тип Alias
 * аннотация типов: Parameter Specification Variables
 * аннотация типов: TypeGuard
-
+* anext, aiter
 
 ---
 ## structural pattern matching
@@ -493,4 +493,5 @@ if __name__ == "__main__":
 
 ---
 ## Асинхронные итераторы. Добавлены функции aiter, anext
+
 
