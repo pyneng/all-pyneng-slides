@@ -24,6 +24,10 @@
 ---
 ## structural pattern matching
 
+```python
+result = ["test", "test2"]
+```
+
 Python 3.10
 ```python
 match result:
@@ -46,7 +50,7 @@ match command:
     case "quit":
         print("Goodbye!")
         quit_game()
-    case "look":
+    case "look" | "test":
         current_room.describe()
 ```
 
@@ -201,6 +205,23 @@ for action in actions:
             ui.play(url)
         case {"sound": _, "format": _}:
             warning("Unsupported audio format")
+```
+
+---
+
+```python
+match event.get():
+    case Click(position=(x, y)):
+        handle_click_at(x, y)
+    case KeyPress(key_name="Q") | Quit():
+        game.quit()
+    case KeyPress(key_name="up arrow"):
+        game.go_north()
+    ...
+    case KeyPress():
+        pass # Ignore other keystrokes
+    case other_event:
+        raise ValueError(f"Unrecognized event: {other_event}")
 ```
 
 ---
@@ -364,7 +385,7 @@ True
 [PEP 647 User-Defined Type Guards](https://www.python.org/dev/peps/pep-0647/)
 
 ```python
-def func(val: Union[str, float]):
+def func(val: str | float):
     # "isinstance" type guard
     if isinstance(val, str):
         # Type of val is narrowed to str
