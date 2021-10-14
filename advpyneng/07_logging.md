@@ -1,5 +1,6 @@
 # Logging
 
+
 ---
 ## Уровни
 
@@ -175,3 +176,58 @@ logfile.setFormatter(formatter)
 
 log.addHandler(logfile)
 ```
+
+---
+### Filter
+
+[LogRecord attributes](https://docs.python.org/3.10/library/logging.html#logrecord-attributes)
+
+```python
+class LevelFilter(logging.Filter):
+    def __init__(self, level):
+        self.level = level
+
+    def filter(self, record):
+        return record.levelno == self.level
+
+
+logfile = logging.FileHandler("logfile3.log")
+logfile.setLevel(logging.DEBUG)
+logfile.addFilter(LevelFilter(logging.DEBUG))
+
+formatter = logging.Formatter("{asctime} - {name} - {levelname} - {message}", style="{")
+logfile.setFormatter(formatter)
+```
+
+
+---
+## NullHandler
+
+```python
+import logging
+
+
+log = logging.getLogger(__name__)
+log.addHandler(logging.NullHandler())
+
+
+def send_show(device_dict, command):
+    ip = device_dict["host"]
+    log.info(f"===>  Connection: {ip}")
+
+    try:
+        with ConnectHandler(**device_dict) as ssh:
+            ssh.enable()
+            result = ssh.send_command(command)
+            log.debug(f"<===  Received:   {ip}")
+            log.debug(f"Получен вывод команды {command}\n\n{result}")
+        return result
+    except SSHException as error:
+        #log.exception(f"Ошибка {error} на {ip}")
+        log.error(f"Ошибка {error} на {ip}")
+```
+
+---
+## Альтернативы модулю logging
+
+[loguru](https://github.com/Delgan/loguru)
