@@ -410,3 +410,8 @@ root:
 ## Альтернативы модулю logging
 
 [loguru](https://github.com/Delgan/loguru)
+
+---
+### Модуль python-json-logger
+
+[python-json-logger](https://github.com/madzak/python-json-logger)
