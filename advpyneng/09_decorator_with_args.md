@@ -226,3 +226,130 @@ def to_bin(*args):
     result = [bin(a) for a in args]
     return result
 ```
+
+---
+## Встроенные декораторы
+
+* classmethod
+* staticmethod
+* property
+* contextlib: contextmanager
+* dataclassess: dataclass
+
+functools:
+
+* cache
+* lru_cache
+* total_ordering
+* singledispatch
+* wraps
+
+---
+### property
+
+```python
+class IPAddress:
+    def __init__(self, address, mask):
+        self._address = address
+        self._mask = int(mask)
+
+    @property
+    def mask(self):
+        return self._mask
+```
+
+---
+### classmethod
+
+```python
+class CiscoSSH(BaseSSH):
+    def __init__(self, ip, username, password, enable_password,
+                 disable_paging=True):
+        super().__init__(ip, username, password)
+        self._ssh.send('enable\n')
+        self._ssh.send(enable_password + '\n')
+        if disable_paging:
+            self._ssh.send('terminal length 0\n')
+        time.sleep(1)
+        self._ssh.recv(self._MAX_READ)
+        self._mgmt_ip = None
+
+    @classmethod
+    def default_params(cls, ip):
+        params = {
+            'ip': ip,
+            'username': 'cisco',
+            'password': 'cisco',
+            'enable_password': 'cisco'}
+        return cls(**params)
+```
+
+---
+### staticmethod
+
+```python
+class CiscoSSH(BaseSSH):
+    def __init__(self, ip, username, password, enable_password,
+                 disable_paging=True):
+        super().__init__(ip, username, password)
+        self._ssh.send('enable\n')
+        self._ssh.send(enable_password + '\n')
+        if disable_paging:
+            self._ssh.send('terminal length 0\n')
+        time.sleep(1)
+        self._ssh.recv(self._MAX_READ)
+        self._mgmt_ip = None
+
+    @staticmethod
+    def _parse_show(command, command_output,
+                   index_file='index', templates='templates'):
+        attributes = {'Command': command,
+                      'Vendor': 'cisco_ios'}
+        cli_table = clitable.CliTable(index_file, templates)
+        cli_table.ParseCmd(command_output, attributes)
+        return [dict(zip(cli_table.header, row)) for row in cli_table]
+
+    def send_show_command(self, command, parse=True):
+        command_output = super().send_show_command(command)
+        if not parse:
+            return command_output
+        return self._parse_show(command, command_output)
+```
+
+---
+### contextlib.contextmanager
+
+```python
+from contextlib import contextmanager
+from time import time, sleep
+
+
+@contextmanager
+def timecode():
+    start = time()
+    yield
+    execution_time = time() - start
+    print(f"Время выполнения: {execution_time:.2f}")
+
+
+In [9]: with timecode():
+   ...:     sleep(3)
+   ...:
+Время выполнения: 3.00
+```
+
+---
+### dataclasses.dataclass
+
+```python
+@dataclass
+class IPAddress:
+    ip: str
+    mask: int
+
+
+In [12]: ip1 = IPAddress('10.1.1.1', 28)
+
+In [13]: ip1
+Out[13]: IPAddress(ip='10.1.1.1', mask=28)
+```
