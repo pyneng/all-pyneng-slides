@@ -353,3 +353,154 @@ In [12]: ip1 = IPAddress('10.1.1.1', 28)
 In [13]: ip1
 Out[13]: IPAddress(ip='10.1.1.1', mask=28)
 ```
+
+---
+### functools.cache
+
+```
+4! 1*2*3*4 = 24
+5! 1*2*3*4*5 = 120
+6! 1*2*3*4*5*6 = 720
+```
+
+```python
+from functools import cache, lru_cache
+
+
+@cache
+def factorial(n):
+    print(f"{n=}")
+    return n * factorial(n-1) if n else 1
+
+
+print(f"{factorial(4)=}")
+print(f"{factorial(5)=}")
+print(f"{factorial(6)=}")
+```
+
+без cache
+```
+n=4
+n=3
+n=2
+n=1
+n=0
+factorial(4)=24
+n=5
+n=4
+n=3
+n=2
+n=1
+n=0
+factorial(5)=120
+n=6
+n=5
+n=4
+n=3
+n=2
+n=1
+n=0
+factorial(6)=720
+```
+
+с cache:
+```
+n=4
+n=3
+n=2
+n=1
+n=0
+factorial(4)=24
+n=5
+factorial(5)=120
+n=6
+factorial(6)=720
+```
+
+---
+### functools lru_cache
+
+```python
+from functools import lru_cache
+
+
+@lru_cache(maxsize=100)
+def fib(n):
+    print(f"{n=}")
+    if n < 2:
+        return n
+    return fib(n-1) + fib(n-2)
+
+
+print([fib(n) for n in range(10)])
+print([fib(n) for n in range(16)])
+```
+
+```
+n=0
+n=1
+n=2
+n=3
+n=4
+n=5
+n=6
+n=7
+n=8
+n=9
+[0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
+n=10
+n=11
+n=12
+n=13
+n=14
+n=15
+[0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610]
+```
+
+---
+### functools lru_cache
+
+```python
+@lru_cache(maxsize=1)
+def send_show_command(host, username, password, secret, device_type, show_command):
+    with ConnectHandler(
+        host=host,
+        username=username,
+        password=password,
+        secret=secret,
+        device_type=device_type,
+    ) as ssh:
+        ssh.enable()
+        print(f"Вызываю команду {show_command}")
+        result = ssh.send_command(show_command)
+    return result
+```
+
+---
+### functools singledispatch
+
+```python
+@singledispatch
+def send_commands(command, device):
+    print("singledispatch")
+    raise NotImplementedError("Поддерживается только строка или iterable")
+
+
+@send_commands.register(str)
+def _(command, device):
+    print("str")
+    with ConnectHandler(**device) as ssh:
+        ssh.enable()
+        result = ssh.send_command(command)
+    return result
+
+
+@send_commands.register(Iterable)
+def _(config_commands, device):
+    print("Аргумент iterable")
+    with ConnectHandler(**device) as ssh:
+        ssh.enable()
+        result = ssh.send_config_set(config_commands)
+    return result
+```
+
