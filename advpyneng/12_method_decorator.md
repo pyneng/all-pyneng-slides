@@ -236,6 +236,192 @@ class CiscoSSH(BaseSSH):
 ## property
 
 ---
+### property
+
+property позволяет:
+
+* создавать атрибуты только для чтения
+* создавать атрибуты при обращении к которым динамически вычисляется значение
+* добавлять проверки при установке значения атрибута
+* сохранять API модуля изменяя код
+
+
+---
+### property
+
+[scrapli MultiResponse](https://github.com/carlmontanari/scrapli/blob/master/scrapli/response.py#L235)
+
+```python
+class MultiResponse(ScrapliMultiResponse):
+    @property
+    def host(self) -> str:
+        try:
+            response = self.data[0]
+        except IndexError:
+            return ""
+        host = response.host
+        return host
+
+    @property
+    def failed(self) -> bool:
+        if any(response.failed for response in self.data):
+            return True
+        return False
+
+    @property
+    def result(self) -> str:
+        result = ""
+        for response in self.data:
+            result += "\n".join([response.channel_input, response.result])
+        return result
+```
+
+---
+### property
+
+Python позволяет создавать и изменять переменные экземпляров:
+
+```python
+class Robot:
+    def __init__(self, name):
+        self.name = name
+
+
+In [2]: bb8 = Robot('BB-8')
+
+In [3]: bb8.name
+Out[3]: 'BB-8'
+
+In [4]: bb8.name = 'R2D2'
+
+In [5]: bb8.name
+Out[5]: 'R2D2'
+```
+---
+### property
+
+Однако иногда нужно сделать так чтобы при изменении/установке значения переменной,
+проверялся ее тип или диапазон значений, также иногда необходимо сделать переменную
+неизменяемой и сделать ее доступной только для чтения.
+В некоторых языках программирования для этого используются методы get и set,
+например:
+
+```python
+class IPAddress:
+    def __init__(self, address, mask):
+        self._address = address
+        self._mask = int(mask)
+
+    def set_mask(self, mask):
+        if not isinstance(mask, int):
+            raise TypeError("Маска должна быть числом")
+        if not mask in range(8, 32):
+            raise ValueError("Маска должна быть в диапазоне от 8 до 32")
+        self._mask = mask
+
+    def get_mask(self):
+        return self._mask
+
+
+In [10]: ip1 = IPAddress('10.1.1.1', 24)
+
+In [12]: ip1.set_mask(23)
+
+In [13]: ip1.get_mask()
+Out[13]: 23
+```
+
+---
+### property
+
+По сравнению со стандартным синтаксисом обращения к атрибутам,
+этот вариант выглядит очень громоздко. В Python есть более компактный
+вариант сделать то же самое - property.
+
+Property как правило, используется как декоратор метода и превращает метод
+в переменную экземпляра с точки зрения пользователя класса.
+
+```python
+class IPAddress:
+    def __init__(self, address, mask):
+        self._address = address
+        self._mask = int(mask)
+
+    @property
+    def mask(self):
+        return self._mask
+
+In [15]: ip1 = IPAddress('10.1.1.1', 24)
+
+In [16]: ip1.mask
+Out[16]: 24
+```
+
+---
+### property
+
+Переменная становится доступной только для чтения:
+
+```python
+In [17]: ip1.mask = 30
+---------------------------------------------------------------------------
+AttributeError                            Traceback (most recent call last)
+<ipython-input-17-e153170a5893> in <module>
+----> 1 ip1.mask = 30
+
+AttributeError: can't set attribute'
+```
+
+---
+### property setter
+
+Также property позволяет добавлять метод setter, который будет отвечать
+за изменение значения переменной и, так как это тоже метод, позволяет
+включить логику с проверкой или динамическим вычислением значения.
+
+```python
+class IPAddress:
+    def __init__(self, address, mask):
+        self._address = address
+        self._mask = int(mask)
+
+    @property
+    def mask(self):
+        return self._mask
+
+    @mask.setter
+    def mask(self, mask):
+        if not isinstance(mask, int):
+            raise TypeError("Маска должна быть числом")
+        if not mask in range(8, 32):
+            raise ValueError("Маска должна быть в диапазоне от 8 до 32")
+        self._mask = mask
+
+
+In [20]: ip1 = IPAddress('10.1.1.1', 24)
+
+In [21]: ip1.mask
+Out[21]: 24
+
+In [23]: ip1.mask = 30
+
+In [24]: ip1.mask = 320
+---------------------------------------------------------------------------
+ValueError                                Traceback (most recent call last)
+<ipython-input-24-8573933afac9> in <module>
+----> 1 ip1.mask = 320
+
+<ipython-input-19-d0e571cd5e2b> in mask(self, mask)
+     13             raise TypeError("Маска должна быть числом")
+     14         if not mask in range(8, 32):
+---> 15             raise ValueError("Маска должна быть в диапазоне от 8 до 32")
+     16         self._mask = mask
+     17
+
+ValueError: Маска должна быть в диапазоне от 8 до 32
+```
+
+---
 ### Варианты создания property
 ### Стандартный вариант применения property без setter
 
