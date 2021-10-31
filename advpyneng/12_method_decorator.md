@@ -279,6 +279,28 @@ class MultiResponse(ScrapliMultiResponse):
 ---
 ### property
 
+```python
+class IPAddress:
+    def __init__(self, address, mask):
+        self._address = address
+        self._mask = int(mask)
+
+    @property
+    def mask(self):
+        return self._mask
+
+    @mask.setter
+    def mask(self, mask):
+        if not isinstance(mask, int):
+            raise TypeError("Маска должна быть числом")
+        if not mask in range(8, 32):
+            raise ValueError("Маска должна быть в диапазоне от 8 до 32")
+        self._mask = mask
+```
+
+---
+### property
+
 Python позволяет создавать и изменять переменные экземпляров:
 
 ```python
