@@ -5,9 +5,9 @@
 ## classmethod
 
 Иногда нужно реализовать несколько способов создания экземпяра,
-при этом в Python можно создавать только один метод __init__.
-Конечно, можно реализовать все варианты в одном __init__,
-но при этом часто параметры __init__ становятся или слишком общими,
+при этом в Python можно создавать только один метод ``__init__``.
+Конечно, можно реализовать все варианты в одном ``__init__``,
+но при этом часто параметры ``__init__`` становятся или слишком общими,
 или их слишком много.
 
 Существует другой вариант решения проблемы - создать альтернативный
@@ -15,14 +15,15 @@
 
 ---
 ### classmethod
+### dict.fromkeys
 
 Пример альтернативного конструктора в стандартной библиотеке:
 
 ```python
 In [25]: r1 = {
-    ...: 'hostname': 'R1',
-    ...: 'OS': 'IOS',
-    ...: 'Vendor': 'Cisco'
+    ...:     'hostname': 'R1',
+    ...:     'OS': 'IOS',
+    ...:     'Vendor': 'Cisco'
     ...: }
 
 In [28]: dict.fromkeys(['hostname', 'os', 'vendor'])
@@ -30,6 +31,39 @@ Out[28]: {'hostname': None, 'os': None, 'vendor': None}
 
 In [29]: dict.fromkeys(['hostname', 'os', 'vendor'], '')
 Out[29]: {'hostname': '', 'os': '', 'vendor': ''}
+```
+
+---
+### classmethod
+### [datetime](https://github.com/python/cpython/blob/3.10/Lib/datetime.py)
+
+```python
+class datetime(date):
+    @classmethod
+    def fromtimestamp(cls, t, tz=None):
+        """Construct a datetime from a POSIX timestamp (like time.time()).
+        A timezone info object may be passed in as well.
+        """
+        _check_tzinfo_arg(tz)
+
+        return cls._fromtimestamp(t, tz is not None, tz)
+
+    @classmethod
+    def utcfromtimestamp(cls, t):
+        """Construct a naive UTC datetime from a POSIX timestamp."""
+        return cls._fromtimestamp(t, True, None)
+
+    @classmethod
+    def now(cls, tz=None):
+        "Construct a datetime from time.time() and optional time zone info."
+        t = _time.time()
+        return cls.fromtimestamp(t, tz)
+
+    @classmethod
+    def utcnow(cls):
+        "Construct a UTC datetime from time.time()."
+        t = _time.time()
+        return cls.utcfromtimestamp(t)
 ```
 
 ---
