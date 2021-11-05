@@ -1,0 +1,225 @@
+## Наследование
+
+
+---
+## netmiko
+
+```
+
+BaseConnection
+    ^
+    |
+    |
+CiscoBaseConnection
+    ^
+    |
+    |
+CiscoIosBase <--------+
+    ^                 |
+    |                 |
+    |                 |
+CiscoIosSSH     CiscoIosTelnet
+```
+
+---
+## netmiko
+
+```python
+class BaseConnection:
+
+    def establish_connection(self, width: int = 511, height: int = 1000) -> None:
+        """Establish SSH connection to the network device
+        Timeout will generate a NetmikoTimeoutException
+        Authentication failure will generate a NetmikoAuthenticationException
+        :param width: Specified width of the VT100 terminal window (default: 511)
+        :type width: int
+        :param height: Specified height of the VT100 terminal window (default: 1000)
+        :type height: int
+        """
+        self.channel: Channel
+        if self.protocol == "telnet":
+            self.remote_conn = telnetlib.Telnet(
+                self.host, port=self.port, timeout=self.timeout
+            )
+            # Migrating communication to channel class
+            self.channel = TelnetChannel(conn=self.remote_conn, encoding=self.encoding)
+            self.telnet_login()
+        elif self.protocol == "serial":
+            self.remote_conn = serial.Serial(**self.serial_settings)
+            self.channel = SerialChannel(conn=self.remote_conn, encoding=self.encoding)
+            self.serial_login()
+        elif self.protocol == "ssh":
+            ssh_connect_params = self._connect_params_dict()
+            self.remote_conn_pre: Optional[paramiko.SSHClient]
+            self.remote_conn_pre = self._build_ssh_client()
+```
+
+---
+## netmiko
+
+[netmiko Channel](https://github.com/ktbyers/netmiko/blob/develop/netmiko/channel.py)
+
+```python
+class TelnetChannel(Channel):
+    def __init__(self, conn: Optional[telnetlib.Telnet], encoding: str) -> None:
+        """
+        Placeholder __init__ method so that reading and writing can be moved to the
+        channel class.
+        """
+        self.remote_conn = conn
+        # FIX: move encoding to GlobalState object?
+        self.encoding = encoding
+
+    def write_channel(self, out_data: str) -> None:
+        if self.remote_conn is None:
+            raise WriteException(
+                "Attempt to write data, but there is no active channel."
+            )
+        self.remote_conn.write(write_bytes(out_data, encoding=self.encoding))
+
+    def read_buffer(self) -> str:
+        """Single read of available data."""
+        raise NotImplementedError
+
+    def read_channel(self) -> str:
+        """Read all of the available data from the channel."""
+        if self.remote_conn is None:
+            raise ReadException("Attempt to read, but there is no active channel.")
+        return self.remote_conn.read_very_eager().decode("utf-8", "ignore")
+```
+
+---
+## scrapli sync classes
+
+```
+BaseDriver
+    ^
+    |
+    |
+ Driver
+    ^
+    |     +--------> BaseGenericDriver
+    |     |
+    |     |
+GenericDriver
+    ^
+    |     +--------> BaseNetworkDriver
+    |     |
+    |     |
+NetworkDriver
+    ^
+    |
+    |
+IOSXEDriver
+```
+
+---
+## scrapli all classes
+
+```
+    +--------------> BaseDriver <--------------+
+    |                                          |
+ Driver                                    AsyncDriver
+    ^                                          ^
+    |                                          |
+    |     +-----> BaseGenericDriver <-----+    |
+    |     |                               |    |
+    |     |                               |    |
+GenericDriver                         AsyncGenericDriver
+    ^                                          |
+    |     +-----> BaseNetworkDriver <-----+    |
+    |     |                               |    |
+    |     |                               |    |
+NetworkDriver                         AsyncNetworkDriver
+    ^                                          ^
+    |                                          |
+    |                                          |
+IOSXEDriver                            AsyncIOSXEDriver
+```
+
+---
+## scrapli mro
+
+```
+                                                            +----> Driver ----> BaseDriver
+                                                            |
+                                   +----> GenericDriver ----+
+                                   |                        |
+                                   |                        +----> BaseGenericDriver
+IOSXEDriver ----> NetworkDriver ---+
+                                   |
+                                   +----> BaseNetworkDriver
+```
+
+```
+In [10]: IOSXEDriver.mro()
+Out[10]:
+[IOSXEDriver,
+ NetworkDriver,
+ GenericDriver,
+ Driver,
+ BaseDriver,
+ BaseGenericDriver,
+ BaseNetworkDriver,
+ object]
+```
+
+
+---
+## scrapli
+### Добавление asynctelnet
+
+https://github.com/carlmontanari/scrapli/blob/master/scrapli/transport/__init__.py
+
+```python
+ASYNCIO_TRANSPORTS = (
+    "asynctelnet",
+    "asyncssh",
+)
+CORE_TRANSPORTS = ("telnet", "system", "ssh2", "paramiko", "asynctelnet", "asyncssh")
+```
+
+[Плюс добавился собственно AsyncTelnetTransport](https://github.com/carlmontanari/scrapli/blob/master/scrapli/transport/plugins/asynctelnet/transport.py)
+
+---
+## scrapli
+### Добавление asynctelnet
+
+```
+    def _transport_factory(self) -> Tuple[Callable[..., Any], object]:
+        """
+        Determine proper transport class and necessary arguments to initialize that class
+        Args:
+            N/A
+        Returns:
+            Tuple[Callable[..., Any], object]: tuple of transport class and dataclass of transport
+                class specific arguments
+        Raises:
+            N/A
+        """
+        if self.transport_name in CORE_TRANSPORTS:
+            transport_class, _plugin_transport_args_class = self._load_core_transport_plugin()
+        else:
+            transport_class, _plugin_transport_args_class = self._load_non_core_transport_plugin()
+
+
+    def _load_core_transport_plugin(
+        self,
+    ) -> Tuple[Any, Type[BasePluginTransportArgs]]:
+        """
+        Find non-core transport plugins and required plugin arguments
+        Args:
+            N/A
+        Returns:
+            Tuple[Any, Type[BasePluginTransportArgs]]: transport class class and TransportArgs \
+                dataclass
+        Raises:
+            ScrapliTransportPluginError: if the transport plugin is unable to be loaded
+        """
+        self.logger.debug("load core transport requested")
+
+        try:
+            transport_plugin_module = importlib.import_module(
+                f"scrapli.transport.plugins.{self.transport_name}.transport"
+            )
+```
