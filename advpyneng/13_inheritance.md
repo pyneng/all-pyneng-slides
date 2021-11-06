@@ -1,4 +1,31 @@
-## Наследование
+## Наследование (Inheritance)
+
+Наследование позволяет создавать новые классы на основе существующих. Различают
+дочерний и родительские классы: дочерний класс наследует родительский.
+При наследовании, дочерний класс наследует все методы и атрибуты родительского класса.
+
+
+В Python синтаксис наследования используется с абстрактными классами
+для наследования интерфейса/протокола. Кроме того, синтаксис наследования используется с Mixin.
+
+---
+## Композиция (Composition)
+
+```python
+from jinja2 import Environment, FileSystemLoader
+
+env = Environment(loader=FileSystemLoader('templates'))
+template = env.get_template('router_template.txt')
+```
+
+---
+## Unified Modeling Language (UML)
+
+![uml](https://resources.jetbrains.com/help/img/idea/2021.2/py_diagram_editor.png)
+
+
+---
+## Примеры использования наследования
 
 
 ---
@@ -20,6 +47,169 @@ CiscoIosBase <--------+
     |                 |
 CiscoIosSSH     CiscoIosTelnet
 ```
+
+---
+## scrapli all driver classes
+
+```
+    +--------------> BaseDriver <--------------+
+    |                                          |
+ Driver                                    AsyncDriver
+    ^                                          ^
+    |                                          |
+    |     +-----> BaseGenericDriver <-----+    |
+    |     |                               |    |
+    |     |                               |    |
+GenericDriver                         AsyncGenericDriver
+    ^                                          |
+    |     +-----> BaseNetworkDriver <-----+    |
+    |     |                               |    |
+    |     |                               |    |
+NetworkDriver                         AsyncNetworkDriver
+    ^                                          ^
+    |                                          |
+    |                                          |
+IOSXEDriver                            AsyncIOSXEDriver
+```
+
+---
+## Создание исключений
+
+```python
+class MyError(Exception):
+    """Свое исключение для модуля."""
+    pass
+```
+
+---
+### Перехват исключений
+
+```python
+from scrapli import Scrapli
+from scrapli.exceptions import ScrapliException, ScrapliCommandFailure
+import yaml
+
+
+def send_show(device, command):
+    try:
+        with Scrapli(**device) as ssh:
+            reply = await ssh.send_command(command)
+            output = reply.result
+            reply.raise_for_status()
+        return output
+    except ScrapliCommandFailure:
+        raise
+    except ScrapliException as error:
+        print(error, device["host"])
+
+
+
+if __name__ == '__main__':
+    with open('devices_scrapli.yaml') as f:
+        devices = yaml.safe_load(f)
+```
+
+
+---
+### Создание своих вариантов классов для модуля
+
+[click custom type ex08_custom_type.py](https://github.com/pyneng/advpyneng-online-3-sep-dec-2021/blob/main/examples/04_click/ex08_custom_type.py)
+
+```python
+class IsIPv4(click.ParamType):
+    def convert(self, value, param, ctx):
+        print("IsIPv4", value)
+        try:
+            ip = ipaddress.ip_address(value)
+            return int(ip)
+        except ValueError:
+            self.fail(f"Все пропало: {value} не ip адрес")
+```
+
+---
+## scrapli classes
+
+```
+Driver <>-----> Channel <>-----> Transport
+```
+
+
+---
+## scrapli sync driver classes
+
+```
+BaseDriver
+    ^
+    |
+    |
+ Driver
+    ^
+    |     +--------> BaseGenericDriver
+    |     |
+    |     |
+GenericDriver
+    ^
+    |     +--------> BaseNetworkDriver
+    |     |
+    |     |
+NetworkDriver
+    ^
+    |
+    |
+IOSXEDriver
+```
+
+---
+## scrapli all driver classes
+
+```
+    +--------------> BaseDriver <--------------+
+    |                                          |
+ Driver                                    AsyncDriver
+    ^                                          ^
+    |                                          |
+    |     +-----> BaseGenericDriver <-----+    |
+    |     |                               |    |
+    |     |                               |    |
+GenericDriver                         AsyncGenericDriver
+    ^                                          |
+    |     +-----> BaseNetworkDriver <-----+    |
+    |     |                               |    |
+    |     |                               |    |
+NetworkDriver                         AsyncNetworkDriver
+    ^                                          ^
+    |                                          |
+    |                                          |
+IOSXEDriver                            AsyncIOSXEDriver
+```
+
+---
+## scrapli mro
+
+```
+                                                            +----> Driver ----> BaseDriver
+                                                            |
+                                   +----> GenericDriver ----+
+                                   |                        |
+                                   |                        +----> BaseGenericDriver
+IOSXEDriver ----> NetworkDriver ---+
+                                   |
+                                   +----> BaseNetworkDriver
+```
+
+```
+In [10]: IOSXEDriver.mro()
+Out[10]:
+[IOSXEDriver,
+ NetworkDriver,
+ GenericDriver,
+ Driver,
+ BaseDriver,
+ BaseGenericDriver,
+ BaseNetworkDriver,
+ object]
+```
+
 
 ---
 ## netmiko
@@ -89,83 +279,6 @@ class TelnetChannel(Channel):
 ```
 
 ---
-## scrapli sync classes
-
-```
-BaseDriver
-    ^
-    |
-    |
- Driver
-    ^
-    |     +--------> BaseGenericDriver
-    |     |
-    |     |
-GenericDriver
-    ^
-    |     +--------> BaseNetworkDriver
-    |     |
-    |     |
-NetworkDriver
-    ^
-    |
-    |
-IOSXEDriver
-```
-
----
-## scrapli all classes
-
-```
-    +--------------> BaseDriver <--------------+
-    |                                          |
- Driver                                    AsyncDriver
-    ^                                          ^
-    |                                          |
-    |     +-----> BaseGenericDriver <-----+    |
-    |     |                               |    |
-    |     |                               |    |
-GenericDriver                         AsyncGenericDriver
-    ^                                          |
-    |     +-----> BaseNetworkDriver <-----+    |
-    |     |                               |    |
-    |     |                               |    |
-NetworkDriver                         AsyncNetworkDriver
-    ^                                          ^
-    |                                          |
-    |                                          |
-IOSXEDriver                            AsyncIOSXEDriver
-```
-
----
-## scrapli mro
-
-```
-                                                            +----> Driver ----> BaseDriver
-                                                            |
-                                   +----> GenericDriver ----+
-                                   |                        |
-                                   |                        +----> BaseGenericDriver
-IOSXEDriver ----> NetworkDriver ---+
-                                   |
-                                   +----> BaseNetworkDriver
-```
-
-```
-In [10]: IOSXEDriver.mro()
-Out[10]:
-[IOSXEDriver,
- NetworkDriver,
- GenericDriver,
- Driver,
- BaseDriver,
- BaseGenericDriver,
- BaseNetworkDriver,
- object]
-```
-
-
----
 ## scrapli
 ### Добавление asynctelnet
 
@@ -223,3 +336,61 @@ CORE_TRANSPORTS = ("telnet", "system", "ssh2", "paramiko", "asynctelnet", "async
                 f"scrapli.transport.plugins.{self.transport_name}.transport"
             )
 ```
+
+
+---
+### Наследование
+
+После наследования всех методов родительского класса, дочерний класс может:
+
+* оставить их без изменения
+* полностью переписать их
+* дополнить метод
+* добавить свои методы
+
+---
+###
+
+Несколько вариантов вызова родительского метода, например, все эти варианты
+вызовут метод send_show_command родительского класса из дочернего класса CiscoSSH*:
+
+* command_result = BaseSSH.send_show_command(self, command)
+* command_result = super(CiscoSSH, self).send_show_command(command)
+* command_result = super().send_show_command(command)
+
+```python
+class BaseSSH:
+    def __init__(self, ip, username, password):
+        self.ip = ip
+        self.username = username
+        self.password = password
+        self._MAX_READ = 10000
+
+        client = paramiko.SSHClient()
+        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+        client.connect(
+            hostname=ip,
+            username=username,
+            password=password,
+            look_for_keys=False,
+            allow_agent=False)
+
+        self._ssh = client.invoke_shell()
+        time.sleep(1)
+        self._ssh.recv(self._MAX_READ)
+
+
+class CiscoSSH(BaseSSH):
+    def __init__(self, ip, username, password, enable_password=None,
+                 disable_paging=True):
+        super().__init__(ip, username, password)
+        if enable_password
+            self._ssh.send('enable\n')
+            self._ssh.send(enable_password + '\n')
+        if disable_paging:
+            self._ssh.send('terminal length 0\n')
+        time.sleep(1)
+        self._ssh.recv(self._MAX_READ)
+```
+
