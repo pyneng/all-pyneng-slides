@@ -17,7 +17,6 @@ from jinja2 import Environment, FileSystemLoader
 env = Environment(loader=FileSystemLoader('templates'))
 template = env.get_template('router_template.txt')
 ```
-
 ---
 ## Unified Modeling Language (UML)
 
@@ -392,5 +391,46 @@ class CiscoSSH(BaseSSH):
             self._ssh.send('terminal length 0\n')
         time.sleep(1)
         self._ssh.recv(self._MAX_READ)
+```
+
+
+---
+## super
+
+```python
+from scrapli.driver.core import IOSXEDriver
+
+class Custom:
+    def send_command(self, *args, **kwargs):
+        print("AAAAAAAAAAAAAAA")
+        return super().send_command(*args, **kwargs)
+
+class MyDriver(Custom, IOSXEDriver):
+    pass
+
+In [17]: r1 = MyDriver("192.168.100.1", auth_username="cisco", auth_password="cisco", auth_secondary="cisco")
+
+In [18]: r1.open()
+AAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAA
+
+In [20]: r = r1.send_command("sh clock")
+AAAAAAAAAAAAAAA
+
+In [21]: r.result
+Out[21]: '*06:42:32.149 UTC Sat Nov 6 2021'
+
+In [23]: MyDriver.mro()
+Out[23]:
+[__main__.MyDriver,
+ __main__.Custom,
+ scrapli.driver.core.cisco_iosxe.sync_driver.IOSXEDriver,
+ scrapli.driver.network.sync_driver.NetworkDriver,
+ scrapli.driver.generic.sync_driver.GenericDriver,
+ scrapli.driver.base.sync_driver.Driver,
+ scrapli.driver.base.base_driver.BaseDriver,
+ scrapli.driver.generic.base_driver.BaseGenericDriver,
+ scrapli.driver.network.base_driver.BaseNetworkDriver,
+ object]
 ```
 
