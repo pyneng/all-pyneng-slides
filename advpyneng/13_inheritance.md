@@ -75,22 +75,6 @@ IOSXEDriver                            AsyncIOSXEDriver
 ```
 
 ---
-### Создание своих вариантов классов для модуля
-
-[click custom type ex08_custom_type.py](https://github.com/pyneng/advpyneng-online-3-sep-dec-2021/blob/main/examples/04_click/ex08_custom_type.py)
-
-```python
-class IsIPv4(click.ParamType):
-    def convert(self, value, param, ctx):
-        print("IsIPv4", value)
-        try:
-            ip = ipaddress.ip_address(value)
-            return int(ip)
-        except ValueError:
-            self.fail(f"Все пропало: {value} не ip адрес")
-```
-
----
 ## scrapli classes
 
 ```
@@ -397,6 +381,25 @@ Out[23]:
  scrapli.driver.generic.base_driver.BaseGenericDriver,
  scrapli.driver.network.base_driver.BaseNetworkDriver,
  object]
+```
+
+---
+## Использование наследования
+
+---
+### Создание своих вариантов классов для модуля
+
+[click custom type ex08_custom_type.py](https://github.com/pyneng/advpyneng-online-3-sep-dec-2021/blob/main/examples/04_click/ex08_custom_type.py)
+
+```python
+class IsIPv4(click.ParamType):
+    def convert(self, value, param, ctx):
+        print("IsIPv4", value)
+        try:
+            ip = ipaddress.ip_address(value)
+            return int(ip)
+        except ValueError:
+            self.fail(f"Все пропало: {value} не ip адрес")
 ```
 
 ---
