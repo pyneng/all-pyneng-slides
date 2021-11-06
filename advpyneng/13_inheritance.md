@@ -1,5 +1,8 @@
 ## Наследование (Inheritance)
 
+---
+## Наследование (Inheritance)
+
 Наследование позволяет создавать новые классы на основе существующих. Различают
 дочерний и родительские классы: дочерний класс наследует родительский.
 При наследовании, дочерний класс наследует все методы и атрибуты родительского класса.
@@ -70,44 +73,6 @@ NetworkDriver                         AsyncNetworkDriver
     |                                          |
 IOSXEDriver                            AsyncIOSXEDriver
 ```
-
----
-## Создание исключений
-
-```python
-class MyError(Exception):
-    """Свое исключение для модуля."""
-    pass
-```
-
----
-### Перехват исключений
-
-```python
-from scrapli import Scrapli
-from scrapli.exceptions import ScrapliException, ScrapliCommandFailure
-import yaml
-
-
-def send_show(device, command):
-    try:
-        with Scrapli(**device) as ssh:
-            reply = await ssh.send_command(command)
-            output = reply.result
-            reply.raise_for_status()
-        return output
-    except ScrapliCommandFailure:
-        raise
-    except ScrapliException as error:
-        print(error, device["host"])
-
-
-
-if __name__ == '__main__':
-    with open('devices_scrapli.yaml') as f:
-        devices = yaml.safe_load(f)
-```
-
 
 ---
 ### Создание своих вариантов классов для модуля
@@ -433,4 +398,115 @@ Out[23]:
  scrapli.driver.network.base_driver.BaseNetworkDriver,
  object]
 ```
+
+---
+## Исключения
+
+---
+## Исключения
+
+```
+BaseException
+ +-- SystemExit
+ +-- KeyboardInterrupt
+ +-- GeneratorExit
+ +-- Exception
+      +-- StopIteration
+      +-- StopAsyncIteration
+      +-- ArithmeticError
+      |    +-- FloatingPointError
+      |    +-- OverflowError
+      |    +-- ZeroDivisionError
+      +-- AssertionError
+      +-- AttributeError
+      +-- BufferError
+      +-- EOFError
+      +-- ImportError
+      |    +-- ModuleNotFoundError
+      +-- LookupError
+      |    +-- IndexError
+      |    +-- KeyError
+      +-- MemoryError
+      +-- NameError
+      |    +-- UnboundLocalError
+      +-- OSError
+      |    +-- BlockingIOError
+      |    +-- ChildProcessError
+      |    +-- ConnectionError
+      |    |    +-- BrokenPipeError
+      |    |    +-- ConnectionAbortedError
+      |    |    +-- ConnectionRefusedError
+      |    |    +-- ConnectionResetError
+      |    +-- FileExistsError
+      |    +-- FileNotFoundError
+      |    +-- InterruptedError
+      |    +-- IsADirectoryError
+      |    +-- NotADirectoryError
+      |    +-- PermissionError
+      |    +-- ProcessLookupError
+      |    +-- TimeoutError
+      +-- ReferenceError
+      +-- RuntimeError
+      |    +-- NotImplementedError
+      |    +-- RecursionError
+      +-- SyntaxError
+      |    +-- IndentationError
+      |         +-- TabError
+      +-- SystemError
+      +-- TypeError
+      +-- ValueError
+      |    +-- UnicodeError
+      |         +-- UnicodeDecodeError
+      |         +-- UnicodeEncodeError
+      |         +-- UnicodeTranslateError
+      +-- Warning
+           +-- DeprecationWarning
+           +-- PendingDeprecationWarning
+           +-- RuntimeWarning
+           +-- SyntaxWarning
+           +-- UserWarning
+           +-- FutureWarning
+           +-- ImportWarning
+           +-- UnicodeWarning
+           +-- BytesWarning
+           +-- ResourceWarning
+```
+
+---
+## Создание исключений
+
+```python
+class MyError(Exception):
+    """Свое исключение для модуля."""
+    pass
+```
+
+---
+### Перехват исключений
+
+```python
+from scrapli import Scrapli
+from scrapli.exceptions import ScrapliException, ScrapliCommandFailure
+import yaml
+
+
+def send_show(device, command):
+    try:
+        with Scrapli(**device) as ssh:
+            reply = await ssh.send_command(command)
+            output = reply.result
+            reply.raise_for_status()
+        return output
+    except ScrapliCommandFailure:
+        raise
+    except ScrapliException as error:
+        print(error, device["host"])
+
+
+
+if __name__ == '__main__':
+    with open('devices_scrapli.yaml') as f:
+        devices = yaml.safe_load(f)
+```
+
 
