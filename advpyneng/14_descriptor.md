@@ -20,20 +20,20 @@
 ``object.__getattribute__()``
 
 ```python
-def object_getattribute(obj, name):
+def getattribute(instance, name):
     "Emulate PyObject_GenericGetAttr() in Objects/object.c"
     null = object()
-    objtype = type(obj)
-    cls_var = getattr(objtype, name, null)
+    cls = type(instance)
+    cls_var = getattr(cls, name, null)
     descr_get = getattr(type(cls_var), '__get__', null)
     if descr_get is not null:
         if (hasattr(type(cls_var), '__set__')
             or hasattr(type(cls_var), '__delete__')):
-            return descr_get(cls_var, obj, objtype)     # data descriptor
-    if hasattr(obj, '__dict__') and name in vars(obj):
-        return vars(obj)[name]                          # instance variable
+            return descr_get(cls_var, instance, cls)     # data descriptor
+    if hasattr(instance, '__dict__') and name in vars(instance):
+        return vars(instance)[name]                          # instance variable
     if descr_get is not null:
-        return descr_get(cls_var, obj, objtype)         # non-data descriptor
+        return descr_get(cls_var, instance, cls)         # non-data descriptor
     if cls_var is not null:
         return cls_var                                  # class variable
     raise AttributeError(name)
