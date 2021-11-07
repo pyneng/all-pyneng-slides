@@ -178,7 +178,6 @@ class AsyncTransport(BaseTransport, ABC):
 ---
 ## Абстрактные классы в стандартной библиотеке Python
 
-
 ---
 ## collections.abc
 
@@ -204,6 +203,12 @@ class AsyncTransport(BaseTransport, ABC):
 |Sequence    |Reversible,  | ``__getitem__``,      | ``__contains__``, ``__iter__``, ``__reversed__``, |
 |            |Collection   | ``__len__``           |index, count
 
+---
+## collections.abc UML
+
+* [python](https://bugs.python.org/file47357/base.png)
+* [Fluent Python](https://user-images.githubusercontent.com/33891164/39363928-e9ba4520-49e0-11e8-9cc5-273134e16df4.png)
+* [dzone](https://dzone.com/articles/just-a-class-diagram-for-python-3-collections-abst)
 
 ---
 ## collections.abc
