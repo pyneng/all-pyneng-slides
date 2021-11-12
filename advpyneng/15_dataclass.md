@@ -13,11 +13,113 @@ Data classes во многом похожи на именованные корт
 несколько специальных методов, добавить сюда строковое представление объекта
 и для создания довольно простого класса, требуется много кода.
 
-
 Data classes это новый функционал, он входит в стандартную бибилиотеку  начиная с Python 3.7.
 Для предыдущих версий надо ставить отдельный модуль dataclasses или использовать сторонний
 типа модуля attr.
 
+---
+### Dataclass
+
+```python
+@dataclass
+class IPAddress:
+    ip: str
+    mask: int
+
+
+In [12]: ip1 = IPAddress('10.1.1.1', 28)
+
+In [13]: ip1
+Out[13]: IPAddress(ip='10.1.1.1', mask=28)
+```
+
+---
+### Dataclass
+
+```python
+@dataclass(order=True)
+class IPAddress:
+    ip: str
+    mask: int
+
+
+In [12]: ip1 = IPAddress('10.1.1.1', 28)
+
+In [14]: ip1 == ip2
+Out[14]: False
+
+In [15]: ip1 < ip2
+Out[15]: True
+```
+
+---
+### Dataclass
+
+scrapli/scrapli/transport/base/base_transport.py
+
+```python
+@dataclass()
+class BaseTransportArgs:
+    transport_options: Dict[str, Any]
+    host: str
+    port: int = 22
+    timeout_socket: float = 10.0
+    timeout_transport: float = 30.0
+    logging_uid: str = ""
+```
+
+scrapli/scrapli/transport/plugins/system/transport.py 
+```python
+from scrapli.transport.base import BasePluginTransportArgs
+
+@dataclass()
+class PluginTransportArgs(BasePluginTransportArgs):
+    auth_username: str
+    auth_private_key: str = ""
+    auth_strict_key: bool = True
+    ssh_config_file: str = ""
+    ssh_known_hosts_file: str = ""
+```
+
+---
+### Dataclass
+
+```python
+
+```
+
+---
+### Dataclass
+
+```python
+
+```
+---
+### Dataclass
+```python
+
+```
+
+
+---
+### Dataclass
+```python
+
+```
+
+---
+### Dataclass
+
+
+```python
+
+```
+---
+### Dataclass
+
+```python
+
+```
 ---
 ### Dataclass
 
@@ -79,12 +181,11 @@ class IPAddress:
 И соответствующего класса созданного с помощью dataclass:
 
 ```python
+@dataclass
+class IPAddress:
+    ip: str
+    mask: int
 
-In [11]: @dataclass
-    ...: class IPAddress:
-    ...:     ip: str
-    ...:     mask: int
-    ...:
 
 In [12]: ip1 = IPAddress('10.1.1.1', 28)
 
