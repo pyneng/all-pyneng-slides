@@ -36,6 +36,12 @@ In [8]: r5 = NetworkDevice("r1", "15.4", "Cisco", "10.1.1.1")
 
 In [9]: r1 == r5
 Out[9]: True
+
+In [10]: r1[0]
+Out[10]: 'r1'
+
+In [11]: r1[-1]
+Out[11]: '10.1.1.1'
 ```
 
 ---
@@ -62,7 +68,35 @@ Out[11]:
 ---
 ### collections.namedtuple
 
-Метод _as_dict возвращает OrderedDict:
+```python
+In [2]: sys.getsizeof?
+Docstring:
+getsizeof(object [, default]) -> int
+
+Return the size of object in bytes.
+Type:      builtin_function_or_method
+```
+
+```python
+from collections import namedtuple
+
+NetworkDevice = namedtuple("NetworkDevice", "hostname ios vendor ip")
+
+r1 = NetworkDevice("r1", "15.4", "Cisco", "10.1.1.1")
+r1_dict = {'hostname': 'r1', 'ios': '15.4', 'vendor': 'Cisco', 'ip': '10.1.1.1'}
+
+
+In [4]: sys.getsizeof(r1)
+Out[4]: 36
+
+In [6]: sys.getsizeof(r1_dict)
+Out[6]: 124
+```
+
+---
+### collections.namedtuple
+
+Метод ``_as_dict`` возвращает OrderedDict:
 
 ```python
 In [8]: r1._asdict()
@@ -72,7 +106,7 @@ Out[8]: {'hostname': 'r1', 'ios': '15.4', 'vendor': 'Cisco', 'ip': '10.1.1.1'}
 ---
 ### collections.namedtuple
 
-Метод _replace возвращает новый экземпляр класса, в котором заменены указанные поля:
+Метод ``_replace`` возвращает новый экземпляр класса, в котором заменены указанные поля:
 
 ```python
 
@@ -89,13 +123,32 @@ Out[20]: Router(hostname='r1', ip='10.2.2.2', ios='15.4')
 ---
 ### collections.namedtuple
 
-Метод _make создает новый экземпляр класса из последовательности полей (это метод класса):
+Метод ``_make`` создает новый экземпляр класса из последовательности полей (это метод класса):
 
 ```python
 In [22]: RouterClass._make(['r3', '10.3.3.3', '15.2'])
 Out[22]: Router(hostname='r3', ip='10.3.3.3', ios='15.2')
 
 In [23]: r3 = RouterClass._make(['r3', '10.3.3.3', '15.2'])
+```
+
+
+```python
+data = [
+    ["sw1", "12.5", "Cisco IOS", "10.1.1.101"],
+    ["sw2", "12.5", "Cisco IOS", "10.1.1.102"],
+    ["sw3", "12.5", "Cisco IOS", "10.1.1.103"],
+    ["sw4", "12.5", "Cisco IOS", "10.1.1.104"],
+]
+
+NetworkDevice = namedtuple("NetworkDevice", "hostname ios vendor ip")
+
+In [11]: list(map(NetworkDevice._make, data))
+Out[11]:
+[NetworkDevice(hostname='sw1', ios='12.5', vendor='Cisco IOS', ip='10.1.1.101'),
+ NetworkDevice(hostname='sw2', ios='12.5', vendor='Cisco IOS', ip='10.1.1.102'),
+ NetworkDevice(hostname='sw3', ios='12.5', vendor='Cisco IOS', ip='10.1.1.103'),
+ NetworkDevice(hostname='sw4', ios='12.5', vendor='Cisco IOS', ip='10.1.1.104')]
 ```
 
 ---
