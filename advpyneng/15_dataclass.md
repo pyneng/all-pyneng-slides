@@ -82,44 +82,164 @@ class PluginTransportArgs(BasePluginTransportArgs):
 ```
 
 ---
-### Dataclass
+### Dataclass - генераторы кода
 
 ```python
+from functools import total_ordering
 
+@total_ordering
+class IPAddress:
+    def __init__(self, ip):
+        self.ip = ip
+
+    def __str__(self):
+        return self.ip
+
+    def __repr__(self):
+        return f"{type(self).__name__}('{self.ip}')"
+
+    def __lt__(self, other):
+        if not isinstance(other, IPAddress):
+            raise TypeError(
+                f"'<' not supported between instances of "
+                f"'{type(self).__name__}' and '{type(other).__name__}'"
+            )
+        return int(self) < int(other)
+
+    def __eq__(self, other):
+        if not isinstance(other, IPAddress):
+            raise TypeError(
+                f"'+' not supported between instances of "
+                f"'{type(self).__name__}' and '{type(other).__name__}'"
+            )
+        return int(self) == int(other)
+
+    def __int__(self):
+        bin_ip = "".join([
+            f"{int(octet):08b}" for octet in self.ip.split(".")
+        ])
+        return int(bin_ip, 2)
+```
+
+
+---
+### Dataclass - генераторы кода
+
+```python
+from dataclasses import dataclass, field
+
+
+@dataclass(order=True)
+class IPAddress:
+    ip: str = field(compare=False)
+    _ip: int = field(init=False, repr=False)
+    mask: int
+
+    def __post_init__(self):
+        self._ip = int(self)
+
+    def __int__(self):
+        bin_ip = "".join([
+            f"{int(octet):08b}" for octet in self.ip.split(".")
+        ])
+        return int(bin_ip, 2)
 ```
 
 ---
-### Dataclass
+### сгенерированный код
 
 ```python
-
-```
----
-### Dataclass
-```python
-
-```
-
-
----
-### Dataclass
-```python
-
+from dataclasses import dataclass
+@dataclass
+class Color:
+    hue: int
+    saturation: float
+    lightness: float = 0.5
 ```
 
 ---
-### Dataclass
-
+### сгенерированный код
 
 ```python
+from dataclasses import Field, _MISSING_TYPE, _DataclassParams
 
+class Color:
+    'Color(hue: int, saturation: float, lightness: float = 0.5)'
+    def __init__(self, hue: int, saturation: float, lightness: float = 0.5) -> None:
+        self.hue=hue
+        self.saturation=saturation
+        self.lightness=lightness
+
+    def __repr__(self):
+        return (self.__class__.__qualname__ +
+                f"(hue={self.hue!r}, saturation={self.saturation!r}, "
+                f"lightness={self.lightness!r})")
+
+    def __eq__(self,other):
+        if other.__class__ is self.__class__:
+            return (self.hue,self.saturation,self.lightness) == (other.hue,other.saturation,other.lightness)
+        return NotImplemented
+
+    __hash__ = None
+    hue: int
+    saturation: float
+    lightness: float = 0.5
 ```
+
 ---
-### Dataclass
+### сгенерированный код
 
 ```python
+from dataclasses import dataclass
 
+
+@dataclass(order=True, frozen=True)
+class Color:
+    hue: int
+    saturation: float
+    lightness: float = 0.5
 ```
+
+---
+### сгенерированный код
+
+
+```python
+def __lt__(self, other):
+    if other.__class__ is self.__class__:
+        return (self.hue, self.saturation, self.lightness) < (other.hue, other.saturation, other.lightness)
+    return NotImplemented
+
+def __le__(self, other):
+    if other.__class__ is self.__class__:
+        return (self.hue, self.saturation, self.lightness) <= (other.hue, other.saturation, other.lightness)
+    return NotImplemented
+
+def __gt__(self, other):
+    if other.__class__ is self.__class__:
+        return (self.hue, self.saturation, self.lightness) > (other.hue, other.saturation, other.lightness)
+    return NotImplemented
+
+def __ge__(self, other):
+    if other.__class__ is self.__class__:
+        return (self.hue, self.saturation, self.lightness) >= (other.hue, other.saturation, other.lightness)
+    return NotImplemented
+
+def __setattr__(self, name, value):
+    if type(self) is cls or name in ('hue', 'saturation', 'lightness'):
+        raise FrozenInstanceError(f"cannot assign to field {name!r}")
+    super(cls, self).__setattr__(name, value)
+
+def __delattr__(self, name):
+    cls = self.__class__
+    if type(self) is cls or name in ('hue', 'saturation', 'lightness'):
+        raise FrozenInstanceError(f"cannot delete field {name!r}")
+    super(cls, self).__delattr__(name)
+
+    def __hash__(self):
+        return hash((self.hue, self.saturation, self.lightness))
+```
+
 ---
 ### Dataclass
 
@@ -198,18 +318,18 @@ Out[13]: IPAddress(ip='10.1.1.1', mask=28)
 
 Для создания класса данных используется аннотация типов.
 Декоратор dataclass использует указанные переменные и дополнительные настройки
-для создания атрибутов для экземпляров класса, а также методов __init__, __repr__ и других.
+для создания атрибутов для экземпляров класса, а также методов ``__init__``, ``__repr__`` и других.
 
 Все переменные, которые определены на уровне класса, по умолчанию, будут прописаны
-в методе __init__ и будут ожидаться как аргументы при создании экземпляра.
+в методе ``__init__`` и будут ожидаться как аргументы при создании экземпляра.
 
 Типы указанные в определении класса не преобразуют атрибуты и не проверяют
 реальный тип данных аргументов.
 
 ---
-### Метод __post_init__
+### Метод ``__post_init__``
 
-Метод __post_init__ позволяет добавлять дополнительную логику работы с переменными экземпляра.
+Метод ``__post_init__`` позволяет добавлять дополнительную логику работы с переменными экземпляра.
 Например, можно проверить тип данных или сделать дополнительные вычисления:
 
 ```python
