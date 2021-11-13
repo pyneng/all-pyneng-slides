@@ -1,4 +1,3 @@
----
 ## Dataclass
 
 ---
@@ -21,6 +20,8 @@ Data classes это новый функционал, он входит в ста
 ### Dataclass
 
 ```python
+from dataclasses import dataclass
+
 @dataclass
 class IPAddress:
     ip: str

@@ -225,7 +225,7 @@ Out[37]: IPAddress(address='10.2.2.2', mask=24)
 ```python
 from typing import NamedTuple
 
-class IPAddress(typing.NamedTuple):
+class IPAddress(NamedTuple):
     ip: str
     mask: int = 24
 
@@ -235,7 +235,7 @@ In [11]: ip1 = IPAddress('10.1.1.1', 28)
 In [12]: ip1
 Out[12]: IPAddress(ip='10.1.1.1', mask=28)
 
-In [13]: class IPAddress(typing.NamedTuple):
+In [13]: class IPAddress(NamedTuple):
     ...:     ip: str
     ...:     mask: int = 24
     ...:
