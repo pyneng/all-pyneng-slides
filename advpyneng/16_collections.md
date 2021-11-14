@@ -634,7 +634,7 @@ Out[19]: OrderedDict([(2, 200), (1, 100)])
 ```
 
 ---
-### collections.UserList
+### collections UserList, UserDict, UserStr
 
 ---
 ### collections.UserList
@@ -644,7 +644,7 @@ Out[19]: OrderedDict([(2, 200), (1, 100)])
 и переопределять существующие методы или добавлять новые.
 
 ---
-### Почему бы не наследовать втроенные list, dict, str?
+### Почему бы не наследовать встроенные list, dict, str?
 
 При наследовании UserDict
 
