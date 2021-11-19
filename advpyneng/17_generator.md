@@ -3,21 +3,109 @@
 ---
 ## Итератор и итерируемый объект
 
-Итерируемый объект (iterable) - это объект, который способен возвращать элементы по одному.
-Для Python это любой объект у которого есть метод ``__iter__`` или метод ``__getitem__``.
-Если у объекта есть метод ``__iter__``, итерируемый объект превращается в итератор вызовом ``iter(name)``,
-где name - имя итерируемого объекта. Если метода ``__iter__`` нет, Python перебирает элементы используя ``__getitem__``.
+---
+## Итерируемый объект
 
+Итерируемый объект (iterable) - это объект, который способен возвращать элементы по одному.
+Для Python это любой объект у которого есть метод ``__iter__`` (или с нюансами ``__getitem__``).
+
+
+## Итератор
 
 Итератор (iterator) - это объект, который возвращает свои элементы по одному за раз.
 С точки зрения Python - это любой объект, у которого есть метод ``__next__``.
 Этот метод возвращает следующий элемент, если он есть, или возвращает исключение StopIteration, когда элементы закончились.
-Кроме того, итератор запоминает, на каком объекте он остановился в последнюю итерацию.
-Также у каждого итератора присутствует метод ``__iter__`` - то есть, любой итератор является итерируемым объектом. Этот метод возвращает сам итератор.
+
+У итератора должен быть метод ``__iter__`` - то есть, любой итератор является итерируемым объектом.
+Этот метод возвращает сам итератор.
+
+## Функция iter
+
+Итерируемый объект превращается в итератор вызовом ``iter(name)``, где name - имя итерируемого объекта.
+
+```python
+iter(obj)
+```
+
+Функция ``iter`` возвращает итератор. Если у obj есть метод ``__iter__``, он вызывается чтобы получить итератор.
+Если метода ``__iter__`` нет, функция iter вызывает метод ``__getitem__`` с индексами начиная с 0.
 
 
 ---
-## Пример создания итератор через класс
+## Функция iter - sentinel
+
+```python
+import random
+
+def commands():
+    return random.choice(["sh clock", "sh ip int br", "ping 10.1.1.1", "sh version", "done"])
+
+
+In [2]: commands_iter = iter(commands, "done")
+
+In [3]: commands_iter
+Out[3]: <callable_iterator at 0xb4602130>
+
+In [4]: for c in commands_iter:
+   ...:     print(c)
+   ...:
+sh version
+sh clock
+sh version
+sh version
+sh ip int br
+```
+
+```python
+In [6]: f = open("config_r1.txt")
+
+In [7]: i = iter(f.readline, "")
+
+In [8]: for line in i:
+   ...:     print(line.rstrip()
+   ...:
+Current configuration : 4052 bytes
+!
+! Last configuration change at 13:13:40 UTC Tue Mar 1 2016
+version 15.2
+no service timestamps debug uptime
+no service timestamps log uptime
+```
+
+---
+## Проверка isinstance с итерируемыми объектами
+
+```python
+from collections.abc import Iterable
+
+class MyList:
+    def __getitem__(self, index):
+        print("__getitem__", index)
+
+
+In [11]: l1 = MyList()
+```
+
+isinstance возвращает False
+
+```python
+In [12]: isinstance(l1, Iterable)
+Out[12]: False
+```
+
+при этом iter (и как следствие перебор в цикле) будет работать
+```python
+In [13]: i = iter(l1)
+
+In [14]: next(i)
+__getitem__ 0
+
+In [15]: next(i)
+__getitem__ 1
+```
+
+---
+## Пример создания итератора с помощью класса
 
 ```python
 class MyRange:
@@ -72,7 +160,7 @@ StopIteration:
 ```
 
 ---
-## Пример создания итератор через класс
+## Пример создания итератора с помощью класса
 
 ```python
 class Cycle:
@@ -93,26 +181,40 @@ class Cycle:
 ---
 ## Генераторы
 
-Генератор - функция, которая позволяет легко создавать свои итераторы.
-В отличии от обычных функций, генератор не просто возвращает значение и завершает работу, а возвращает итератор, который отдает элементы по одному.
+Функция-генератор - функция, которая позволяет легко создавать свои итераторы.
+В отличии от обычных функций, функция-генератор не просто возвращает значение
+и завершает работу, а возвращает объект генератор (итератор).
+Функция-генератор это generator factory.
 
 
-Обычная функция завершает работу если:
-
-* встретилось выражение return
-* закончился код функции (это срабатывает как выражение ``return None``)
-* возникло исключение
-
-
-С точки зрения синтаксиса, генератор выглядит как обычная функция,
+С точки зрения синтаксиса, функция-генератор выглядит как обычная функция,
 но, вместо return, используется оператор ``yield``.
 Каждый раз, когда внутри функции встречается yield, генератор приостанавливается и возвращает значение.
 При следующем запросе, генератор начинает работать с того же места, где он завершил работу в прошлый раз.
 Так как yield не завершает работу генератора, он может использоваться несколько раз.
 
+---
+## Python docs glossary
+
+### [generator](https://docs.python.org/3/glossary.html#term-generator)
+
+A function which returns a generator iterator. It looks like a normal function
+except that it contains yield expressions for producing a series of values usable
+in a for-loop or that can be retrieved one at a time with the next() function.
+
+Usually refers to a generator function, but may refer to a generator iterator
+in some contexts. In cases where the intended meaning isn’t clear, using the full terms avoids ambiguity.
+
+### generator iterator
+
+An object created by a generator function.
+
+Each yield temporarily suspends processing, remembering the location execution
+state (including local variables and pending try-statements). When the generator
+iterator resumes, it picks up where it left off (in contrast to functions which start fresh on every invocation).
 
 ---
-### Создание генератора
+### Создание генератора с помощью функции генератора
 
 Функция-генератор - это функция, в которой присутствует ключевое слово yield.
 При вызове, эта функция возвращает объект генератор. 
@@ -127,7 +229,9 @@ def filter_lines(filename, regex):
                 yield line.rstrip()
 
 
-In [7]: for line in filter_lines('config_r1.txt', '^interface'):
+In [6]: filtered = filter_lines('config_r1.txt', '^interface'):
+
+In [7]: for line in filtered:
    ...:     print(line)
    ...:
 interface Loopback0
@@ -141,7 +245,9 @@ interface Ethernet1/0
 ```
 
 ---
-## Итератор через класс и аналог как генератор
+## Создание итератора через класс и функцию-генератор
+
+Класс MyRange возвращает объект, который является итератором:
 
 ```python
 class MyRange:
@@ -159,9 +265,12 @@ class MyRange:
 
     def __iter__(self):
         return self
+
+
+range1 = MyRange(10, 16)
 ```
 
-Генератор
+Функция-генератор my_range возвращает объект, который является итератором:
 
 ```python
 def my_range(start, stop):
@@ -169,10 +278,15 @@ def my_range(start, stop):
     while current < stop:
         yield current
         current += 1
+
+
+gen_range1 = my_range(10, 16)
 ```
 
 ---
-## Итератор через класс и аналог как генератор
+## Создание итератора через класс и функцию-генератор
+
+Класс Cycle возвращает объект, который является итератором:
 
 ```python
 class Cycle:
@@ -190,7 +304,7 @@ class Cycle:
         return self
 ```
 
-Генератор
+Функция-генератор my_cycle возвращает объект, который является итератором:
 
 ```python
 def my_cycle(values):
@@ -207,7 +321,7 @@ def generate_nums(number):
     print('Start of generation')
     yield number
     print('Next number')
-    yield number+1
+    yield number + 1
     print('The end')
 
 In [3]: result = generate_nums(100)
@@ -235,6 +349,7 @@ StopIteration:
 ```
 
 ---
+## Примеры использования генераторов
 
 ```python
 import csv
@@ -252,6 +367,9 @@ def read_csv(filename):
         for line in reader:
             yield line
 ```
+
+---
+## yield from
 
 ---
 ## yield from
@@ -282,22 +400,27 @@ Out[4]: [0, 1, 2, 3, 4]
 ---
 ## yield from
 
-Пример использования yield from для получения плоского списка из списка списков
-с разной вложенностью (упрощенный вариант примера 4.14 из книги Python Cookbook:
-
 ```python
-def flatten_list(alist):
-    for item in alist:
-        if type(item) is list:
-            yield from flatten_list(item)
-        else:
+def chain_iterables(*iterables):
+    for iterable in iterables:
+        for item in iterable:
             yield item
 
 
-In [6]: example = [0, 1, [2, 3], 4, [5, 6, [7, 8]], 9]
+In [6]: list(chain_iterables([1, 2, 3], "abc"))
+Out[6]: [1, 2, 3, 'a', 'b', 'c']
+```
 
-In [7]: list(flatten_list(example))
-Out[7]: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+Вариант с yield from
+
+```python
+def chain_iterables(*iterables):
+    for iterable in iterables:
+        yield from iterable
+
+
+In [8]: list(chain_iterables([1, 2, 3], "abc"))
+Out[8]: [1, 2, 3, 'a', 'b', 'c']
 ```
 
 ---
