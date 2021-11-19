@@ -252,12 +252,134 @@ def read_csv(filename):
         for line in reader:
             yield line
 ```
+
+---
+## yield from
+
+При использовании в генераторе, yield from может помочь упростить использование yield в цикле for:
+
+```python
+In [1]: def generate():
+   ...:     for i in range(5):
+   ...:         yield i
+   ...:
+
+In [2]: list(generate())
+Out[2]: [0, 1, 2, 3, 4]
+```
+
+Аналогичный вариант с yield from:
+
+```python
+In [3]: def generate():
+   ...:     yield from range(5)
+   ...:
+
+In [4]: list(generate())
+Out[4]: [0, 1, 2, 3, 4]
+```
+
+---
+## yield from
+
+Пример использования yield from для получения плоского списка из списка списков
+с разной вложенностью (упрощенный вариант примера 4.14 из книги Python Cookbook:
+
+```python
+def flatten_list(alist):
+    for item in alist:
+        if type(item) is list:
+            yield from flatten_list(item)
+        else:
+            yield item
+
+
+In [6]: example = [0, 1, [2, 3], 4, [5, 6, [7, 8]], 9]
+
+In [7]: list(flatten_list(example))
+Out[7]: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+```
+
+---
+## generator expression (генераторное выражение)
+
+
+---
+## generator expression (генераторное выражение)
+
+Генераторное выражение использует такой же синтаксис, как list comprehensions, но возвращает итератор, а не список.
+
+```python
+In [1]: genexpr = (x**2 for x in range(10000))
+
+In [2]: genexpr
+Out[2]: <generator object <genexpr> at 0xb571ec8c>
+
+In [3]: next(genexpr)
+Out[3]: 0
+
+In [4]: next(genexpr)
+Out[4]: 1
+
+In [5]: next(genexpr)
+Out[5]: 4
+```
+
 ---
 ## Генератор как менеджер контекста
+
+```python
+import time
+
+
+class Timed:
+    def __enter__(self):
+        self.start = time.time()
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        end = time.time()
+        print("время выполнения", end - self.start)
+
+
+In [4]: with Timed():
+   ...:     time.sleep(2)
+   ...:
+время выполнения 2.0024032592773438
+```
+
+```python
+from contextlib import contextmanager
+
+@contextmanager
+def gen_timed():
+    start = time.time()
+    yield
+    end = time.time()
+    print("время выполнения", end - start)
+
+
+In [7]: with gen_timed():
+   ...:     time.sleep(2)
+   ...:
+время выполнения 2.003124713897705
+```
 
 ---
 ## Генератор как fixture
 
+```python
+@pytest.fixture(scope='module')
+def ssh_test_connection(first_router_from_devices_yaml):
+    ssh = ConnectHandler(**first_router_from_devices_yaml)
+    ssh.enable()
+    yield ssh
+    ssh.disconnect()
+```
 
-## yield from
-
+```python
+@pytest.fixture(scope='module')
+def ssh_test_connection(first_router_from_devices_yaml):
+    with ConnectHandler(**first_router_from_devices_yaml) as ssh:
+        ssh.enable()
+        yield ssh
+```
