@@ -266,7 +266,6 @@ class MyRange:
     def __iter__(self):
         return self
 
-
 range1 = MyRange(10, 16)
 ```
 
@@ -278,7 +277,6 @@ def my_range(start, stop):
     while current < stop:
         yield current
         current += 1
-
 
 gen_range1 = my_range(10, 16)
 ```
