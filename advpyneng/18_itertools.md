@@ -420,37 +420,12 @@ Out[75]:
  Book(title='The Lord of the Rings (1-3)', author='J.R.R. Tolkien'),
  Book(title='Harry Potter and the Sorcerer’s Stone', author='J.K. Rowling'),
  Book(title='To Kill a Mockingbird', author='Harper Lee')]
-
-
-In [76]: list(groupby(books, operator.attrgetter('author')))
-Out[76]:
-[('George Orwell', <itertools._grouper at 0xb473f3ec>),
- ('Ray Bradbury', <itertools._grouper at 0xb473f12c>),
- ('J.R.R. Tolkien', <itertools._grouper at 0xb473f98c>),
- ('George Orwell', <itertools._grouper at 0xb473f7cc>),
- ('Ray Bradbury', <itertools._grouper at 0xb473f40c>),
- ('J.R.R. Tolkien', <itertools._grouper at 0xb473f74c>),
- ('J.K. Rowling', <itertools._grouper at 0xb473ffcc>),
- ('Harper Lee', <itertools._grouper at 0xb473fbec>)]
 ```
 
 ---
 ## Пример использования groupby
 
 ```python
-In [81]: for key, item in groupby(books, operator.attrgetter('author')):
-    ...:     print(key.ljust(20), list(item))
-    ...:
-George Orwell        [Book(title='1984', author='George Orwell')]
-Ray Bradbury         [Book(title='The Martian Chronicles', author='Ray Bradbury')]
-J.R.R. Tolkien       [Book(title='The Hobbit', author='J.R.R. Tolkien')]
-George Orwell        [Book(title='Animal Farm', author='George Orwell')]
-Ray Bradbury         [Book(title='Fahrenheit 451', author='Ray Bradbury')]
-J.R.R. Tolkien       [Book(title='The Lord of the Rings (1-3)', author='J.R.R. Tolkien')]
-J.K. Rowling         [Book(title='Harry Potter and the Sorcerer’s Stone', author='J.K. Rowling')]
-Harper Lee           [Book(title='To Kill a Mockingbird', author='Harper Lee')]
-
-
 In [83]: sorted_books = sorted(books, key=operator.attrgetter('author'))
 
 In [84]: sorted_books
