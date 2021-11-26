@@ -92,31 +92,11 @@ def ping_ip_addresses(ip_list):
 ---
 ## Основы asyncio
 
-Модуль asyncio можно разделить на две части: высокоуровневый интерфейс для пользователей,
-которые пишут программы и низкоуровневый интерфейс для авторов модулей, библиотек
-и фреймворков на основе asyncio.
+asyncio - это библиотека для написания параллельного кода с использованием синтаксиса async/await.
 
-## [High-level API Index](https://docs.python.org/3.10/library/asyncio-api-index.html)
-### Tasks
-
-|           |                                                     |
-|-----------|-----------------------------------------------------|
-| ``run()`` | Create event loop, run a coroutine, close the loop. |
-| ``create_task()`` | Start an asyncio Task. |
-| ``await sleep()`` | Sleep for a number of seconds. |
-| ``await gather()`` | Schedule and wait for things concurrently. |
-| ``await wait_for()`` | Run with a timeout. |
-| ``await shield()`` | Shield from cancellation. |
-| ``await wait()`` | Monitor for completion. |
-| ``current_task()`` | Return the current Task. |
-| ``all_tasks()`` | Return all tasks for an event loop. |
-| ``Task`` | Task object. |
-| ``to_thread()`` | Asynchronously run a function in a separate OS thread. |
-| ``run_coroutine_threadsafe()`` | Schedule a coroutine from another OS thread. |
-| ``for in as_completed()`` | Monitor for completion with a for loop. |
-
----
-## Основы asyncio
+asyncio используется в качестве основы для нескольких асинхронных фреймворков Python,
+которые обеспечивают высокопроизводительные сетевые и веб-серверы, библиотеки подключения
+к базам данных, распределенные очереди задач и т. д.
 
 Отличия asyncio от многопоточной работы:
 
@@ -179,6 +159,32 @@ Future - это специальный низкоуровневый объект
 необходимости создавать Future напрямую, но некоторые функции могут возвращать Future.
 Task является подклассом Future.
 Менеджер может следить за future и ожидать их завершения.
+
+---
+## asyncio API
+
+Модуль asyncio можно разделить на две части: высокоуровневый интерфейс для пользователей,
+которые пишут программы и низкоуровневый интерфейс для авторов модулей, библиотек
+и фреймворков на основе asyncio.
+
+## [High-level API Index](https://docs.python.org/3.10/library/asyncio-api-index.html)
+### Tasks
+
+|           |                                                     |
+|-----------|-----------------------------------------------------|
+| ``run()`` | Create event loop, run a coroutine, close the loop. |
+| ``create_task()`` | Start an asyncio Task. |
+| ``await sleep()`` | Sleep for a number of seconds. |
+| ``await gather()`` | Schedule and wait for things concurrently. |
+| ``await wait_for()`` | Run with a timeout. |
+| ``await shield()`` | Shield from cancellation. |
+| ``await wait()`` | Monitor for completion. |
+| ``current_task()`` | Return the current Task. |
+| ``all_tasks()`` | Return all tasks for an event loop. |
+| ``Task`` | Task object. |
+| ``to_thread()`` | Asynchronously run a function in a separate OS thread. |
+| ``run_coroutine_threadsafe()`` | Schedule a coroutine from another OS thread. |
+| ``for in as_completed()`` | Monitor for completion with a for loop. |
 
 
 ---
