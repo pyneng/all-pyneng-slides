@@ -206,7 +206,7 @@ if __name__ == "__main__":
 ``__aenter__`` и ``__aexit__`` и соответственно чтобы они вызывались, надо
 использовать асинхронный менеджер контекста ``async with``, а не обычный ``with``.
 
-> ``async with`` можно использовать только внутри сопрограммы.
+> ``async with`` можно использовать только внутри асинхронной функции.
 
 ---
 ## Асинхронный менеджер контекста
@@ -292,7 +292,7 @@ if __name__ == "__main__":
 ``__aiter__`` и ``__anext__``, плюс для перебора асинхронных итерируемых объектов
 есть цикл ``async for``.
 
-> ``async for`` можно использовать только внутри сопрограммы.
+> ``async for`` можно использовать только внутри асинхронной функции.
 
 ---
 ## Асинхронная итерация
@@ -498,6 +498,40 @@ if __name__ == "__main__":
 ```
 
 ---
+## Асинхронные генераторы
+
+---
+## Асинхронные генераторы
+
+```python
+async def check_connection(devices_list):
+    for device in devices_list:
+        ip = device["host"]
+        transport = device.get("transport")
+        try:
+            async with timeout(5):  # для asynctelnet
+                async with AsyncScrapli(**device) as conn:
+                    prompt = await conn.get_prompt()
+                yield True, f"{ip=} {prompt=} {transport=}"
+        except (ScrapliException, asyncio.exceptions.TimeoutError) as error:
+            yield False, f"{ip=} {error=} {transport=}"
+
+
+async def scan(devices):
+    check = check_connection(devices)
+    async for status, msg in check:
+        if status:
+            logging.info(f"Подключение успешно {msg}")
+        else:
+            logging.warning(f"Не удалось подключиться {msg}")
+
+
+async def scan_all(telnet_list, ssh_list):
+    await asyncio.gather(scan(telnet_list), scan(ssh_list))
+```
+
+
+---
 ## list/dict/set comprehensions
 
 В примере выше в list comp используется именно ``async for`` потому что выполняется
@@ -550,7 +584,7 @@ async def send_show(device, command):
 ## Декораторы для сопрограмм
 
 Для того чтобы замерить время выполнения send_show, надо дождаться выполнения
-сопрограммы - сделать ``await``, а ``await`` можно писать только внутри сопрограммы,
+сопрограммы - сделать ``await``, а ``await`` можно писать только внутри асинхронной функции,
 соответственно функция wrapper должна быть сопрограммой.
 
 Аналогичный обычный декоратор:
@@ -645,40 +679,6 @@ class PingIP:
                 ping_not_ok.append(ip)
         return ping_ok, ping_not_ok
 ```
-
----
-## Асинхронные генераторы
-
----
-## Асинхронные генераторы
-
-```python
-async def check_connection(devices_list):
-    for device in devices_list:
-        ip = device["host"]
-        transport = device.get("transport")
-        try:
-            async with timeout(5):  # для asynctelnet
-                async with AsyncScrapli(**device) as conn:
-                    prompt = await conn.get_prompt()
-                yield True, f"{ip=} {prompt=} {transport=}"
-        except (ScrapliException, asyncio.exceptions.TimeoutError) as error:
-            yield False, f"{ip=} {error=} {transport=}"
-
-
-async def scan(devices):
-    check = check_connection(devices)
-    async for status, msg in check:
-        if status:
-            logging.info(f"Подключение успешно {msg}")
-        else:
-            logging.warning(f"Не удалось подключиться {msg}")
-
-
-async def scan_all(telnet_list, ssh_list):
-    await asyncio.gather(scan(telnet_list), scan(ssh_list))
-```
-
 ---
 ## asyncio subprocess
 
