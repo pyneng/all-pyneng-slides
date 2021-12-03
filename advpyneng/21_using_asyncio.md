@@ -6,12 +6,12 @@
 * создание классов
 * асинхронный менеджер контекста
 * асинхронная итерация
+* асинхронные генераторы
 * list/dict/set comprehensions
 * декораторы для сопрограмм
-* асинхронные генераторы
 * asyncio subprocess
-* запуск синхронного кода в потоках
 * semaphore
+* запуск синхронного кода в потоках
 
 
 ---
@@ -414,6 +414,41 @@ $ python ex06_async_iterator_telnet_ssh.py
 ```
 
 ---
+## Асинхронные генераторы
+
+---
+## Асинхронные генераторы
+
+Доступны с Python 3.6
+
+```python
+async def check_connection(devices_list):
+    for device in devices_list:
+        ip = device["host"]
+        transport = device.get("transport")
+        try:
+            async with timeout(5):  # для asynctelnet
+                async with AsyncScrapli(**device) as conn:
+                    prompt = await conn.get_prompt()
+                yield True, f"{ip=} {prompt=} {transport=}"
+        except (ScrapliException, asyncio.exceptions.TimeoutError) as error:
+            yield False, f"{ip=} {error=} {transport=}"
+
+
+async def scan(devices):
+    check = check_connection(devices)
+    async for status, msg in check:
+        if status:
+            logging.info(f"Подключение успешно {msg}")
+        else:
+            logging.warning(f"Не удалось подключиться {msg}")
+
+
+async def scan_all(telnet_list, ssh_list):
+    await asyncio.gather(scan(telnet_list), scan(ssh_list))
+```
+
+---
 ## list/dict/set comprehensions
 
 ---
@@ -495,39 +530,6 @@ if __name__ == "__main__":
             print(f"{datetime.now()} SSH. Подключение успешно: {msg}")
         else:
             print(f"{datetime.now()} SSH. Не удалось подключиться: {msg}")
-```
-
----
-## Асинхронные генераторы
-
----
-## Асинхронные генераторы
-
-```python
-async def check_connection(devices_list):
-    for device in devices_list:
-        ip = device["host"]
-        transport = device.get("transport")
-        try:
-            async with timeout(5):  # для asynctelnet
-                async with AsyncScrapli(**device) as conn:
-                    prompt = await conn.get_prompt()
-                yield True, f"{ip=} {prompt=} {transport=}"
-        except (ScrapliException, asyncio.exceptions.TimeoutError) as error:
-            yield False, f"{ip=} {error=} {transport=}"
-
-
-async def scan(devices):
-    check = check_connection(devices)
-    async for status, msg in check:
-        if status:
-            logging.info(f"Подключение успешно {msg}")
-        else:
-            logging.warning(f"Не удалось подключиться {msg}")
-
-
-async def scan_all(telnet_list, ssh_list):
-    await asyncio.gather(scan(telnet_list), scan(ssh_list))
 ```
 
 
@@ -679,8 +681,19 @@ class PingIP:
                 ping_not_ok.append(ip)
         return ping_ok, ping_not_ok
 ```
+
 ---
 ## asyncio subprocess
+
+---
+## asyncio subprocess
+
+```python
+coroutine asyncio.create_subprocess_exec(program, *args, stdin=None, stdout=None, stderr=None, limit=None, **kwds)
+coroutine asyncio.create_subprocess_shell(cmd, stdin=None, stdout=None, stderr=None, limit=None, **kwds)
+```
+
+> [loop.subprocess_exec](https://docs.python.org/3/library/asyncio-eventloop.html#asyncio.loop.subprocess_exec)
 
 ---
 ## asyncio subprocess
@@ -714,29 +727,35 @@ async def ping_ip_list(ip_list):
 Сопрограмма ``asyncio.to_thread`` позволяет запустить блокирующую операцию
 в потоке. 
 
+```python
+asyncio.to_thread(func, /, *args, **kwargs)
+```
+
+```python
+def blocking_io():
+    time.sleep(1)
+
+
+async def main():
+    await asyncio.gather(
+        asyncio.to_thread(blocking_io),
+        asyncio.sleep(1),
+    )
+
+
+asyncio.run(main())
+```
+
+---
+## Запуск синхронного кода в потоках
+
 Эта сопрограмма появилась в Python 3.9, до этого использовалась ``loop.run_in_executor``.
 При этом to_thread это по сути `обертка вокруг loop.run_in_executor
 с использованием ThreadPoolExecutor по умолчанию, с максимальным количеством потоков
-по умолчанию:
-
-```python
-async def to_thread(func, /, *args, **kwargs):
-    """Asynchronously run function *func* in a separate thread.
-    Any *args and **kwargs supplied for this function are directly passed
-    to *func*. Also, the current :class:`contextvars.Context` is propogated,
-    allowing context variables from the main thread to be accessed in the
-    separate thread.
-    Return a coroutine that can be awaited to get the eventual result of *func*.
-    """
-    loop = events.get_running_loop()
-    ctx = contextvars.copy_context()
-    func_call = functools.partial(ctx.run, func, *args, **kwargs)
-    return await loop.run_in_executor(None, func_call)
-```
+по умолчанию.
 
 Начиная с версии Python 3.8 значение по умолчанию для max_workers высчитывается
 так ``min(32, os.cpu_count() + 4)``.
-
 
 ---
 ## Semaphore
@@ -765,18 +784,14 @@ asyncio.run(main())
 ## Semaphore
 
 ```python
-async def send_show(device, show_commands):
+async def send_show(device, show):
     print(f'>>> Подключаюсь к {device["host"]}')
-    cmd_dict = {}
-    if type(show_commands) == str:
-        show_commands = [show_commands]
     try:
         async with AsyncScrapli(**device) as ssh:
-            for cmd in show_commands:
-                reply = await ssh.send_command(cmd)
-                cmd_dict[cmd] = reply.result
+            reply = await ssh.send_command(show)
+            output = reply.result
             print(f'<<< Получен результат от {device["host"]}')
-        return cmd_dict
+        return output
     except ScrapliException as error:
         print(error, device["host"])
 
