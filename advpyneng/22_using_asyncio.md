@@ -128,7 +128,7 @@ async def run_all(devices, command):
 if __name__ == "__main__":
     coro = run_all(devices, "sh clock")
 
-    loop = asyncio.get_event_loop()
+    loop = asyncio.new_event_loop()
     result = loop.run_until_complete(coro)
     loop.close()
 ```
