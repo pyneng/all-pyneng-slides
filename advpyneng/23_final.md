@@ -47,6 +47,8 @@
 
 [Python Concurrency with asyncio](https://www.manning.com/books/python-concurrency-with-asyncio) публикация January 2022
 
+![](https://images-na.ssl-images-amazon.com/images/I/41WAMF489QL._SX218_BO1,204,203,200_QL40_FMwebp_.jpg)
+
 ---
 ### Using Asyncio in Python
 
