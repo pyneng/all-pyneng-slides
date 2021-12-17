@@ -18,7 +18,7 @@
 
 [Effective Python: 90 Specific Ways to Write Better Python (2nd Edition)](https://www.amazon.com/Effective-Python-Specific-Software-Development/dp/0134853989/).
 
-![](https://www.pearson.com/store/medias/-bigcovers-0134853989.jpg-size-W370?context=bWFzdGVyfGltYWdlc3w1NTI4M3xpbWFnZS9qcGVnfHN5cy1tYXN0ZXIvaW1hZ2VzL2gxOS9oZTMvODkxMDEwMTgwNzEzNC9iaWdjb3ZlcnMvMDEzNDg1Mzk4OS5qcGdfc2l6ZV9XMzcwfDlkM2Q0MTgzNWVmNWZiZjAxYTE1ZDJjYTc3YmZhYjI4Y2JiZDdlNWZjYWRmODg5NzE5MTIzZDBkNzU2MGYzMWU)
+![](https://images-na.ssl-images-amazon.com/images/I/41Z5hoZZQ7L._SX258_BO1,204,203,200_.jpg)
 
 ---
 ### Python Cookbook
