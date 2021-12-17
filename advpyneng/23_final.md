@@ -1,7 +1,20 @@
-## Advanced Python для сетевых инженеров!
+## Advanced Python для сетевых инженеров
 
 ---
 ## Продолжение обучения
+
+---
+## Продолжение обучения
+
+* Тестирование кода с помощью pytest
+* Основы аннотации типов
+* Автоматическое форматирование кода с Black
+* Создание интерфейса CLI с click
+* Модуль logging
+* Декораторы
+* ООП: основы, декораторы методов, наследование, ABC, mixin, descriptor, namedtuple, dataclass
+* Генераторы
+* Asyncio
 
 ---
 ### Книги
@@ -159,4 +172,5 @@
 * [Andrew Svetlov](https://twitter.com/andrew_svetlov)
 * [Dane Hillard](https://twitter.com/easyaspython)
 * [Corey Schafer](https://twitter.com/coreymschafer)
+* [Олег Молчанов](https://www.youtube.com/user/zaemiel)
 
