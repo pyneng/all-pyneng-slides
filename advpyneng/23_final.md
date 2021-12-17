@@ -11,7 +11,7 @@
 
 [Fluent Python 2nd edition](https://www.amazon.com/Fluent-Python-Concise-Effective-Programming/dp/1492056359/) (May 17, 2022)
 
-![](https://covers.oreillystatic.com/images/0636920032519/lrg.jpg)
+![](https://images-na.ssl-images-amazon.com/images/I/412Er-QBlAL._SX379_BO1,204,203,200_.jpg)
 
 ---
 ### Effective Python
