@@ -40,7 +40,7 @@
 
 [Python Testing with pytest: Simple, Rapid, Effective, and Scalable (2nd edition)](https://pragprog.com/titles/bopytest2/python-testing-with-pytest-second-edition/) публикация Feb 2022
 
-![](https://pragprog.com/titles/bopytest2/python-testing-with-pytest-second-edition/bopytest2.jpg)
+![](https://pragprog.com/titles/bopytest2/python-testing-with-pytest-second-edition/bopytest2-beta-250.jpg)
 
 ---
 ### Python Concurrency with asyncio
