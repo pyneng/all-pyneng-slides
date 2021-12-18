@@ -45,7 +45,7 @@
 
 [Robust Python](https://www.amazon.com/Robust-Python-Patrick-Viafore-ebook/dp/B09982C9FX/)
 
-![](https://images-na.ssl-images-amazon.com/images/I/81faPYg2QCS.jpg)
+![](https://images-na.ssl-images-amazon.com/images/I/41u0Ttn+3CS._SX258_BO1,204,203,200_.jpg)
 
 
 
