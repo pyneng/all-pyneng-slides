@@ -4,7 +4,7 @@
 ## Продолжение обучения
 
 ---
-## Продолжение обучения
+## Темы курса
 
 * Тестирование кода с помощью pytest
 * Основы аннотации типов
@@ -39,6 +39,14 @@
 [Python Cookbook](https://www.amazon.com/gp/product/1449340377/) - отличная книга рецептов. Рассматривается огромное количество сценариев с решениями и пояснением.
 
 ![](https://images-na.ssl-images-amazon.com/images/I/51jrF94LNsL._AC_SY400_.jpg)
+
+---
+### Robust Python
+
+[Robust Python](https://www.amazon.com/Robust-Python-Patrick-Viafore-ebook/dp/B09982C9FX/)
+
+<img align="right" src="https://images-na.ssl-images-amazon.com/images/I/81faPYg2QCS.jpg" width="200">
+
 
 
 ---
