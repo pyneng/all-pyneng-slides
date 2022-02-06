@@ -77,51 +77,11 @@ Initialized empty Git repository in /home/vagrant/tools/first_repo/.git/
 ---
 ### Команды git
 
-* ``git status`` - показывает статус репозитория, подсказывает команды git для выполнения следующего шага/отката
-* ``git add`` позволяет добавить файл(ы) в репозиторий
-добавляет содержимое рабочего каталога в индекс (staging area) для последующего коммита
-
-Для того чтобы Git начал следить за файлами, используется команда git add.
-
-Можно указать, что надо следить за конкретным файлом:
-
-![alt](https://pyneng.github.io/assets/images/git_add_readme.png)
-
-Или за всеми файлами:
-
-![alt](https://pyneng.github.io/assets/images/git_add_all.png)
-
----
-### git add
-
-Вывод git status после добавления файлов:
-
-![alt](https://pyneng.github.io/assets/images/git_status_3.png)
-
-
-Теперь файлы находятся в секции "Changes to be committed".
-
----
-### git commit
-
-После того как все нужные файлы были добавлены в staging, можно закоммитить изменения.
-
-У команды git commit есть только один обязательный параметр - флаг ```-m```.
-Он позволяет указать сообщение для этого коммита:
-
-![alt](https://pyneng.github.io/assets/images/git_commit_1.png)
-
----
-### git commit
-
-
-После этого, git status отображает:
-
-![alt](https://pyneng.github.io/assets/images/git_status_4.png)
-
-
-Фраза "working directory clean" обозначает, что нет изменений, которые нужно добавить в Git или закоммитить.
-
+* ``git status`` - показывает состояния файлов в рабочем каталоге и индексе: какие файлы изменены, но не добавлены в индекс; какие ожидают коммита в индексе. 
+* ``git add`` - добавляет содержимое рабочего каталога в индекс (staging area) для последующего коммита
+* ``git commit`` - берёт все данные, добавленные в индекс с помощью git add, и сохраняет их
+* ``git push`` - используется для установления связи с удалённым репозиторием, вычисления локальных изменений отсутствующих в нём, и собственно их передачи в репозиторий
+* ``git pull`` - git вначале забирает изменения из указанного удалённого репозитория, а затем пытается слить их с текущей веткой
 
 ---
 ### .gitignore
@@ -144,8 +104,6 @@ Initialized empty Git repository in /home/vagrant/tools/first_repo/.git/
 После этого, git status показывает:
 
 ![alt](https://pyneng.github.io/assets/images/git_status_2.png)
-
-
 
 ---
 ## [Отображение статуса репозитория в командной строке](https://pyneng.github.io/docs/git-prompt/)
