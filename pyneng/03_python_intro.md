@@ -92,82 +92,31 @@ $ python3.7 -m pip install tabulate
 * пакеты, которые установлены в виртуальных окружениях, не перебивают глобальные пакеты
 
 ---
-### virtualenvwrapper
+### venv
 
-Позволяет немного проще работать с виртуальными окружениями.
+Позволяет работать с виртуальными окружениями.
 
-Установка virtualenvwrapper с помощью pip:
-```
-sudo pip install virtualenvwrapper
-```
-
-После установки в ```.bashrc``` нужно добавить несколько строк
-```
-export WORKON_HOME=~/venv
-
-. /usr/local/bin/virtualenvwrapper.sh
-```
-
----
-### Работа с виртуальными окружениями
 
 Создание нового виртуального окружения, в котором Python 3.7 используется по умолчанию:
 ```
-$ mkvirtualenv --python=/usr/local/bin/python3.7 pyneng
-New python executable in PyNEng/bin/python
-Installing distribute........................done.
-Installing pip...............done.
-(pyneng)$ 
+$ python3.7 -m venv new/pyneng
 ```
 
----
-### Работа с виртуальными окружениями
-
-
-Теперь в том каталоге, который был указан в WORKON_HOME, создан каталог PyNEng:
+Для перехода в виртуальное окружение надо выполнить команду (Linux/Mac):
 ```
-(pyneng)$ ls -ls venv
-total 52
-....
-4 -rwxr-xr-x 1 nata nata   99 Sep 30 16:41 preactivate
-4 -rw-r--r-- 1 nata nata   76 Sep 30 16:41 predeactivate
-4 -rwxr-xr-x 1 nata nata   91 Sep 30 16:41 premkproject
-4 -rwxr-xr-x 1 nata nata  130 Sep 30 16:41 premkvirtualenv
-4 -rwxr-xr-x 1 nata nata  111 Sep 30 16:41 prermvirtualenv
-4 drwxr-xr-x 6 nata nata 4096 Sep 30 16:42 pyneng
+$ source new/pyneng/bin/activate
 ```
 
----
-### Работа с виртуальными окружениями
-
-Выйти из виртуального окружения:
+Windows
 ```
-(pyneng)$ deactivate 
-$ 
+C:\Users\nata\AppData\Local\python\mu\mu_venv-38-20220110-150945\Scripts\activate.bat
 ```
 
-Для перехода в созданное виртуальное окружение надо выполнить команду __workon__:
+Для выхода из виртуального окружения используется команда deactivate:
 ```
-$ workon pyneng
-(pyneng)$ 
-```
-
----
-### Работа с виртуальными окружениями
-
-Если необходимо перейти из одного виртуального окружения в другое, то необязательно делать __deactivate__, можно перейти сразу через workon:
-```
-$ workon Test
-(Test)$ workon pyneng
-(pyneng)$ 
+$ deactivate
 ```
 
-Если виртуальное окружение нужно удалить, используется команда __rmvirtualenv__:
-```
-$ rmvirtualenv Test
-Removing Test...
-$ 
-```
 
 ---
 ## Синтаксис Python
@@ -518,3 +467,4 @@ Out[22]: 140239990503080
 * имена функций задаются маленькими буквами, с подчеркиваниями между словами
   * get_names
 * имена классов задаются словами с заглавными буквами, без пробелов
+
