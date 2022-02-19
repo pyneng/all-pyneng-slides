@@ -1,132 +1,6 @@
 # Python для сетевых инженеров 
 
 ---
-## Переменные
-
----
-### Переменные
-
-Переменные в Python:
-* не требуют объявления типа переменной (Python - язык с динамической типизацией)
-* являются ссылками на область памяти
-
-Правила именования переменных:
-* имя переменной может состоять только из букв, цифр и знака подчеркивания
-* имя не может начинаться с цифры
-* имя не может содержать специальных символов @, $, %
-
----
-### Переменные
-
-```python
-In [1]: a = 3
-
-In [2]: b = 'Hello'
-
-In [3]: c, d = 9, 'Test'
-
-In [4]: print(a,b,c,d)
-3 Hello 9 Test
-```
-
-Обратите внимание, что в Python не нужно указывать, что a это число, а b это строка.
-
----
-### Переменные
-
-Переменные являются ссылками на область памяти. Это можно продемонстрировать с помощью функции ```id()```, которая показывает идентификатор объекта:
-```python
-In [5]: a = b = c = 33
-
-In [6]: id(a)
-Out[6]: 31671480
-
-In [7]: id(b)
-Out[7]: 31671480
-
-In [8]: id(c)
-Out[8]: 31671480
-```
-
----
-### Переменные
-
-С числами у Python есть ещё одна особенность, которая может немного сбить.
-Числа от -5 до 256 заранее созданы и хранятся в массиве (списке).
-Поэтому при создании числа из этого диапазона фактически создается ссылка на число в созданном массиве.
-
-Это можно проверить таким образом:
-```python
-In [9]: a = 3
-
-In [10]: b = 3
-
-In [11]: id(a)
-Out[11]: 4400936168
-
-In [12]: id(b)
-Out[12]: 4400936168
-
-In [13]: id(3)
-Out[13]: 4400936168
-```
-
----
-### Переменные
-
-У ```a```, ```b``` и числа ```3``` одинаковые идентификаторы.
-Все они просто являются ссылками на существующее число в списке.
-
-Но если сделать то же самое с числом больше 256, идентификаторы у всех разные:
-```python
-In [14]: a = 500
-
-In [15]: b = 500
-
-In [16]: id(a)
-Out[16]: 140239990503056
-
-In [17]: id(b)
-Out[17]: 140239990503032
-
-In [18]: id(500)
-Out[18]: 140239990502960
-```
-
----
-### Переменные
-
-При этом, если сделать присваивание такого вида:
-```python
-In [19]: a = b = c = 500
-```
-
-Идентификаторы будут у всех одинаковые:
-```python
-In [20]: id(a)
-Out[20]: 140239990503080
-
-In [21]: id(b)
-Out[21]: 140239990503080
-
-In [22]: id(c)
-Out[22]: 140239990503080
-```
-
----
-### Имена переменных
-
-В Python есть рекомендации по именованию функций, классов и переменных:
-* имена переменных обычно пишутся полностью большими или маленькими буквами
-  * DB_NAME
-  * db_name
-* имена функций задаются маленькими буквами, с подчеркиваниями между словами
-  * get_names
-* имена классов задаются словами с заглавными буквами, без пробелов
-  * CiscoSwitch
-
-
----
 ## Типы данных в Python
 
 ---
@@ -139,7 +13,7 @@ Out[22]: 140239990503080
 * Dictionaries (словари)
 * Tuples (кортежи)
 * Sets (множества)
-* Boolean
+* Boolean (булевы значения)
 
 ---
 ### Типы данных в Python
@@ -166,6 +40,50 @@ Out[22]: 140239990503080
 Неупорядоченные:
 * Множества
 
+
+---
+### Типы данных в Python
+
+| Название    | Название        | Пример |
+|-------------|-----------------|--------------|
+| Number      | число           | ``1, 100`` |
+|             |                 |
+| String      | строка          | ``"interface Gi0/0"`` |
+|             |                 |
+| List        | список          | ``[1, 2, 3]`` |
+|             |                 |
+| Dictionary  | словарь         | ``{"username": "user1", "permissions": 100}`` |
+|             |                 |
+| Tuple       | кортеж          | ``("line console 0", "login local")`` |
+|             |                 |
+| Set         | множество       | ``{3, 10, 100, 4, 5}`` |
+|             |                 |
+| Boolean     | булево значение | ``True, False`` |
+
+---
+### Типы данных в Python
+
+|             |               |
+|-------------|--------------|
+| String      | Для хранения текста и произвольных данных, для которых в Python нет типа |
+| List        | Набор данных, очень часто однотипных данных: список вланов, команд, строк файла |
+| Dictionary  | Используется для данных типа поле: значение |
+| Tuple       | Неизменяемый набор данных, который часто возвращается из внешних источников - БД, CSV. |
+|             | Также используется когда данные это набор значений: (x, y) |
+| Set         | Для хранения уникальных данных. Плюс часто используется промежуточно для |
+|             | операций с множествами |
+| Boolean     | Указывает, что какое-то значение истинное или ложное. Например {"routing": True} |
+| None        | Используется, когда надо указать, что в этом месте нет никакого значения |
+
+
+|             |              |
+|-------------|--------------|
+| String      | "interface Gi0/0" |
+| List        | [1, 2, 3] |
+| Dictionary  | {"username": "user1", "permissions": 100} |
+| Tuple       | ("line console 0", "login local") |
+| Set         | {3, 10, 100, 4, 5} |
+| Boolean     | True, False |
 
 ---
 ## Числа
@@ -387,8 +305,6 @@ In [17]: intf + ' ' + tun
 Out[17]: 'interface Tunnel0'
 ```
 
----
-### Строки
 
 Строку можно умножать на число. В этом случае, строка повторяется указанное количество раз:
 ```python
@@ -400,9 +316,9 @@ Out[19]: '########################################'
 ```
 
 ---
-### Строки
+### Строки. Индекс
 
-То, что строки являются упорядоченным типом данных, позволяет обращаться к символам в строке по номеру, начиная с нуля:
+Обращение по индексу к символам:
 ```python
 In [20]: string1 = 'interface FastEthernet1/0'
 
@@ -410,10 +326,7 @@ In [21]: string1[0]
 Out[21]: 'i'
 ```
 
----
-### Строки
-
-Нумерация всех символов в строке идет с нуля. Но, если нужно обратиться к какому-то по счету символу, начиная с конца, то можно указывать отрицательные значения (на этот раз с единицы).
+Если нужно обратиться к какому-то по счету символу, начиная с конца, то можно указывать отрицательные значения (на этот раз с единицы).
 
 ```python
 In [22]: string1[1]
@@ -424,9 +337,9 @@ Out[23]: '0'
 ```
 
 ---
-### Строки
+### Строки. Срез
 
-Кроме обращения к конкретному символу, можно делать срезы строки, указав диапазон номеров (срез выполняется по второе число, не включая его):
+Срез строки (срез выполняется по второе число, не включая его):
 ```python
 In [24]: string1[0:9]
 Out[24]: 'interface'
@@ -434,9 +347,6 @@ Out[24]: 'interface'
 In [25]: string1[10:22]
 Out[25]: 'FastEthernet'
 ```
-
----
-### Строки
 
 Если не указывается второе число, то срез будет до конца строки:
 ```python
@@ -485,15 +395,105 @@ Out[32]: '13579'
 ### Полезные методы для работы со строками
 
 При автоматизации очень часто надо будет работать со строками, так как конфигурационный файл, вывод команд и отправляемые команды - это строки.
-
 Знание различных методов (то есть, действий), которые можно применять к строкам, помогает более эффективно работать с ними.
-
 Строки неизменяемый тип данных, поэтому все методы, которые преобразуют строку возвращают новую строку, а исходная строка остается неизменной.
+
+---
+### Полезные методы для работы со строками
+
+|             |  Разделение строки на части |
+|:------------|:-----------------------------------------------------------------------------|
+| join        | Concatenate any number of strings.                                           |
+| split       | Return a list of the words in the string, using sep as the delimiter string. |
+| splitlines  | Return a list of the lines in the string, breaking at line boundaries.       |
+| partition   | Partition the string into three parts using the given separator.             |
+| rpartition  | Partition the string into three parts using the given separator.             |
+| rsplit      | Return a list of the words in the string, using sep as the delimiter string. |
+|             |  |
+
+
+| | Удаление whitespace символов |
+|:-------|:--------------------------------------------------------------------------|
+| strip  | Return a copy of the string with leading and trailing whitespace removed. |
+| rstrip | Return a copy of the string with trailing whitespace removed.             |
+| lstrip | Return a copy of the string with leading whitespace removed.              |
+|        |  |
+
+| |  Проверка начала/конца строки |
+|----------------|:-------------------------------------------------------------------------|
+| startswith     | Return True if S starts with the specified prefix, False otherwise.      |
+| endswith       | Return True if S ends with the specified prefix, False otherwise.      |
+|        |  |
+
+---
+### Полезные методы для работы со строками
+
+|  | Проверка того, что находится в строке |
+|:------------------|:-------------------------------------------------------------------------|
+| isalnum()      | Return True if the string is an alpha-numeric string, False otherwise.   |
+| isalpha()      | Return True if the string is an alphabetic string, False otherwise.      |
+| isascii()      | Return True if all characters in the string are ASCII, False otherwise.  |
+| isdecimal()    | Return True if the string is a decimal string, False otherwise.          |
+| isdigit()      | Return True if the string is a digit string, False otherwise.            |
+| isidentifier() | Return True if the string is a valid Python identifier, False otherwise. |
+| islower()      | Return True if the string is a lowercase string, False otherwise.        |
+| isnumeric()    | Return True if the string is a numeric string, False otherwise.          |
+| isprintable()  | Return True if the string is printable, False otherwise.                 |
+| isspace()      | Return True if the string is a whitespace string, False otherwise.       |
+| istitle()      | Return True if the string is a title-cased string, False otherwise.      |
+| isupper()      | Return True if the string is an uppercase string, False otherwise.       |
+|        |  |
+
+
+|            | Преобразования регистра |
+|:-----------|:---------------------------------------------------------------------------------|
+| lower      | Return a copy of the string converted to lowercase.                              |
+| capitalize | Return a capitalized version of the string.                                      |
+| swapcase   | Convert uppercase characters to lowercase and lowercase characters to uppercase. |
+| title      | Return a version of the string where each word is titlecased.                    |
+| upper      | Return a copy of the string converted to uppercase.                              |
+| casefold   | Return a version of the string suitable for caseless comparisons.                |
+|        |  |
+
+
+
+---
+### Полезные методы для работы со строками
+
+
+|  | Выравнивание текста |
+|:-------------------------------------|:---------------------------------------------------------------------------------|
+| center | Return a centered string of length width.                                        |
+| ljust  | Return a left-justified string of length width.                                  |
+| rjust  | Return a right-justified string of length width.                                 |
+| zfill                | Pad a numeric string with zeros on the left, to fill a field of the given width. |
+|        |  |
+
+
+| | Поиск, подсчет элементов |
+|:--------|:-------------------------------------|
+| count   | S.count(sub[, start[, end]]) -> int  |
+| find    | S.find(sub[, start[, end]]) -> int   |
+| index   | S.index(sub[, start[, end]]) -> int  |
+| replace | S.replace(old, new)                  |
+| rfind   | S.rfind(sub[, start[, end]]) -> int  |
+| rindex  | S.rindex(sub[, start[, end]]) -> int |
+|        |  |
+
+| | Другие методы |
+|:----------------------------------------|:------------------------------------|
+| expandtabs | Return a copy where all tab characters are expanded using spaces.       |
+| format     | S.format(*args, **kwargs) -> str  |
+| format_map | S.format_map(mapping) -> str  |
+| maketrans  | Return a translation table usable for str.translate(). |
+| translate  | Replace each character in the string using the given translation table. |
+| encode   | Encode the string using the codec registered for encoding.              |
+
 
 ---
 ### ```upper(), lower(), swapcase(), capitalize()```
 
-Методы __```upper()```__, __```lower()```__, __```swapcase()```__, __```capitalize()```__ выполняют преобразование регистра строки:
+Методы ```upper()```, ```lower()```, ```swapcase()```, ```capitalize()``` выполняют преобразование регистра строки:
 ```python
 In [25]: string1 = 'FastEthernet'
 
@@ -524,40 +524,9 @@ FASTETHERNET
 ```
 
 ---
-### ```count()```
-
-Метод __```count()```__ используется для подсчета того, сколько раз символ или подстрока встречаются в строке:
-```python
-In [33]: string1 = 'Hello, hello, hello, hello'
-
-In [34]: string1.count('hello')
-Out[34]: 3
-
-In [35]: string1.count('ello')
-Out[35]: 4
-
-In [36]: string1.count('l')
-Out[36]: 8
-```
-
----
-### ```find()```
-
-Методу __```find()```__ можно передать подстроку или символ, и он покажет, на какой позиции находится первый символ подстроки (для первого совпадения):
-```python
-In [37]: string1 = 'interface FastEthernet0/1'
-
-In [38]: string1.find('Fast')
-Out[38]: 10
-
-In [39]: string1[string1.find('Fast')::]
-Out[39]: 'FastEthernet0/1'
-```
-
----
 ### ```startswith(), endswith()```
 
-Проверка на то, начинается или заканчивается ли строка на определенные символы (методы __```startswith()```__, __```endswith()```__):
+Проверка на то, начинается или заканчивается ли строка на определенные символы (методы ```startswith()```, ```endswith()```):
 ```python
 In [40]: string1 = 'FastEthernet0/1'
 
@@ -577,7 +546,7 @@ Out[44]: False
 ---
 ### ```replace()```
 
-Замена последовательности символов в строке на другую последовательность (метод __```replace()```__):
+Замена последовательности символов в строке на другую последовательность (метод ```replace()```):
 ```python
 In [45]: string1 = 'FastEthernet0/1'
 
@@ -591,7 +560,7 @@ Out[46]: 'GigabitEthernet0/1'
 Часто при обработке файла файл открывается построчно.
 Но в конце каждой строки, как правило, есть какие-то спецсимволы (а могут быть и в начале). Например, перевод строки.
 
-Для того, чтобы избавиться от них, очень удобно использовать метод __```strip()```__:
+Для того, чтобы избавиться от них, очень удобно использовать метод ```strip()```:
 ```python
 In [47]: string1 = '\n\tinterface FastEthernet0/1\n'
 
@@ -623,12 +592,12 @@ Out[52]: '110/1045'
 ```
 
 Метод strip() убирает спецсимволы и в начале, и в конце строки.
-Если необходимо убрать символы только слева или только справа, можно использовать, соответственно, методы __```lstrip()```__ и __```rstrip()```__.
+Если необходимо убрать символы только слева или только справа, можно использовать, соответственно, методы ```lstrip()``` и ```rstrip()```.
 
 ---
 ### ```split()```
 
-Метод __```split()```__ разбивает строку на части, используя как разделитель какой-то символ (или символы).
+Метод ```split()``` разбивает строку на части, используя как разделитель какой-то символ (или символы).
 По умолчанию, в качестве разделителя используются пробелы.
 Но в скобках можно указать любой разделитель.
 
@@ -1095,6 +1064,21 @@ Out[2]: ['Antony', 'John', 'Michael']
 
 Список - это изменяемый тип данных, поэтому очень важно обращать внимание на то, что большинство методов для работы со списками меняют список на месте, при этом ничего не возвращая.
 
+|                  | |
+|:------------------------------------------|:-----------------------------------------------------|
+| append(object, /)                         | Append object to the end of the list.                |
+| extend(iterable, /)                       | Extend list by appending elements from the iterable. |
+| remove(value, /)                          | Remove first occurrence of value.                    |
+| insert(index, object, /)                  | Insert object before index.                          |
+| pop(index=-1, /)                          | Remove and return item at index (default last).      |
+| count(value, /)                           | Return number of occurrences of value.               |
+| index(value, start=0, stop=2147483647, /) | Return first index of value.                         |
+| sort(key=None, reverse=False)    | Sort the list in ascending order and return None. |
+| clear()                                   | Remove all items from list.                          |
+| copy()                                    | Return a shallow copy of the list.                   |
+| reverse()                                 | Reverse IN PLACE.                                  |
+
+
 ---
 ### ```join()```
 
@@ -1387,6 +1371,21 @@ Out[2]: ['location', 'name', 'vendor']
 
 ---
 ### Полезные методы для работы со словарями
+
+|   | Методы словарей |
+|----------|-------------------------------------------|
+| get      | Return the value for key if key is in the dictionary, else default.
+| update   | Update D from dict/iterable E and F.
+| pop      | remove specified key and return the corresponding value.
+|          | If key is not found, d is returned if given, otherwise KeyError is raised
+| popitem  | Remove and return a (key, value) pair as a 2-tuple.
+| setdefault | Insert key with a value of default if key is not in the dictionary.
+| keys     | Return  a set-like object providing a view on D's keys
+| values   | Return an object providing a view on D's values
+| items    | Return a set-like object providing a view on D's items
+| clear    | Remove all items from D.
+| copy     |  a shallow copy of D
+| fromkeys | Create a new dictionary with keys from iterable and values set to value.
 
 ---
 ### ```clear()```
@@ -1795,6 +1794,14 @@ TypeError: 'tuple' object does not support item assignment
 ```
 
 ---
+### Методы кортежа
+
+|   | Методы кортежа |
+|---------|--------------------------------------|
+| count   | S.count(sub[, start[, end]]) -> int  |
+| index   | S.index(sub[, start[, end]]) -> int  |
+
+---
 ## Множество (Set)
 
 ---
@@ -1824,11 +1831,36 @@ In [4]: print(set1)
 ### Полезные методы для работы с множествами
 
 ---
+### Методы множеств
+
+| Название                      | Описание |
+|-------------------------------|--------------|
+| add                           | Add an element to a set. |
+| update                        | Update a set with the union of itself and others. |
+| remove                        | Remove an element from a set; it must be a member. |
+| discard                       | Remove an element from a set if it is a member. |
+| pop                           | Remove and return an arbitrary set element. Raises KeyError if the set is empty. |
+| clear                         | Remove all elements from this set. |
+| copy                          | Return a shallow copy of a set. |
+| | |
+| difference                    | Return the difference of two or more sets as a new set. |
+| intersection                  | Return the intersection of two sets as a new set. |
+| union                         | Return the union of sets as a new set. |
+| symmetric_difference          | Return the symmetric difference of two sets as a new set. |
+| difference_update             | Remove all elements of another set from this set. |
+| intersection_update           | Update a set with the intersection of itself and another. |
+| symmetric_difference_update   | Update a set with the symmetric difference of itself and another. |
+| isdisjoint                    | Return True if two sets have a null intersection. |
+| issubset                      | Report whether another set contains this set. |
+| issuperset                    | Report whether this set contains another set. |
+
+
+---
 ### ```add()```
 
-Метод __```add()```__ добавляет элемент во множество:
+Метод ```add()``` добавляет элемент во множество:
 ```python
-In [1]: set1 = {10,20,30,40}
+In [1]: set1 = {10, 20, 30, 40}
 
 In [2]: set1.add(50)
 
@@ -1839,7 +1871,7 @@ Out[3]: {10, 20, 30, 40, 50}
 ---
 ### ```discard()```
 
-Метод __```discard()```__ позволяет удалять элементы, не выдавая ошибку, если элемента в множестве нет:
+Метод ```discard()``` позволяет удалять элементы, не выдавая ошибку, если элемента в множестве нет:
 ```python
 In [3]: set1
 Out[3]: {10, 20, 30, 40, 50}
@@ -1858,9 +1890,9 @@ Out[7]: {10, 20, 30, 40}
 ---
 ### ```clear()```
 
-Метод __```clear()```__ очищает множество:
+Метод ```clear()``` очищает множество:
 ```python
-In [8]: set1 = {10,20,30,40}
+In [8]: set1 = {10, 20, 30, 40}
 
 In [9]: set1.clear()
 
@@ -1873,10 +1905,10 @@ Out[10]: set()
 
 Множества полезны тем, что с ними можно делать различные операции и находить объединение множеств, пересечение и так далее.
 
-Объединение множеств можно получить с помощью метода __```union()```__ или оператора __```|```__:
+Объединение множеств можно получить с помощью метода ```union()``` или оператора ```|```:
 ```python
-In [1]: vlans1 = {10,20,30,50,100}
-In [2]: vlans2 = {100,101,102,102,200}
+In [1]: vlans1 = {10, 20, 30, 50, 100}
+In [2]: vlans2 = {100, 101, 102, 102, 200}
 
 In [3]: vlans1.union(vlans2)
 Out[3]: {10, 20, 30, 50, 100, 101, 102, 200}
@@ -1888,10 +1920,10 @@ Out[4]: {10, 20, 30, 50, 100, 101, 102, 200}
 ---
 ### Операции с множествами
 
-Пересечение множеств можно получить с помощью метода __```intersection()```__ или оператора __```&```__:
+Пересечение множеств можно получить с помощью метода ```intersection()``` или оператора ```&```:
 ```python
-In [5]: vlans1 = {10,20,30,50,100}
-In [6]: vlans2 = {100,101,102,102,200}
+In [5]: vlans1 = {10, 20, 30, 50, 100}
+In [6]: vlans2 = {100, 101, 102, 200}
 
 In [7]: vlans1.intersection(vlans2)
 Out[7]: {100}
@@ -1939,7 +1971,7 @@ Out[5]: {' ', 'g', 'i', 'l', 'n', 'o', 'r', 's', 't'}
 
 Множество из списка:
 ```python
-In [6]: set([10,20,30,10,10,30])
+In [6]: set([10, 20, 30, 10, 10, 30])
 Out[6]: {10, 20, 30}
 ```
 
