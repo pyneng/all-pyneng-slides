@@ -85,165 +85,6 @@
 | Set         | {3, 10, 100, 4, 5} |
 | Boolean     | True, False |
 
----
-## Числа
-
----
-### Числа
-
-```python
-In [1]: 1 + 2
-Out[1]: 3
-
-In [2]: 1.0 + 2
-Out[2]: 3.0
-
-In [3]: 10 - 4
-Out[3]: 6
-
-In [4]: 2**3
-Out[4]: 8
-```
-
----
-### Числа
-
-Деление int и float:
-```python
-In [5]: 10/3
-Out[5]: 3.3333333333333335
-
-In [6]: 10/3.0
-Out[6]: 3.3333333333333335
-
-```
-
----
-### Числа
-
-С помощью функции round можно округлять числа до нужного количества знаков:
-```python
-In [9]: round(10/3.0, 2)
-Out[9]: 3.33
-
-In [10]: round(10/3.0, 4)
-Out[10]: 3.3333
-```
-
----
-### Числа
-
-Остаток от деления:
-```python
-In [11]: 10 % 3
-Out[11]: 1
-```
-
----
-### Числа
-
-Операторы сравнения
-```python
-In [12]: 10 > 3.0
-Out[12]: True
-
-In [13]: 10 < 3
-Out[13]: False
-
-In [14]: 10 == 3
-Out[14]: False
-
-In [15]: 10 == 10
-Out[15]: True
-
-In [16]: 10 <= 10
-Out[16]: True
-
-In [17]: 10.0 == 10
-Out[17]: True
-```
-
----
-### Числа
-
-Функция int() позволяет выполнять конвертацию в тип int. Во втором аргументе можно указывать систему счисления:
-```python
-In [18]: a = '11'
-
-In [19]: int(a)
-Out[19]: 11
-```
-
----
-### Числа
-
-Если указать, что строку a надо воспринимать как двоичное число, то результат будет таким:
-```python
-In [20]: int(a, 2)
-Out[20]: 3
-```
-
-Конвертация в int типа float:
-```python
-In [21]: int(3.333)
-Out[21]: 3
-
-In [22]: int(3.9)
-Out[22]: 3
-```
-
----
-### Числа
-
-Функция bin позволяет получить двоичное представление числа (обратите внимание, что результат - строка):
-```python
-In [23]: bin(8)
-Out[23]: '0b1000'
-
-In [24]: bin(255)
-Out[24]: '0b11111111'
-```
-
----
-### Числа
-
-Аналогично, функция hex() позволяет получить шестнадцатеричное значение:
-```python
-In [25]: hex(10)
-Out[25]: '0xa'
-```
-
----
-### Числа
-
-И, конечно же, можно делать несколько преобразований одновременно:
-```python
-In [26]: int('ff', 16)
-Out[26]: 255
-
-In [27]: bin(int('ff', 16))
-Out[27]: '0b11111111'
-```
-
----
-### Числа
-
-Для более сложных математических функций в Python есть модуль __math__:
-```python
-In [28]: import  math
-
-In [29]: math.sqrt(9)
-Out[29]: 3.0
-
-In [30]: math.sqrt(10)
-Out[30]: 3.1622776601683795
-
-In [31]: math.factorial(3)
-Out[31]: 6
-
-In [32]: math.pi
-Out[32]: 3.141592653589793
-```
 
 ---
 ## Строки (Strings)
@@ -267,14 +108,14 @@ Out[10]: 'Hello'
 ### Строки
 
 ```python
-In [11]: tunnel = """
-   ....: interface Tunnel0
-   ....:  ip address 10.10.10.1 255.255.255.0
-   ....:  ip mtu 1416
-   ....:  ip ospf hello-interval 5
-   ....:  tunnel source FastEthernet1/0
-   ....:  tunnel protection ipsec profile DMVPN
-   ....: """
+tunnel = """
+interface Tunnel0
+ ip address 10.10.10.1 255.255.255.0
+ ip mtu 1416
+ ip ospf hello-interval 5
+ tunnel source FastEthernet1/0
+ tunnel protection ipsec profile DMVPN
+"""
 
 In [12]: tunnel
 Out[12]: '\ninterface Tunnel0\n ip address 10.10.10.1 255.255.255.0\n ip mtu 1416\n ip ospf hello-interval 5\n tunnel source FastEthernet1/0\n tunnel protection ipsec profile DMVPN\n'
@@ -289,31 +130,6 @@ interface Tunnel0
  tunnel protection ipsec profile DMVPN
 ```
 
----
-### Строки
-
-Строки можно суммировать. Тогда они объединяются в одну строку:
-```python
-In [14]: intf = 'interface'
-
-In [15]: tun = 'Tunnel0'
-
-In [16]: intf + tun
-Out[16]: 'interfaceTunnel0'
-
-In [17]: intf + ' ' + tun
-Out[17]: 'interface Tunnel0'
-```
-
-
-Строку можно умножать на число. В этом случае, строка повторяется указанное количество раз:
-```python
-In [18]: intf * 5
-Out[18]: 'interfaceinterfaceinterfaceinterfaceinterface'
-
-In [19]: '#' * 40
-Out[19]: '########################################'
-```
 
 ---
 ### Строки. Индекс
@@ -389,6 +205,32 @@ Out[31]: '02468'
 ```python
 In [32]: a[1::2]
 Out[32]: '13579'
+```
+
+---
+### Строки
+
+Строки можно суммировать. Тогда они объединяются в одну строку:
+```python
+In [14]: intf = 'interface'
+
+In [15]: tun = 'Tunnel0'
+
+In [16]: intf + tun
+Out[16]: 'interfaceTunnel0'
+
+In [17]: intf + ' ' + tun
+Out[17]: 'interface Tunnel0'
+```
+
+
+Строку можно умножать на число. В этом случае, строка повторяется указанное количество раз:
+```python
+In [18]: intf * 5
+Out[18]: 'interfaceinterfaceinterfaceinterfaceinterface'
+
+In [19]: '#' * 40
+Out[19]: '########################################'
 ```
 
 ---
