@@ -4,6 +4,12 @@
 
 # Контроль хода программы
 
+* if/elif/else
+* for
+* while
+* pass, break, continue
+* try/except
+
 ---
 
 ## if/elif/else
