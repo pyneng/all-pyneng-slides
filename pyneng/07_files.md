@@ -512,70 +512,6 @@ ValueError                       Traceback (most recent call last)
 ValueError: I/O operation on closed file
 ```
 
----
-### Использование `try/finally` для работы с файлами
-
-С помощью обработки исключений, можно:
-* перехватывать исключения, которые возникают, при попытке прочитать несуществующий файл
-* закрывать файл, после всех операций, в блоке `finally`
-
----
-### Использование `try/finally` для работы с файлами
-
-Если попытаться открыть для чтения файл, которого не существует, возникнет такое исключение:
-
-```python
-In [7]: f = open('r3.txt', 'r')
----------------------------------------------------------------------------
-IOError                                   Traceback (most recent call last)
-<ipython-input-54-1a33581ca641> in <module>()
-----> 1 f = open('r3.txt', 'r')
-
-IOError: [Errno 2] No such file or directory: 'r3.txt'
-```
-
----
-### Использование `try/finally` для работы с файлами
-
-С помощью конструкции `try/except`, можно перехватить это исключение и вывести своё сообщение:
-
-```python
-In [8]: try:
-  ....:     f = open('r3.txt', 'r')
-  ....: except IOError:
-  ....:     print('No such file')
-  ....:
-No such file
-```
-
----
-### Использование `try/finally` для работы с файлами
-
-А с помощью части `finally`, можно закрыть файл, после всех операций:
-
-```python
-In [9]: try:
-  ....:     f = open('r1.txt', 'r')
-  ....:     print(f.read())
-  ....: except IOError:
-  ....:     print('No such file')
-  ....: finally:
-  ....:     f.close()
-  ....:
-!
-service timestamps debug datetime msec localtime show-timezone year
-service timestamps log datetime msec localtime show-timezone year
-service password-encryption
-service sequence-numbers
-!
-no ip domain lookup
-!
-ip ssh version 2
-!
-
-In [10]: f.closed
-Out[10]: True
-```
 
 ---
 ## Конструкция with
@@ -587,10 +523,10 @@ Out[10]: True
 
 В Python существует более удобный способ работы с файлами, чем те, которые использовались до сих пор - конструкция ```with```:
 ```python
-In [1]: with open('r1.txt', 'r') as f:
-  ....:     for line in f:
-  ....:         print(line)
-  ....:
+with open('r1.txt', 'r') as f:
+    for line in f:
+        print(line)
+
 !
 
 service timestamps debug datetime msec localtime show-timezone year
@@ -630,10 +566,10 @@ for line in f:
 ### Конструкция with
 
 ```python
-In [2]: with open('r1.txt', 'r') as f:
-  ....:     for line in f:
-  ....:         print(line.rstrip())
-  ....:
+with open('r1.txt', 'r') as f:
+    for line in f:
+        print(line.rstrip())
+
 !
 service timestamps debug datetime msec localtime show-timezone year
 service timestamps log datetime msec localtime show-timezone year
@@ -655,9 +591,9 @@ Out[3]: True
 
 И, конечно же, с конструкцией ```with``` можно использовать не только такой построчный вариант считывания, все методы, которые рассматривались до этого, также работают:
 ```python
-In [4]: with open('r1.txt', 'r') as f:
-  ....:     print(f.read())
-  ....:
+with open('r1.txt', 'r') as f:
+    print(f.read())
+
 !
 service timestamps debug datetime msec localtime show-timezone year
 service timestamps log datetime msec localtime show-timezone year
@@ -675,11 +611,11 @@ ip ssh version 2
 
 В таком случае, в блоке with можно открывать два файла таким образом:
 ```python
-In [5]: with open('r1.txt') as src, open('result.txt', 'w') as dest:
-   ...:     for line in src:
-   ...:         if line.startswith('service'):
-   ...:             dest.write(line)
-   ...:
+with open('r1.txt') as src, open('result.txt', 'w') as dest:
+    for line in src:
+        if line.startswith('service'):
+            dest.write(line)
+
 
 In [6]: cat result.txt
 service timestamps debug datetime msec localtime show-timezone year
@@ -694,12 +630,12 @@ service sequence-numbers
 
 Это равнозначно таким двум блокам with:
 ```python
-In [7]: with open('r1.txt') as src:
-   ...:     with open('result.txt', 'w') as dest:
-   ...:         for line in src:
-   ...:             if line.startswith('service'):
-   ...:                 dest.write(line)
-   ...:
+with open('r1.txt') as src:
+    with open('result.txt', 'w') as dest:
+        for line in src:
+            if line.startswith('service'):
+                dest.write(line)
+
 
 ```
 
