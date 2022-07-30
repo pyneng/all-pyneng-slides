@@ -64,6 +64,32 @@ password = os.environ.get('SSH_password')
 ```
 
 ---
+### Настройка CLI интерфейса (пример с click)
+
+```python
+@click.command()
+@click.argument("command")
+@click.argument("ip-list", nargs=-1)
+@click.option("--username", "-u", envvar="NET_USER", prompt=True)
+@click.option("--password", "-p", envvar="NET_PASSWORD", prompt=True, hide_input=True)
+@click.option("--secret", "-s", envvar="NET_SECRET", prompt=True, hide_input=True)
+def main(command, ip_list, username, password, secret):
+    device_params = {
+        "device_type": "cisco_ios",
+        "username": username,
+        "password": password,
+        "secret": secret,
+    }
+
+    device_list = [{**device_params, "host": ip} for ip in ip_list]
+
+    result_dict = send_command_to_cisco_devices(device_list, command)
+    for ip, output in result_dict.items():
+        print(ip.center(30, "="))
+        print(output)
+```
+
+---
 ## Модуль pexpect
 
 ---
