@@ -1014,7 +1014,7 @@ devices_ip = ['192.168.100.1','192.168.100.2','192.168.100.3']
 Пример использования netmiko (файл 4_netmiko.py):
 ```python
 for ip in devices_ip:
-    print("Connection to device {}".format( ip ))
+    print("Connection to device {}".format(ip))
     device_params = {'device_type': 'cisco_ios',
                      'ip': ip,
                      'username': user,
@@ -1284,7 +1284,7 @@ devices_ip = ['192.168.100.1','192.168.100.2','192.168.100.3']
 Файл 4_netmiko_telnet.py:
 ```python
 for ip in devices_ip:
-    print("Connection to device {}".format( ip ))
+    print("Connection to device {}".format(ip))
     device_params = {'device_type': 'cisco_ios_telnet',
                      'ip': ip,
                      'username':user,
