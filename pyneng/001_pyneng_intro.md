@@ -10,7 +10,6 @@
 * Функции print, input, len, sorted
 * Условия if/else
 * Цикл for
-* Работа с файлами
 
 ---
 ## Синтаксис Python
@@ -38,11 +37,9 @@ else:
 
 print("The End")
 
-def open_file(filename):
-    print("Reading file", filename)
-    with open(filename) as f:
-        return f.read()
-        print("Done")
+words = ["test", "line", "hello"]
+for word in words:
+    print(word.upper())
 ```
 
 ---
@@ -123,7 +120,7 @@ b = 5
 ---
 ### print
 
-Функция print позволяет вывести информацию на стандартный поток вывода.
+Функция print позволяет вывести информацию на стандартный поток вывода (на экран).
 
 Если необходимо вывести строку, то ее нужно обязательно заключить в кавычки
 (двойные или одинарные). Если же нужно вывести, например, результат вычисления
