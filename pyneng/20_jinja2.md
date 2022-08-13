@@ -56,15 +56,34 @@ router ospf 10
 
 ---
 
-## Пример использования Jinja
+### Шаблоны конфигураций с Jinja
 
+Пример шаблона Jinja:
+```jinja
+hostname {{ name }}
+
+interface Loopback0
+ ip address 10.0.0.{{ id }} 255.255.255.255
+
+{% for vlan, name in vlans.items() %}
+vlan {{ vlan }}
+ name {{ name }}
+{% endfor %}
+
+{% if ospf %}
+router ospf 1
+ router-id 10.0.0.{{ id }}
+ auto-cost reference-bandwidth 10000
+ {% for networks in ospf %}
+ network {{ networks.network }} area {{ networks.area }}
+ {% endfor %}
+{% endif %}
+
+```
 ---
 
-### Пример использования Jinja
+## Пример использования Jinja
 
-Термин "программный интерфейс" относится к способу работы Jinja с вводными данными и шаблоном, для генерации итоговых файлов. 
-
-Переделанный пример предыдущего скрипта, шаблона и файла с данными (все файлы находятся в каталоге 2_example):
 
 ---
 
@@ -72,112 +91,69 @@ router ospf 10
 ```
 hostname {{name}}
 !
-interface Loopback10
- description MPLS loopback
- ip address 10.10.{{id}}.1 255.255.255.255
- !
+interface Loopback255
+ description Management loopback
+ ip address 10.255.{{id}}.1 255.255.255.255
+!
 interface GigabitEthernet0/0
- description WAN to {{name}} sw1 G0/1
+ description LAN to {{name}} sw1 {{int}}
+ ip address {{ip}} 255.255.255.0
 !
-interface GigabitEthernet0/0.1{{id}}1
- description MPLS to {{to_name}}
- encapsulation dot1Q 1{{id}}1
- ip address 10.{{id}}.1.2 255.255.255.252
- ip ospf network point-to-point
- ip ospf hello-interval 1
- ip ospf cost 10
-!
-interface GigabitEthernet0/1
- description LAN {{name}} to sw1 G0/2 !
-interface GigabitEthernet0/1.{{IT}}
- description PW IT {{name}} - {{to_name}}
- encapsulation dot1Q {{IT}}
- xconnect 10.10.{{to_id}}.1 {{id}}11 encapsulation mpls
- backup peer 10.10.{{to_id}}.2 {{id}}21
-  backup delay 1 1
-!
-interface GigabitEthernet0/1.{{BS}}
- description PW BS {{name}} - {{to_name}}
- encapsulation dot1Q {{BS}}
- xconnect 10.10.{{to_id}}.1 {{to_id}}{{id}}11 encapsulation mpls
-  backup peer 10.10.{{to_id}}.2 {{to_id}}{{id}}21
-  backup delay 1 1
-!
-router ospf 10
- router-id 10.10.{{id}}.1
+router ospf {{ process_id | default(100) }}
+ router-id 10.255.{{id}}.1
  auto-cost reference-bandwidth 10000
  network 10.0.0.0 0.255.255.255 area 0
- !
 ```
 
 ---
 
 Файл с данными routers_info.yml
 ```
-- id: 11
+- id: '11'
+  int: Gi1/0/1
+  ip: 10.1.1.1
   name: Liverpool
-  to_name: LONDON
-  IT: 791
-  BS: 1550
-  to_id: 1
-
-- id: 12
-  name: Bristol
-  to_name: LONDON
-  IT: 793
-  BS: 1510
-  to_id: 1
-
-- id: 14
+- id: '21'
+  int: Gi1/0/2
+  ip: 10.2.2.1
+  name: London
+- int: Gi1/0/3
+  ip: 10.3.3.1
   name: Coventry
-  to_name: Manchester
-  IT: 892
-  BS: 1650
-  to_id: 2
+  process_id: 1
 ```
 
 ---
 
 Скрипт для генерации конфигураций router_config_generator_ver2.py
 ```python
-# -*- coding: utf-8 -*-
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment, FileSystemLoader, StrictUndefined
 import yaml
 
-env = Environment(loader=FileSystemLoader('templates'))
-template = env.get_template('router_template.txt')
 
-routers = yaml.load(open('routers_info.yml'))
+env = Environment(
+    loader=FileSystemLoader("~/path/to/templates"),
+    undefined=StrictUndefined
+)
+templ = env.get_template("cfg_template.txt")
 
-for router in routers:
-    r1_conf = router['name']+'_r1.txt'
-    with open(r1_conf,'w') as f:
-        f.write(template.render(router))
+with open("cfg_data.yaml") as f:
+    data = yaml.safe_load(f)
+
+for param in data:
+    print(templ.render(param))
 ```
 
----
-
-Файл router_config_generator.py импортирует из модуля jinja2:
-* __FileSystemLoader__ - загрузчик, который позволяет работать с файловой системой
- * тут указывается путь к каталогу, где находятся шаблоны
- * в данном случае, шаблон находится в каталоге templates
-* __Environment__ - класс для описания параметров окружения:
- * в данном случае, указан только загрузчик
- * но в нем можно указывать методы обрабатки шаблона
-
-Обратите внимание, что шаблон теперь находится в каталоге __templates__.
 
 ---
+### Jinja2 API
 
-Если шаблоны находятся в текущем каталоге, надо добавить пару строк и изменить значение в загручике:
-```python
-import os
+FileSystemLoader
 
-curr_dir = os.path.dirname(os.path.abspath(__file__))
-env = Environment(loader = FileSystemLoader(curr_dir))
 ```
-
-Метод __```get_template()```__ используется для того, чтобы получить шаблон. В скобках указывается имя файла.
+loader = FileSystemLoader("templates")
+loader = FileSystemLoader(["/override/templates", "/default/templates"])
+```
 
 ---
 
@@ -188,8 +164,7 @@ env = Environment(loader = FileSystemLoader(curr_dir))
 ## Синтаксис шаблонов Jinja2
 
 До сих пор, в примерах шаблонов Jinja2 использовалась только подстановка переменных.
-Это самый простой и понятный пример использования шаблонов.
-Но синтаксис шаблонов Jinja на этом не ограничивается.
+Это самый простой и понятный пример использования шаблонов, но синтаксис шаблонов Jinja на этом не ограничивается.
 
 ---
 
