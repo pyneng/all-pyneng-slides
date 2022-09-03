@@ -25,32 +25,33 @@
 ---
 ## Бонусные лекции
 
-* работа с базами данных в Python
-* новые возможности в Python 3.x
-* руководство стилю кода PEP8
-* ansible
-* scrapli
-* vim, tmux
+* [Работа с базами данных в Python](https://youtube.com/playlist?list=PLah0HUih_ZRlJp_yFqZp4qTCB0BL7V_Ci)
+* [Новые возможности в Python 3.x](https://youtube.com/playlist?list=PLah0HUih_ZRlmf6BeA-7Bx-1NvmqnSIOD)
+* [Руководство стилю кода PEP8](https://youtube.com/playlist?list=PLah0HUih_ZRnw7KP62J-z2cXmb6EeglvO)
+* [Основы Ansible 2.9 для сетевых инженеров](https://youtube.com/playlist?list=PLah0HUih_ZRnuI_K5-GV4FdAO9dVkRIGF)
+* [Основы scrapli](https://youtube.com/playlist?list=PLah0HUih_ZRlmi9YXa1YgXggTaw1BwZa4)
+* [vim](https://youtube.com/playlist?list=PLah0HUih_ZRkiQXDuElo_JW9OfmbEXRpj)
+* [tmux](https://youtube.com/playlist?list=PLah0HUih_ZRkSAPJyzlk_wU7iVLzGFMAi)
 
 ---
 ### Бонусные лекции. Полезно знать
 
-* аннотация типов
-* black
-* click (typer)
-* logging
-* pdb
-* pytest
-* rich
-* python package
+* [Аннотация типов и основы mypy](https://www.youtube.com/playlist?list=PLah0HUih_ZRlrzKmbAwxyitvmXjCN4BM9)
+* [black](https://youtube.com/playlist?list=PLah0HUih_ZRnw7KP62J-z2cXmb6EeglvO)
+* [Создание CLI с помощью Click](https://www.youtube.com/playlist?list=PLah0HUih_ZRkrS43bjaC8hxwQjcCZhNiM)
+* [Создание CLI с помощью Typer](https://www.youtube.com/playlist?list=PLah0HUih_ZRnp0HI2TxbQ549Ty-P8soUV)
+* [Модуль logging](https://www.youtube.com/playlist?list=PLah0HUih_ZRlYLjVt0i1fqirtcBQp89Ts)
+* [pdb](https://youtube.com/playlist?list=PLah0HUih_ZRnhRXJgPLKEJLtOBBkh6e8P)
+* [Модуль Rich - создание красивых приложений в CLI](https://www.youtube.com/playlist?list=PLah0HUih_ZRkzS7TouDvcgK79WiYZSgpk)
+* [Import package](https://youtube.com/playlist?list=PLah0HUih_ZRljP9fwcz37LwFSAjzK0pFY)
 
 ---
 ### Бонусные лекции. Продвинутые темы
 
-* генераторы
-* декораторы
-* ООП: classmethod, staticmethod, property
-* ООП: namedtuple, dataclasses
+* [Генераторы](https://www.youtube.com/playlist?list=PLah0HUih_ZRmfsPwasDQ1HfWAc32U7o9m)
+* [Декораторы](https://www.youtube.com/playlist?list=PLah0HUih_ZRlGw_CtgPvuvNC1IBNiDCGH)
+* [Декораторы методов: property, classmethod, staticmethod](https://www.youtube.com/playlist?list=PLah0HUih_ZRmHz77JQLpFXRoAwvUqNNZ4)
+* [Dataclass, namedtuple](https://www.youtube.com/playlist?list=PLah0HUih_ZRnyfizwF6clCjbW8tyUC-Z4)
 
 ---
 ## Продолжение обучения
@@ -62,7 +63,7 @@
 * изучать дальше Python для автоматизации работы с сетью
 * изучать Python без привязки к сетевому оборудованию
 
-[Подборка ресурсов](https://natenka.github.io/pyneng-resources/) в которой можно найти и другие материалы.
+[Подборка ресурсов](https://natenka.io/pyneng-resources/) в которой можно найти и другие материалы.
 
 ---
 ## Написание скриптов для автоматизации рабочих процессов
@@ -77,7 +78,7 @@
 Python позволяет делать достаточно многое обладая только базовыми знаниями.
 Поэтому не всегда рабочие задачи позволят принципиально повысить уровень знаний или подтолкнуть к этому.
 
-Но зная Python лучше, те же задачи можно решать, как правило, намного проще.
+Зная Python лучше, те же задачи можно решать, как правило, намного проще.
 Поэтому лучше не останавливаться и учиться дальше.
 
 ---
@@ -86,23 +87,22 @@ Python позволяет делать достаточно многое обл�
 ---
 ### Курсы
 
-[Курсы на Cisco DevNet](https://learninglabs.cisco.com/)
-
 Nicholas Russo:
 
 * [Automating Networks with Python](https://www.pluralsight.com/courses/automating-networks-python)
 * [Automating Networks with Ansible the Right Way](https://www.pluralsight.com/courses/automating-networks-ansible-right-way)
 
-John John McGovern. CBT Nuggets:
+John McGovern:
 
+* [Introduction to Python for Network Engineers](https://www.cbtnuggets.com/it-training/python/network-engineers-intro)
 * [Advanced Network Automation with Cisco and Python. CBT Nuggets](https://www.cbtnuggets.com/it-training/networking/network-automation-cisco-python)
 
 
 ---
 ### Книги
 
-* [Network Programmability and Automation: Skills for the Next-Generation Network Engineer](https://www.amazon.com/Network-Programmability-Automation-Next-Generation-Engineer/dp/1491931256)
-* [Mastering Python Networking (Eric Chou)](https://www.packtpub.com/networking-and-servers/mastering-python-networking) - отчасти перекликается с тем, что рассматривалось в этой книге, но в ней есть и много новых тем. Плюс, рассматриваются примеры не только на оборудовании Cisco, но Juniper и Arista.
+* [Network Programmability and Automation](https://www.amazon.com/Network-Programmability-Automation-Next-Generation-Engineer/dp/1491931256), [Network Programmability and Automation, 2nd Edition](https://blog.networktocode.com/post/npa-book-second-edition/)
+* [Mastering Python Networking - Third Edition (Eric Chou)](https://www.packtpub.com/product/mastering-python-networking-third-edition/9781839214677) - отчасти перекликается с тем, что рассматривалось в этой книге, но в ней есть и много новых тем. Плюс, рассматриваются примеры не только на оборудовании Cisco, но Juniper и Arista.
 
 
 ---
@@ -110,18 +110,10 @@ John John McGovern. CBT Nuggets:
 
 * [CiscoConfParse](https://github.com/mpenning/ciscoconfparse) - библиотека, которая парсит конфигурации типа Cisco IOS. С ее помощью можно: проверять существующие конфигурации маршрутизаторов/коммутаторов, получать определенную часть конфигурации, изменять конфигурацию
 * [NAPALM](https://github.com/napalm-automation/napalm) - NAPALM (Network Automation and Programmability Abstraction Layer with Multivendor support) это библиотека, которая позволяет работать с сетевым оборудованием разных вендоров, используя унифицированный API
-* [NOC Project](https://kb.nocproject.org/display/SITE/NOC) - NOC is the scalable, high-performance and open-source OSS system for ISP, service and content providers
-* [Requests](https://github.com/kennethreitz/requests) - библиотека для работы с HTTP
-* [SaltStack](https://saltstack.com/) - аналог Ansible
-
----
-### Проекты:
-
 * [Scapy](https://github.com/secdev/scapy) - сетевая утилита, которая позволяет манипулировать сетевыми пакетами
-* [StackStorm](https://stackstorm.com/) - StackStorm is event-driven automation commonly used for auto-remediation, security responses, facilitated troubleshooting, complex deployments, and more
 * [Nornir](https://github.com/nornir-automation/nornir)
 * [eNMS](https://github.com/afourmy/eNMS)
-* [netdev](https://github.com/selfuryon/netdev)
+* [netutils](https://netutils.readthedocs.io/en/latest/index.html)
 
 ---
 ## Python без привязки к сетевому оборудованию
@@ -147,14 +139,14 @@ John John McGovern. CBT Nuggets:
 ### Книги. Среднего/продвинутого уровня
 
 * [Python Tricks](https://www.amazon.com/Python-Tricks-Buffet-Awesome-Features-ebook/dp/B0785Q7GSY) - отличный вариант для 2-3 книги по Python. В книге описываются различные аспекты Python и то как правильно использовать. Книга достаточно новая (конец 2017 года), в ней рассматривается Python 3.
-* [Effective Python: 59 Specific Ways to Write Better Python (Effective Software Development Series)](https://www.amazon.com/Effective-Python-Specific-Software-Development-ebook-dp-B00TKGY0GU/dp/B00TKGY0GU/) - книга полезных советов как лучше писать код. В конце 2019 года [планируется выход второго издания книги](https://www.amazon.com/Effective-Python-Specific-Software-Development/dp/0134853989/).
+* [Effective Python](https://effectivepython.com/) - книга полезных советов как лучше писать код
 * [Dive Into Python 3](http://diveintopython3.problemsolving.io/) - коротко рассматриваются основы Python, а затем более продвинутые темы: closure, генераторы, тесты и так далее. Книга 2009 года, но рассматриваюется Python 3 и 99% тем остались без изменений.
 
 ---
 ### Книги. Среднего/продвинутого уровня
 
 * [Problem Solving with Algorithms and Data Structures using Python](https://runestone.academy/runestone/static/pythonds/index.html) - отличная книга по структурам данных и алгоритмам. Много примеров и домашних заданий. [На русском](http://aliev.me/runestone/)
-* [Fluent Python](https://www.amazon.com/gp/product/1491946008/) - отличная книга по более продвинутым темам. Даже те темы, которые устарели в текущей версии Python (asyncio) стоит прочитать ради прекрасного объяснения темы.
+* [Fluent Python, Second Edition](https://www.oreilly.com/library/view/fluent-python-2nd/9781492056348/) - лучшая книга по продвинутым темам
 * [Python Cookbook](https://www.amazon.com/gp/product/1449340377/) - отличная книга рецептов. Рассматривается огромное количество сценариев с решениями и пояснением.
 
 ---
@@ -174,7 +166,7 @@ John John McGovern. CBT Nuggets:
 ### Сайты с задачами
 
 * [Bites of Py](https://codechalleng.es/bites/) - очень хороший сайт на котором много заданий разного уровня сложности. На нем вполне можно набить руку и на базовых вещах, но в то же время есть куда расти
-* [HackerRank](https://www.hackerrank.com/) - на этом сайте задачи разбиты по областям: алгоритмы, регулярные выражения, базы данных и другие. Но есть и базовые задачи 
+* [HackerRank](https://www.hackerrank.com/) - на этом сайте задачи разбиты по областям: алгоритмы, реглярные выражения, базы данных и другие
 * [CheckIO - online game for Python and JavaScript coders](https://checkio.org/)
 
 
@@ -197,8 +189,6 @@ John John McGovern. CBT Nuggets:
 
 * [Официальная документация Python](https://docs.python.org/3/index.html)
 * [Python Module of the Week](https://pymotw.com/3/index.html)
-* [Tiny-Python-3.6-Notebook](https://github.com/mattharrison/Tiny-Python-3.6-Notebook/blob/master/python.rst) - Отличная шпаргалка по Python 3.6
-
 
 ---
 
