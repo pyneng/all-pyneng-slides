@@ -141,11 +141,13 @@ John McGovern:
 * [Python Tricks](https://www.amazon.com/Python-Tricks-Buffet-Awesome-Features-ebook/dp/B0785Q7GSY) - отличный вариант для 2-3 книги по Python. В книге описываются различные аспекты Python и то как правильно использовать. Книга достаточно новая (конец 2017 года), в ней рассматривается Python 3.
 * [Effective Python](https://effectivepython.com/) - книга полезных советов как лучше писать код
 * [Dive Into Python 3](http://diveintopython3.problemsolving.io/) - коротко рассматриваются основы Python, а затем более продвинутые темы: closure, генераторы, тесты и так далее. Книга 2009 года, но рассматриваюется Python 3 и 99% тем остались без изменений.
+* [Architecture Patterns with Python](https://www.cosmicpython.com/)
 
 ---
 ### Книги. Среднего/продвинутого уровня
 
 * [Problem Solving with Algorithms and Data Structures using Python](https://runestone.academy/runestone/static/pythonds/index.html) - отличная книга по структурам данных и алгоритмам. Много примеров и домашних заданий. [На русском](http://aliev.me/runestone/)
+
 * [Fluent Python, Second Edition](https://www.oreilly.com/library/view/fluent-python-2nd/9781492056348/) - лучшая книга по продвинутым темам
 * [Python Cookbook](https://www.amazon.com/gp/product/1449340377/) - отличная книга рецептов. Рассматривается огромное количество сценариев с решениями и пояснением.
 
