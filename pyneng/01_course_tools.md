@@ -233,9 +233,9 @@ Initialized empty Git repository in /home/vagrant/repos/first_repo/.git/
 > и подобные проблемы с работой скрипта, чем при запуске кода через тест на 3 этапе.
 
 ---
-## После этой лекции надо
+## Что надо сделать
 
-* [Подготовить виртуалку/компьютер](https://pyneng.natenka.io/docs/course-vm/)
+* [Подготовить рабочую среду](https://pyneng.natenka.io/docs/course-vm/)
 * [Разобраться с Git и GitHub для выполнения заданий](https://pyneng.natenka.io/docs/git-github-course/)
   * клонировать свой репозиторий в виртуалку (приватный репозиторий с именем online-14-имя-фамилия в который я отправила приглашение)
   * попробовать сделать изменение в каком-то файле (например, README.md) и запушить его на GitHub
