@@ -1,58 +1,13 @@
 # Python для сетевых инженеров 
 
 ---
-## Переменные
-
----
-### Переменные
-
-Переменные в Python:
-* не требуют объявления типа переменной (Python - язык с динамической типизацией)
-* являются ссылками на область памяти
-
-Правила именования переменных:
-* имя переменной может состоять только из букв, цифр и знака подчеркивания
-* имя не может начинаться с цифры
-* имя не может содержать специальных символов @, $, %
-
----
-### Переменные
-
-```python
-In [1]: a = 3
-
-In [2]: b = 'Hello'
-
-In [3]: c, d = 9, 'Test'
-
-In [4]: print(a,b,c,d)
-3 Hello 9 Test
-```
-
-Обратите внимание, что в Python не нужно указывать, что a это число, а b это строка.
-
-
----
-### Имена переменных
-
-В Python есть рекомендации по именованию функций, классов и переменных:
-* имена переменных обычно пишутся полностью большими или маленькими буквами
-  * DB_NAME
-  * db_name
-* имена функций задаются маленькими буквами, с подчеркиваниями между словами
-  * get_names
-* имена классов задаются словами с заглавными буквами, без пробелов
-  * CiscoSwitch
-
-
----
 ## Типы данных в Python
 
 ---
 ### Типы данных в Python
 
 В Python есть несколько стандартных типов данных:
-* Numbers (числа)
+* Integers (целые числа)
 * Strings (строки)
 * Lists (списки)
 * Dictionaries (словари)
@@ -91,8 +46,6 @@ In [4]: print(a,b,c,d)
 
 | Название    | Название        | Пример |
 |-------------|-----------------|--------------|
-| Number      | число           | ``1, 100`` |
-|             |                 |
 | String      | строка          | ``"interface Gi0/0"`` |
 |             |                 |
 | List        | список          | ``[1, 2, 3]`` |
@@ -129,6 +82,52 @@ In [4]: print(a,b,c,d)
 | Tuple       | ("line console 0", "login local") |
 | Set         | {3, 10, 100, 4, 5} |
 | Boolean     | True, False |
+
+
+---
+## Переменные
+
+---
+### Переменные
+
+Переменные в Python:
+* не требуют объявления типа переменной (Python - язык с динамической типизацией)
+* являются ссылками на область памяти
+
+Правила именования переменных:
+* имя переменной может состоять только из букв, цифр и знака подчеркивания
+* имя не может начинаться с цифры
+* имя не может содержать специальных символов @, $, %
+
+---
+### Переменные
+
+```python
+In [1]: a = 3
+
+In [2]: b = 'Hello'
+
+In [3]: c, d = 9, 'Test'
+
+In [4]: print(a, b, c, d)
+3 Hello 9 Test
+```
+
+Обратите внимание, что в Python не нужно указывать, что a это число, а b это строка.
+
+
+---
+### Имена переменных
+
+В Python есть рекомендации по именованию функций, классов и переменных:
+* имена переменных обычно пишутся полностью большими или маленькими буквами
+  * DB_NAME
+  * db_name
+* имена функций задаются маленькими буквами, с подчеркиваниями между словами
+  * get_names
+* имена классов задаются словами с заглавными буквами, без пробелов
+  * CiscoSwitch
+
 
 ---
 ## Числа
@@ -213,32 +212,6 @@ In [2]: line.
 ---
 ### Методы строк
 
-```python
-In [3]: line.lower?
-Signature: line.lower()
-Docstring: Return a copy of the string converted to lowercase.
-Type:      builtin_function_or_method
-
-In [4]: line.split?
-Signature: line.split(sep=None, maxsplit=-1)
-Docstring:
-Return a list of the words in the string, using sep as the delimiter string.
-
-sep
-  The delimiter according which to split the string.
-  None (the default value) means split according to any whitespace,
-  and discard empty strings from the result.
-maxsplit
-  Maximum number of splits to do.
-  -1 (the default value) means no limit.
-Type:      builtin_function_or_method
-
-In [3]: help(str)
-```
-
----
-### Методы строк
-
 ```
 In [10]: from rich import inspect
 
@@ -295,83 +268,6 @@ In [13]: inspect(str, methods=True)
 │        upper = def upper(self, /): Return a copy of the string converted to uppercase.                                                  │
 │        zfill = def zfill(self, width, /): Pad a numeric string with zeros on the left, to fill a field of the given width.              │
 ╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-```
-
----
-### Методы строк
-
-Проверка того, что находится в строке
-
-```
-│   startswith = def startswith(...) S.startswith(prefix[, start[, end]]) -> bool                                                         │
-│     endswith = def endswith(...) S.endswith(suffix[, start[, end]]) -> bool                                                             │
-│      isalnum = def isalnum(self, /): Return True if the string is an alpha-numeric string, False otherwise.                             │
-│      isalpha = def isalpha(self, /): Return True if the string is an alphabetic string, False otherwise.                                │
-│      isascii = def isascii(self, /): Return True if all characters in the string are ASCII, False otherwise.                            │
-│    isdecimal = def isdecimal(self, /): Return True if the string is a decimal string, False otherwise.                                  │
-│      isdigit = def isdigit(self, /): Return True if the string is a digit string, False otherwise.                                      │
-│ isidentifier = def isidentifier(self, /): Return True if the string is a valid Python identifier, False otherwise.                      │
-│      islower = def islower(self, /): Return True if the string is a lowercase string, False otherwise.                                  │
-│    isnumeric = def isnumeric(self, /): Return True if the string is a numeric string, False otherwise.                                  │
-│  isprintable = def isprintable(self, /): Return True if the string is printable, False otherwise.                                       │
-│      isspace = def isspace(self, /): Return True if the string is a whitespace string, False otherwise.                                 │
-│      istitle = def istitle(self, /): Return True if the string is a title-cased string, False otherwise.                                │
-│      isupper = def isupper(self, /): Return True if the string is an uppercase string, False otherwise.                                 │
-```
-
-Преобразования регистра
-```
-│        lower = def lower(self, /): Return a copy of the string converted to lowercase.                                                  │
-│   capitalize = def capitalize(self, /): Return a capitalized version of the string.                                                     │
-│     swapcase = def swapcase(self, /): Convert uppercase characters to lowercase and lowercase characters to uppercase.                  │
-│        title = def title(self, /): Return a version of the string where each word is titlecased.                                        │
-│        upper = def upper(self, /): Return a copy of the string converted to uppercase.                                                  │
-│     casefold = def casefold(self, /): Return a version of the string suitable for caseless comparisons.                                 │
-```
-
-Удаление whitespace символов
-```
-│        strip = def strip(self, chars=None, /): Return a copy of the string with leading and trailing whitespace removed.                │
-│       rstrip = def rstrip(self, chars=None, /): Return a copy of the string with trailing whitespace removed.                           │
-│       lstrip = def lstrip(self, chars=None, /): Return a copy of the string with leading whitespace removed.                            │
-```
-
-Выравнивание текста
-```
-│       center = def center(self, width, fillchar=' ', /): Return a centered string of length width.                                      │
-│        ljust = def ljust(self, width, fillchar=' ', /): Return a left-justified string of length width.                                 │
-│        rjust = def rjust(self, width, fillchar=' ', /): Return a right-justified string of length width.                                │
-│        zfill = def zfill(self, width, /): Pad a numeric string with zeros on the left, to fill a field of the given width.              │
-```
-
-Поиск, подсчет элементов
-```
-│        count = def count(...) S.count(sub[, start[, end]]) -> int                                                                       │
-│         find = def find(...) S.find(sub[, start[, end]]) -> int                                                                         │
-│        index = def index(...) S.index(sub[, start[, end]]) -> int                                                                       │
-│      replace = def replace(self, old, new, count=-1, /): Return a copy with all occurrences of substring old replaced by new.           │
-│        rfind = def rfind(...) S.rfind(sub[, start[, end]]) -> int                                                                       │
-│       rindex = def rindex(...) S.rindex(sub[, start[, end]]) -> int                                                                     │
-```
-
-Разделение строки на части
-```
-│         join = def join(self, iterable, /): Concatenate any number of strings.                                                          │
-│        split = def split(self, /, sep=None, maxsplit=-1): Return a list of the words in the string, using sep as the delimiter string.  │
-│   splitlines = def splitlines(self, /, keepends=False): Return a list of the lines in the string, breaking at line boundaries.          │
-│    partition = def partition(self, sep, /): Partition the string into three parts using the given separator.                            │
-│   rpartition = def rpartition(self, sep, /): Partition the string into three parts using the given separator.                           │
-│       rsplit = def rsplit(self, /, sep=None, maxsplit=-1): Return a list of the words in the string, using sep as the delimiter string. │
-```
-
-Другие методы
-```
-│   expandtabs = def expandtabs(self, /, tabsize=8): Return a copy where all tab characters are expanded using spaces.                    │
-│       format = def format(...) S.format(*args, **kwargs) -> str                                                                         │
-│   format_map = def format_map(...) S.format_map(mapping) -> str                                                                         │
-│    maketrans = def maketrans(...) Return a translation table usable for str.translate().                                                │
-│    translate = def translate(self, table, /): Replace each character in the string using the given translation table.                   │
-│       encode = def encode(self, /, encoding='utf-8', errors='strict'): Encode the string using the codec registered for encoding.       │
 ```
 
 
@@ -562,13 +458,13 @@ london = {'name': 'London1', 'location': 'London Str', 'vendor': 'Cisco'}
 
 london = {
         'id': 1,
-        'name':'London',
-        'it_vlan':320,
-        'user_vlan':1010,
-        'mngmt_vlan':99,
+        'name': 'London',
+        'it_vlan': 320,
+        'user_vlan': 1010,
+        'mngmt_vlan': 99,
         'to_name': None,
         'to_id': None,
-        'port':'G1/0/11'
+        'port': 'G1/0/11',
 }
 ```
 
@@ -603,30 +499,24 @@ In [5]: print(london)
 В словаре в качестве значения можно использовать словарь:
 ```python
 london_co = {
-    'r1' : {
-    'hostname': 'london_r1',
-    'location': '21 New Globe Walk',
-    'vendor': 'Cisco',
-    'model': '4451',
-    'ios': '15.4',
-    'ip': '10.255.0.1'
-    },
-    'r2' : {
-    'hostname': 'london_r2',
-    'location': '21 New Globe Walk',
-    'vendor': 'Cisco',
-    'model': '4451',
-    'ios': '15.4',
-    'ip': '10.255.0.2'
-    },
-    'sw1' : {
-    'hostname': 'london_sw1',
-    'location': '21 New Globe Walk',
-    'vendor': 'Cisco',
-    'model': '3850',
-    'ios': '3.6.XE',
-    'ip': '10.255.0.101'
-    }
+    'r1': {'hostname': 'london_r1',
+           'ios': '15.4',
+           'ip': '10.255.0.1',
+           'location': '21 New Globe Walk',
+           'model': '4451',
+           'vendor': 'Cisco'},
+    'r2': {'hostname': 'london_r2',
+           'ios': '15.4',
+           'ip': '10.255.0.2',
+           'location': '21 New Globe Walk',
+           'model': '4451',
+           'vendor': 'Cisco'},
+    'sw1': {'hostname': 'london_sw1',
+            'ios': '3.6.XE',
+            'ip': '10.255.0.101',
+            'location': '21 New Globe Walk',
+            'model': '3850',
+            'vendor': 'Cisco'},
 }
 ```
 
@@ -710,12 +600,8 @@ In [27]: inspect(dict, methods=True)
 ---
 ### Кортеж
 
-Создать пустой кортеж:
 ```python
-In [1]: tuple1 = tuple()
-
-In [2]: print(tuple1)
-()
+tuple_keys = ('hostname', 'location', 'vendor', 'model', 'ios', 'ip')
 ```
 
 Кортеж из одного элемента (обратите внимание на запятую):
@@ -728,12 +614,12 @@ In [3]: tuple2 = ('password',)
 
 Кортеж из списка:
 ```python
-In [4]: list_keys = ['hostname', 'location', 'vendor', 'model', 'IOS', 'IP']
+In [4]: list_keys = ['hostname', 'location', 'vendor', 'model', 'ios', 'ip']
 
 In [5]: tuple_keys = tuple(list_keys)
 
 In [6]: tuple_keys
-Out[6]: ('hostname', 'location', 'vendor', 'model', 'IOS', 'IP')
+Out[6]: ('hostname', 'location', 'vendor', 'model', 'ios', 'ip')
 ```
 
 К объектам в кортеже можно обращаться, как и к объектам списка, по порядковому номеру:
@@ -780,6 +666,10 @@ In [35]: inspect(tuple, methods=True)
 Множество - это изменяемый неупорядоченный тип данных. В множестве всегда содержатся только уникальные элементы.
 
 Множество в Python - это последовательность элементов, которые разделены между собой запятой и заключены в фигурные скобки.
+
+```python
+items = {40, 100, 10, 20, 30}
+```
 
 ---
 ### Множество
@@ -838,25 +728,26 @@ In [36]: inspect(set, methods=True)
 Множества полезны тем, что с ними можно делать различные операции и находить объединение множеств, пересечение и так далее.
 
 ```
-
-    Union                                  Intersection
-         _________                              _________
- _______|#########|                     _______|__       |
-|#######|##|######|                    |       |##|      |
-|#######|##|######|                    |       |##|      |
-|#######|##|######|                    |       |##|      |
-|#######|##|######|                    |_______|##|      |
-        |#########|                            |_________|
-
-
-     Difference                           Symmetric difference
-         _________                              _________
- _______|__       |                     _______|#########|
-|#######|  |      |                    |#######|  |######|
-|#######|  |      |                    |#######|  |######|
-|#######|  |      |                    |#######|  |######|
-|#######|__|      |                    |#######|__|######|
-        |_________|                            |#########|
+                 Union                              Intersection
+              Объединение                            Пересечение
+                   _________                              _________
+           _______|#########|                     _______|__       |
+          |#######|##|######|                    |       |##|      |
+          |#######|##|######|                    |       |##|      |
+          |#######|##|######|                    |       |##|      |
+          |#######|##|######|                    |_______|##|      |
+                  |#########|                            |_________|
+          
+          
+                 Difference                      Symmetric difference
+                 Разность                       Симметрическая разность
+                   _________                              _________
+           _______|__       |                     _______|#########|
+          |#######|  |      |                    |#######|  |######|
+          |#######|  |      |                    |#######|  |######|
+          |#######|  |      |                    |#######|  |######|
+          |#######|__|      |                    |#######|__|######|
+                  |_________|                            |#########|
 ```
 
 ---
@@ -1045,13 +936,13 @@ In [4]: print("{:>15} {:>15} {:>15}".format(vlan, mac, intf))
 Шаблон для вывода может быть и многострочным:
 ```python
 In [6]: ip_template = '''
-   ...: IP address:
+   ...: ip address:
    ...: {}
    ...: '''
 
 In [7]: print(ip_template.format('10.1.1.1'))
 
-IP address:
+ip address:
 10.1.1.1
 ```
 

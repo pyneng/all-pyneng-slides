@@ -18,26 +18,45 @@
 ### if/elif/else
 
 * Проверка if всегда идет первой
-* После оператора if должно быть какое-то условие: если это условие выполняется (возвращает True), то действия в блоке if выполняются
-* С помощью elif можно сделать несколько разветвлений, то есть, проверять входящие данные на разные условия
- * блок elif это тот же if, но только следующая проверка. Грубо говоря, это "а если ..."
- * блоков elif может быть много
+* После оператора if должно быть какое-то условие: если это условие является истинным, действия в блоке if выполняются
+* С помощью elif можно сделать несколько разветвлений
 * Блок else выполняется в том случае, если ни одно из условий if или elif не было истинным
+
+
+```python
+if expression:
+    ...
+
+
+if expression:
+    ...
+else:
+    ...
+
+
+if expression:
+    ...
+elif expression:
+    ...
+elif expression:
+    ...
+else:
+    ...
+```
+
 
 ---
 ### if/elif/else
 
 ```python
-In [1]: a = 9
+a = 9
 
-In [2]: if a == 10:
-   ...:     print('a равно 10')
-   ...: elif a < 10:
-   ...:     print('a меньше 10')
-   ...: else:
-   ...:     print('a больше 10')
-   ...:     
-a меньше 10
+if a == 10:
+    print('a равно 10')
+elif a < 10:
+    print('a меньше 10')
+else:
+    print('a больше 10')
 ```
 
 ---
@@ -56,7 +75,7 @@ Out[9]: True
 In [10]: 1 in [1, 2, 3]
 Out[10]: True
 
-In [11]: 0 in [ 1, 2, 3 ]
+In [11]: 0 in [1, 2, 3]
 Out[11]: False
 ```
 
@@ -78,17 +97,17 @@ Out[11]: False
 ### True и False
 
 ```python
-In [12]: list_to_test = [1, 2, 3]
+list_to_test = [1, 2, 3]
 
-In [13]: if list_to_test:
-   ....:     print("В списке есть объекты")
-   ....:
-В списке есть объекты
+if list_to_test:
+    print("В списке есть объекты")
 
-In [14]: if len(list_to_test) != 0:
-   ....:     print("В списке есть объекты")
-   ....:
-В списке есть объекты
+# Вывод: В списке есть объекты
+
+if len(list_to_test) != 0:
+    print("В списке есть объекты")
+
+# Вывод: В списке есть объекты
 ```
 
 ---
@@ -110,12 +129,7 @@ Out[6]: False
 
 In [7]: 5 == 5
 Out[7]: True
-```
 
----
-### Операторы сравнения
-
-```python
 In [8]: 5 >= 5
 Out[8]: True
 
@@ -149,17 +163,18 @@ Out[12]: False
 ---
 ### Оператор in
 
-При использовании со словарями условие __in__ выполняет проверку по ключам словаря:
+При использовании со словарями условие ``in`` выполняет проверку по ключам словаря:
 ```python
-In [15]: r1 = {
-   ....:  'IOS': '15.4',
-   ....:  'IP': '10.255.0.1',
-   ....:  'hostname': 'london_r1',
-   ....:  'location': '21 New Globe Walk',
-   ....:  'model': '4451',
-   ....:  'vendor': 'Cisco'}
+r1 = {
+    'ios': '15.4',
+    'ip': '10.255.0.1',
+    'hostname': 'london_r1',
+    'location': '21 New Globe Walk',
+    'model': '4451',
+    'vendor': 'Cisco'
+}
 
-In [16]: 'IOS' in r1
+In [16]: 'ios' in r1
 Out[16]: True
 
 In [17]: '4451' in r1
@@ -170,17 +185,18 @@ Out[17]: False
 ### Операторы and, or, not
 
 ```python
-In [15]: r1 = {
-   ....:  'IOS': '15.4',
-   ....:  'IP': '10.255.0.1',
-   ....:  'hostname': 'london_r1',
-   ....:  'location': '21 New Globe Walk',
-   ....:  'model': '4451',
-   ....:  'vendor': 'Cisco'}
+r1 = {
+    'ios': '15.4',
+    'ip': '10.255.0.1',
+    'hostname': 'london_r1',
+    'location': '21 New Globe Walk',
+    'model': '4451',
+    'vendor': 'Cisco'
+}
 
 In [18]: vlan = [10, 20, 30, 40]
 
-In [19]: 'IOS' in r1 and 10 in vlan
+In [19]: 'ios' in r1 and 10 in vlan
 Out[19]: True
 
 In [20]: '4451' in r1 and 10 in vlan
@@ -202,6 +218,7 @@ Out[23]: True
 В Python оператор ```and``` возвращает не булево значение, а значение одного из операторов.
 
 Если оба операнда являются истиной, результатом выражения будет последнее значение:
+
 ```python
 In [24]: 'string1' and 'string2'
 Out[24]: 'string2'
@@ -211,23 +228,12 @@ Out[25]: 'string3'
 ```
 
 ---
-### Оператор and
-
-Если один из операторов является ложью, результатом выражения будет первое ложное значение:
-```python
-In [26]: '' and 'string1'
-Out[26]: ''
-
-In [27]: '' and [] and 'string1'
-Out[27]: ''
-```
-
----
 ### Оператор or
 
 Оператор ```or```, как и оператор and, возвращает значение одного из операторов.
 
 При оценке операндов возвращается первый истинный операнд:
+
 ```python
 In [28]: '' or 'string1'
 Out[28]: 'string1'
@@ -248,14 +254,35 @@ In [31]: '' or [] or {}
 Out[31]: {}
 ```
 
-Важная особенность работы оператора ```or``` - операнды, которые находятся после истинного, не вычисляются:
-```python
-In [33]: '' or sorted([44, 1, 67])
-Out[33]: [1, 44, 67]
+---
 
-In [34]: '' or 'string1' or sorted([44, 1, 67])
-Out[34]: 'string1'
+### Вычисления по короткой схеме ([Short-Circuit evaluation](https://en.wikipedia.org/wiki/Short-circuit_evaluation))
+
+```python
+In [1]: True and print(10)
+10
+
+In [2]: False and print(10)
+Out[2]: False
+
+In [3]: False or print(10)
+10
+
+In [4]: False or print(10) or True
+10
+Out[4]: True
 ```
+
+---
+### [Приоритет операторов](https://docs.python.org/3/reference/expressions.html#operator-precedence)
+
+* ``x[index] x[i:j] x(arg1, arg2, ...) x.attr``
+* ``* / %``
+* ``+ -``
+* ``in``, ``not in``, ``is``, ``is not``, ``< <= > >= != ==``
+* ``not x``
+* ``and``
+* ``or``
 
 ---
 ### Пример использования конструкции if/elif/else
@@ -270,7 +297,7 @@ if len(password) < 8:
 elif username in password:
     print('Пароль содержит имя пользователя')
 else:
-    print('Пароль для пользователя {} установлен'.format(username))
+    print(f'Пароль для пользователя {username} установлен')
 ```
 
 ---
@@ -395,8 +422,8 @@ vlan 100
 
 ```python
 In [5]: r1 = {
- 'IOS': '15.4',
- 'IP': '10.255.0.1',
+ 'ios': '15.4',
+ 'ip': '10.255.0.1',
  'hostname': 'london_r1',
  'location': '21 New Globe Walk',
  'model': '4451',
@@ -406,9 +433,9 @@ In [6]: for k in r1:
    ....:     print(k)
    ....:     
 vendor
-IP
+ip
 hostname
-IOS
+ios
 location
 model
 ```
@@ -423,9 +450,9 @@ In [7]: for key in r1:
    ....:     print(key + ' => ' + r1[key])
    ....:     
 vendor => Cisco
-IP => 10.255.0.1
+ip => 10.255.0.1
 hostname => london_r1
-IOS => 15.4
+ios => 15.4
 location => 21 New Globe Walk
 model => 4451
 ```
@@ -440,9 +467,9 @@ In [8]: for key, value in r1.items():
    ....:     print(key + ' => ' + value)
    ....:     
 vendor => Cisco
-IP => 10.255.0.1
+ip => 10.255.0.1
 hostname => london_r1
-IOS => 15.4
+ios => 15.4
 location => 21 New Globe Walk
 model => 4451
 ```
