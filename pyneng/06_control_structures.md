@@ -7,7 +7,6 @@
 * if/elif/else
 * for
 * while
-* pass, break, continue
 * try/except
 
 ---
@@ -561,7 +560,7 @@ interface FastEthernet0/17
 
 В цикле while, как и в выражении if, надо писать условие.
 Если условие истинно, выполняются действия внутри блока while. 
-Но, в отличии от if, после выполнения while возвращается в начало цикла.
+В отличии от if, после выполнения while возвращается в начало цикла.
 
 При использовании циклов while необходимо обращать внимание на то, будет ли достигнуто такое состояние, при котором условие цикла будет ложным.
 
@@ -958,9 +957,9 @@ $ python divide_ver3.py
 
 Файл divide_ver4.py с блоком finally:
 ```python
+a = input("Введите первое число: ")
+b = input("Введите второе число: ")
 try:
-    a = input("Введите первое число: ")
-    b = input("Введите второе число: ")
     result = int(a)/int(b)
 except (ValueError, ZeroDivisionError):
     print("Что-то пошло не так...")
@@ -1041,4 +1040,56 @@ while True:
 
 Если вы раньше использовали какой-то другой язык программирования, есть вероятность, что в нем использование исключений считалось плохим тоном.
 В Python этот не так.
+
+---
+### LBYL vs EAFP
+
+* LBYL - look before you leap
+* EAFP - easier to ask forgiveness than permission 
+
+---
+### LBYL vs EAFP
+
+EAFP - easier to ask forgiveness than permission 
+```python
+a = input("Введите число: ")
+b = input("Введите второе число: ")
+try:
+    result = int(a) / int(b)
+except ValueError:
+    print("Поддерживаются только числа")
+except ZeroDivisionError:
+    print("На ноль делить нельзя")
+else:
+    print(result)
+```
+
+LBYL - look before you leap
+
+```python
+a = input("Введите число: ")
+b = input("Введите второе число: ")
+if a.isdigit() and b.isdigit():
+    if int(b) == 0:
+        print("На ноль делить нельзя")
+    else:
+        print(int(a) / int(b))
+else:
+    print("Поддерживаются только числа")
+```
+
+---
+### for/else, while/else
+
+В циклах for и while опционально может использоваться блок else.
+
+for/else
+
+* блок else выполняется в том случае, если цикл завершил итерацию списка
+* но else не выполняется, если в цикле был выполнен break
+
+while/else
+
+* блок else выполняется в том случае, если условие в while ложно
+* else не выполняется, если в цикле был выполнен break
 
