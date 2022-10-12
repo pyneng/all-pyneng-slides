@@ -3,296 +3,262 @@
 ---
 ## Полезные модули
 
-* subprocess
-* os
-* glob
-* ipaddress
 * pprint
+* glob
+* os
+* ipaddress
 * tabulate
+* subprocess
 
 ---
-## Модуль subprocess
+## Модуль pprint
 
 ---
-### Модуль subprocess
+### Модуль pprint
 
-Модуль subprocess позволяет создавать новые процессы.  
-При этом он может подключаться к [стандартным потокам ввода/вывода/ошибок](http://xgu.ru/wiki/stdin) и получать код возврата.
+Модуль pprint позволяет красиво отображать объекты Python.
+При этом сохраняется структура объекта и отображение, которое выводит pprint, можно использовать для создания объекта.
 
-С помощью subprocess можно, например, выполнять любые команды Linux из скрипта.  
-И, в зависимости от ситуации, получать вывод или только проверять, что команда выполнилась без ошибок.
 
 ---
-### Функция `subprocess.run()`
+### Модуль pprint
 
-Функция `subprocess.run()` - основной способ работы с модулем subprocess.
+```python
+In [6]: london_co = {'r1': {'hostname': 'london_r1', 'location': '21 New Globe Wal
+   ...: k', 'vendor': 'Cisco', 'model': '4451', 'IOS': '15.4', 'IP': '10.255.0.1'}
+   ...: , 'r2': {'hostname': 'london_r2', 'location': '21 New Globe Walk', 'vendor
+   ...: ': 'Cisco', 'model': '4451', 'IOS': '15.4', 'IP': '10.255.0.2'}, 'sw1': {'
+   ...: hostname': 'london_sw1', 'location': '21 New Globe Walk', 'vendor': 'Cisco
+   ...: ', 'model': '3850', 'IOS': '3.6.XE', 'IP': '10.255.0.101'}}
+   ...:
 
-```py
-In [1]: import subprocess
+In [7]: from pprint import pprint
 
-In [2]: result = subprocess.run('ls')
-ipython_as_mngmt_console.md  README.md         version_control.md
-module_search.md             useful_functions
-naming_conventions           useful_modules
+In [8]: pprint(london_co)
+{'r1': {'IOS': '15.4',
+        'IP': '10.255.0.1',
+        'hostname': 'london_r1',
+        'location': '21 New Globe Walk',
+        'model': '4451',
+        'vendor': 'Cisco'},
+ 'r2': {'IOS': '15.4',
+        'IP': '10.255.0.2',
+        'hostname': 'london_r2',
+        'location': '21 New Globe Walk',
+        'model': '4451',
+        'vendor': 'Cisco'},
+ 'sw1': {'IOS': '3.6.XE',
+         'IP': '10.255.0.101',
+         'hostname': 'london_sw1',
+         'location': '21 New Globe Walk',
+         'model': '3850',
+         'vendor': 'Cisco'}}
+```
+
+---
+### Модуль pprint
+
+Список списков:
+```python
+In [13]: interfaces = [['FastEthernet0/0', '15.0.15.1', 'YES', 'manual', 'up', 'up
+    ...: '], ['FastEthernet0/1', '10.0.1.1', 'YES', 'manual', 'up', 'up'], ['FastE
+    ...: thernet0/2', '10.0.2.1', 'YES', 'manual', 'up', 'down']]
+    ...:
+
+In [14]: pprint(interfaces)
+[['FastEthernet0/0', '15.0.15.1', 'YES', 'manual', 'up', 'up'],
+ ['FastEthernet0/1', '10.0.1.1', 'YES', 'manual', 'up', 'up'],
+ ['FastEthernet0/2', '10.0.2.1', 'YES', 'manual', 'up', 'down']]
+```
+
+---
+### Модуль pprint
+
+Строка:
+```python
+In [18]: tunnel
+Out[18]: '\ninterface Tunnel0\n ip address 10.10.10.1 255.255.255.0\n ip mtu 1416\n ip ospf hello-interval 5\n tunnel source FastEthernet1/0\n tunnel protection ipsec profile DMVPN\n'
+
+In [19]: pprint(tunnel)
+('\n'
+ 'interface Tunnel0\n'
+ ' ip address 10.10.10.1 255.255.255.0\n'
+ ' ip mtu 1416\n'
+ ' ip ospf hello-interval 5\n'
+ ' tunnel source FastEthernet1/0\n'
+ ' tunnel protection ipsec profile DMVPN\n')
 
 ```
 
 ---
-### Функция `subprocess.run()`
+### Ограничение вложенности
 
-В переменной result теперь содержится специальный объект CompletedProcess.
-Из этого объекта можно получить информацию о выполнении процесса, например, о коде возврата:
-```py
-In [3]: result
-Out[3]: CompletedProcess(args='ls', returncode=0)
+У функции pprint есть дополнительный параметр depth, который позволяет ограничивать глубину отображения структуры данных.
 
-In [4]: result.returncode
-Out[4]: 0
+```python
+In [3]: result = {
+   ...:  'interface Tunnel0': [' ip unnumbered Loopback0',
+   ...:   ' tunnel mode mpls traffic-eng',
+   ...:   ' tunnel destination 10.2.2.2',
+   ...:   ' tunnel mpls traffic-eng priority 7 7',
+   ...:   ' tunnel mpls traffic-eng bandwidth 5000',
+   ...:   ' tunnel mpls traffic-eng path-option 10 dynamic',
+   ...:   ' no routing dynamic'],
+   ...:  'ip access-list standard LDP': [' deny   10.0.0.0 0.0.255.255',
+   ...:   ' permit 10.0.0.0 0.255.255.255'],
+   ...:  'router bgp 100': {' address-family vpnv4': ['  neighbor 10.2.2.2 activat
+   ...: e',
+   ...:    '  neighbor 10.2.2.2 send-community both',
+   ...:    '  exit-address-family'],
+   ...:   ' bgp bestpath igp-metric ignore': [],
+   ...:   ' bgp log-neighbor-changes': [],
+   ...:   ' neighbor 10.2.2.2 next-hop-self': [],
+   ...:   ' neighbor 10.2.2.2 remote-as 100': [],
+   ...:   ' neighbor 10.2.2.2 update-source Loopback0': [],
+   ...:   ' neighbor 10.4.4.4 remote-as 40': []},
+   ...:  'router ospf 1': [' mpls ldp autoconfig area 0',
+   ...:   ' mpls traffic-eng router-id Loopback0',
+   ...:   ' mpls traffic-eng area 0',
+   ...:   ' network 10.0.0.0 0.255.255.255 area 0']}
+   ...:
 ```
 
 ---
-### Функция `subprocess.run()`
+### Ограничение вложенности
 
-Если необходимо вызвать команду с аргументами, её нужно передавать таким образом (как список):
-```py
-In [5]: result = subprocess.run(['ls', '-ls'])
-total 28
-4 -rw-r--r-- 1 vagrant vagrant   56 Jun  7 19:35 ipython_as_mngmt_console.md
-4 -rw-r--r-- 1 vagrant vagrant 1638 Jun  7 19:35 module_search.md
-4 drwxr-xr-x 2 vagrant vagrant 4096 Jun  7 19:35 naming_conventions
-4 -rw-r--r-- 1 vagrant vagrant  277 Jun  7 19:35 README.md
-4 drwxr-xr-x 2 vagrant vagrant 4096 Jun 16 05:11 useful_functions
-4 drwxr-xr-x 2 vagrant vagrant 4096 Jun 17 16:28 useful_modules
-4 -rw-r--r-- 1 vagrant vagrant   49 Jun  7 19:35 version_control.md
-
+Можно отобразить только ключи, указав глубину равной 1:
+```python
+In [5]: pprint(result, depth=1)
+{'interface Tunnel0': [...],
+ 'ip access-list standard LDP': [...],
+ 'router bgp 100': {...},
+ 'router ospf 1': [...]}
 ```
 
----
-### Функция `subprocess.run()`
-
-При попытке выполнить команду с использованием wildcard выражений, например, использовать `*`, возникнет ошибка:
-```py
-In [6]: result = subprocess.run(['ls', '-ls', '*md'])
-ls: cannot access *md: No such file or directory
-
-```
+Скрытые уровни сложенности заменяются ```...```.
 
 ---
-### Функция `subprocess.run()`
+### Ограничение вложенности
 
-Чтобы вызывать команды, в которых используются wildcard выражения, нужно добавлять аргумент shell и вызывать команду таким образом:
-```py
-In [7]: result = subprocess.run('ls -ls *md', shell=True)
-4 -rw-r--r-- 1 vagrant vagrant   56 Jun  7 19:35 ipython_as_mngmt_console.md
-4 -rw-r--r-- 1 vagrant vagrant 1638 Jun  7 19:35 module_search.md
-4 -rw-r--r-- 1 vagrant vagrant  277 Jun  7 19:35 README.md
-4 -rw-r--r-- 1 vagrant vagrant   49 Jun  7 19:35 version_control.md
-
-```
-
----
-### Функция `subprocess.run()`
-
-Ещё одна особенность функции run() - она ожидает завершения выполнения команды.
-Если попробовать, например, запустить команду ping, то этот аспект будет заметен:
-```py
-In [8]: result = subprocess.run(['ping', '-c', '3', '-n', '8.8.8.8'])
-PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
-64 bytes from 8.8.8.8: icmp_seq=1 ttl=43 time=55.1 ms
-64 bytes from 8.8.8.8: icmp_seq=2 ttl=43 time=54.7 ms
-64 bytes from 8.8.8.8: icmp_seq=3 ttl=43 time=54.4 ms
-
---- 8.8.8.8 ping statistics ---
-3 packets transmitted, 3 received, 0% packet loss, time 2004ms
-rtt min/avg/max/mdev = 54.498/54.798/55.116/0.252 ms
-
-```
-
----
-### Получение результата выполнения команды
-
-По умолчанию функция run возвращает результат выполнения команды на стандартный поток вывода.
-
-Если нужно получить результат выполнения команды, надо добавить аргумент stdout и указать ему значение subprocess.PIPE:
-```py
-In [9]: result = subprocess.run(['ls', '-ls'], stdout=subprocess.PIPE)
-```
-
----
-### Получение результата выполнения команды
-
-Теперь можно получить результат выполнения команды таким образом:
-```py
-In [10]: print(result.stdout)
-b'total 28\n4 -rw-r--r-- 1 vagrant vagrant   56 Jun  7 19:35 ipython_as_mngmt_console.md\n4 -rw-r--r-- 1 vagrant vagrant 1638 Jun  7 19:35 module_search.md\n4 drwxr-xr-x 2 vagrant vagrant 4096 Jun  7 19:35 naming_conventions\n4 -rw-r--r-- 1 vagrant vagrant  277 Jun  7 19:35 README.md\n4 drwxr-xr-x 2 vagrant vagrant 4096 Jun 16 05:11 useful_functions\n4 drwxr-xr-x 2 vagrant vagrant 4096 Jun 17 16:30 useful_modules\n4 -rw-r--r-- 1 vagrant vagrant   49 Jun  7 19:35 version_control.md\n'
+Если указать глубину равной 2, отобразится следующий уровень:
+```python
+In [6]: pprint(result, depth=2)
+{'interface Tunnel0': [' ip unnumbered Loopback0',
+                       ' tunnel mode mpls traffic-eng',
+                       ' tunnel destination 10.2.2.2',
+                       ' tunnel mpls traffic-eng priority 7 7',
+                       ' tunnel mpls traffic-eng bandwidth 5000',
+                       ' tunnel mpls traffic-eng path-option 10 dynamic',
+                       ' no routing dynamic'],
+ 'ip access-list standard LDP': [' deny   10.0.0.0 0.0.255.255',
+                                 ' permit 10.0.0.0 0.255.255.255'],
+ 'router bgp 100': {' address-family vpnv4': [...],
+                    ' bgp bestpath igp-metric ignore': [],
+                    ' bgp log-neighbor-changes': [],
+                    ' neighbor 10.2.2.2 next-hop-self': [],
+                    ' neighbor 10.2.2.2 remote-as 100': [],
+                    ' neighbor 10.2.2.2 update-source Loopback0': [],
+                    ' neighbor 10.4.4.4 remote-as 40': []},
+ 'router ospf 1': [' mpls ldp autoconfig area 0',
+                   ' mpls traffic-eng router-id Loopback0',
+                   ' mpls traffic-eng area 0',
+                   ' network 10.0.0.0 0.255.255.255 area 0']}
 
 ```
 
 ---
-### Получение результата выполнения команды
+### pformat
 
-Модуль вернул вывод в виде байтовой строки.
+pformat - это функция, которая отображает результат в виде строки.
+Ее удобно использовать, если необходимо записать структуру данных в какой-то файл, например, для логирования.
 
-Для перевода её в unicode есть два варианта:
+```python
+In [15]: from pprint import pformat
 
-* выполнить decode полученной строки
-* указать аргумент encoding
+In [16]: formatted_result = pformat(result)
 
----
-### Получение результата выполнения команды
-
-Вариант с decode:
-```py
-In [11]: print(result.stdout.decode('utf-8'))
-total 28
-4 -rw-r--r-- 1 vagrant vagrant   56 Jun  7 19:35 ipython_as_mngmt_console.md
-4 -rw-r--r-- 1 vagrant vagrant 1638 Jun  7 19:35 module_search.md
-4 drwxr-xr-x 2 vagrant vagrant 4096 Jun  7 19:35 naming_conventions
-4 -rw-r--r-- 1 vagrant vagrant  277 Jun  7 19:35 README.md
-4 drwxr-xr-x 2 vagrant vagrant 4096 Jun 16 05:11 useful_functions
-4 drwxr-xr-x 2 vagrant vagrant 4096 Jun 17 16:30 useful_modules
-4 -rw-r--r-- 1 vagrant vagrant   49 Jun  7 19:35 version_control.md
-
+In [17]: print(formatted_result)
+{'interface Tunnel0': [' ip unnumbered Loopback0',
+                       ' tunnel mode mpls traffic-eng',
+                       ' tunnel destination 10.2.2.2',
+                       ' tunnel mpls traffic-eng priority 7 7',
+                       ' tunnel mpls traffic-eng bandwidth 5000',
+                       ' tunnel mpls traffic-eng path-option 10 dynamic',
+                       ' no routing dynamic'],
+ 'ip access-list standard LDP': [' deny   10.0.0.0 0.0.255.255',
+                                 ' permit 10.0.0.0 0.255.255.255'],
+ 'router bgp 100': {' address-family vpnv4': ['  neighbor 10.2.2.2 activate',
+                                              '  neighbor 10.2.2.2 '
+                                              'send-community both',
+                                              '  exit-address-family'],
+                    ' bgp bestpath igp-metric ignore': [],
+                    ' bgp log-neighbor-changes': [],
+                    ' neighbor 10.2.2.2 next-hop-self': [],
+                    ' neighbor 10.2.2.2 remote-as 100': [],
+                    ' neighbor 10.2.2.2 update-source Loopback0': [],
+                    ' neighbor 10.4.4.4 remote-as 40': []},
+ 'router ospf 1': [' mpls ldp autoconfig area 0',
+                   ' mpls traffic-eng router-id Loopback0',
+                   ' mpls traffic-eng area 0',
+                   ' network 10.0.0.0 0.255.255.255 area 0']}
 ```
 
 ---
-### Получение результата выполнения команды
-
-Вариант с encoding:
-```py
-In [12]: result = subprocess.run(['ls', '-ls'], stdout=subprocess.PIPE, encoding='utf-8')
-
-In [13]: print(result.stdout)
-total 28
-4 -rw-r--r-- 1 vagrant vagrant   56 Jun  7 19:35 ipython_as_mngmt_console.md
-4 -rw-r--r-- 1 vagrant vagrant 1638 Jun  7 19:35 module_search.md
-4 drwxr-xr-x 2 vagrant vagrant 4096 Jun  7 19:35 naming_conventions
-4 -rw-r--r-- 1 vagrant vagrant  277 Jun  7 19:35 README.md
-4 drwxr-xr-x 2 vagrant vagrant 4096 Jun 16 05:11 useful_functions
-4 drwxr-xr-x 2 vagrant vagrant 4096 Jun 17 16:31 useful_modules
-4 -rw-r--r-- 1 vagrant vagrant   49 Jun  7 19:35 version_control.md
-
-```
+## Модуль glob
 
 ---
-### Отключение вывода
+### Модуль glob
 
-Иногда достаточно получения кода возврата и нужно отключить вывод результата выполнения на стандартный поток вывода, и при этом сам результат не нужен.
+Шаблоны glob определяют наборы имен файлов с подстановочными знаками.
 
-Это можно сделать, передав функции run аргумент stdout со значением subprocess.DEVNULL:
-```py
-In [14]: result = subprocess.run(['ls', '-ls'], stdout=subprocess.DEVNULL)
-
-In [15]: print(result.stdout)
-None
-
-In [16]: print(result.returncode)
-0
-```
+* ``*``
+* ``?``
+* ``[abc]``
+* ``[a-z]``
 
 
 ---
-### Работа со стандартным потоком ошибок
-
-Если команда была выполнена с ошибкой или не отработала корректно, вывод команды попадет на стандартный поток ошибок.
-
-Получить этот вывод можно так же, как и стандартный поток вывода:
-```py
-In [17]: result = subprocess.run(['ping', '-c', '3', '-n', 'a'], stderr=subprocess.PIPE, encoding='utf-8')
-```
-
----
-### Работа со стандартным потоком ошибок
-
-Теперь в result.stdout пустая строка, а в result.stderr находится стандартный поток вывода:
-```
-In [18]: print(result.stdout)
-None
-
-In [19]: print(result.stderr)
-ping: unknown host a
-
-
-In [20]: print(result.returncode)
-2
+### Модуль glob
 
 ```
-
----
-### Примеры использования модуля
-
-Пример использования модуля subprocess (файл subprocess_run_basic.py):
-```py
-import subprocess
-
-reply = subprocess.run(['ping', '-c', '3', '-n', '8.8.8.8'])
-
-if reply.returncode == 0:
-    print('Alive')
-else:
-    print('Unreachable')
-
+├── task_9_0.py
+├── task_9_1.py
+├── task_9_2.py
+├── task_9_3a.py
+├── task_9_3.py
+├── task_9_4.py
+├── task_9_5a.py
+├── task_9_5.py
+├── task_9_6a.py
+├── task_9_6.py
+├── task_9_7.py
 ```
 
----
-### Примеры использования модуля
+```python
+In [5]: glob("task_9_[1-3]*")
+Out[5]: ['task_9_3a.py', 'task_9_3.py', 'task_9_1.py', 'task_9_2.py']
 
-Результат выполнения будет таким:
-```py
-$ python subprocess_run_basic.py
-PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
-64 bytes from 8.8.8.8: icmp_seq=1 ttl=43 time=54.0 ms
-64 bytes from 8.8.8.8: icmp_seq=2 ttl=43 time=54.4 ms
-64 bytes from 8.8.8.8: icmp_seq=3 ttl=43 time=53.9 ms
+In [6]: glob("task_9_3*")
+Out[6]: ['task_9_3a.py', 'task_9_3.py']
 
---- 8.8.8.8 ping statistics ---
-3 packets transmitted, 3 received, 0% packet loss, time 2005ms
-rtt min/avg/max/mdev = 53.962/54.145/54.461/0.293 ms
-Alive
+In [7]: glob("task_9_?a*")
+Out[7]: ['task_9_3a.py', 'task_9_5a.py', 'task_9_6a.py']
+
+In [4]: glob("task*")
+Out[4]:
+['task_9_3a.py',
+ 'task_9_3.py',
+ 'task_9_5a.py',
+ 'task_9_5.py',
+ 'task_9_6.py',
+ 'task_9_0.py',
+ 'task_9_7.py',
+ 'task_9_6a.py',
+ 'task_9_4.py',
+ 'task_9_1.py',
+ 'task_9_2.py']
 ```
 
----
-### Примеры использования модуля
-
-Функция ping_ip проверяет доступность IP-адреса и возвращает True и stdout, если адрес доступен, или False и stderr, если адрес недоступен (файл subprocess_ping_function.py):
-```py
-import subprocess
-
-
-def ping_ip(ip_address):
-    """
-    Ping IP address and return tuple:
-    On success:
-        * True
-        * command output (stdout)
-    On failure:
-        * False
-        * error output (stderr)
-    """
-    reply = subprocess.run(['ping', '-c', '3', '-n', ip_address],
-                           stdout=subprocess.PIPE,
-                           stderr=subprocess.PIPE,
-                           encoding='utf-8')
-    if reply.returncode == 0:
-        return True, reply.stdout
-    else:
-        return False, reply.stderr
-
-print(ping_ip('8.8.8.8'))
-print(ping_ip('a'))
-
-```
-
----
-### Примеры использования модуля
-
-Результат выполнения будет таким:
-```
-$ python subprocess_ping_function.py
-(True, 'PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.\n64 bytes from 8.8.8.8: icmp_seq=1 ttl=43 time=63.8 ms\n64 bytes from 8.8.8.8: icmp_seq=2 ttl=43 time=55.6 ms\n64 bytes from 8.8.8.8: icmp_seq=3 ttl=43 time=55.9 ms\n\n--- 8.8.8.8 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2003ms\nrtt min/avg/max/mdev = 55.643/58.492/63.852/3.802 ms\n')
-(False, 'ping: unknown host a\n')
-
-```
 
 ---
 ## Модуль os
@@ -869,197 +835,288 @@ In [27]: print(tabulate(list_of_dict, headers='keys', tablefmt='pipe', stralign=
 
 ```
 
----
-## Модуль pprint
 
 ---
-### Модуль pprint
-
-Модуль pprint позволяет красиво отображать объекты Python.
-При этом сохраняется структура объекта и отображение, которое выводит pprint, можно использовать для создания объекта.
-
+## Модуль subprocess
 
 ---
-### Модуль pprint
+### Модуль subprocess
 
-```python
-In [6]: london_co = {'r1': {'hostname': 'london_r1', 'location': '21 New Globe Wal
-   ...: k', 'vendor': 'Cisco', 'model': '4451', 'IOS': '15.4', 'IP': '10.255.0.1'}
-   ...: , 'r2': {'hostname': 'london_r2', 'location': '21 New Globe Walk', 'vendor
-   ...: ': 'Cisco', 'model': '4451', 'IOS': '15.4', 'IP': '10.255.0.2'}, 'sw1': {'
-   ...: hostname': 'london_sw1', 'location': '21 New Globe Walk', 'vendor': 'Cisco
-   ...: ', 'model': '3850', 'IOS': '3.6.XE', 'IP': '10.255.0.101'}}
-   ...:
+Модуль subprocess позволяет создавать новые процессы.  
+При этом он может подключаться к [стандартным потокам ввода/вывода/ошибок](http://xgu.ru/wiki/stdin) и получать код возврата.
 
-In [7]: from pprint import pprint
-
-In [8]: pprint(london_co)
-{'r1': {'IOS': '15.4',
-        'IP': '10.255.0.1',
-        'hostname': 'london_r1',
-        'location': '21 New Globe Walk',
-        'model': '4451',
-        'vendor': 'Cisco'},
- 'r2': {'IOS': '15.4',
-        'IP': '10.255.0.2',
-        'hostname': 'london_r2',
-        'location': '21 New Globe Walk',
-        'model': '4451',
-        'vendor': 'Cisco'},
- 'sw1': {'IOS': '3.6.XE',
-         'IP': '10.255.0.101',
-         'hostname': 'london_sw1',
-         'location': '21 New Globe Walk',
-         'model': '3850',
-         'vendor': 'Cisco'}}
-```
+С помощью subprocess можно, например, выполнять любые команды Linux из скрипта.  
+И, в зависимости от ситуации, получать вывод или только проверять, что команда выполнилась без ошибок.
 
 ---
-### Модуль pprint
+### Функция `subprocess.run()`
 
-Список списков:
-```python
-In [13]: interfaces = [['FastEthernet0/0', '15.0.15.1', 'YES', 'manual', 'up', 'up
-    ...: '], ['FastEthernet0/1', '10.0.1.1', 'YES', 'manual', 'up', 'up'], ['FastE
-    ...: thernet0/2', '10.0.2.1', 'YES', 'manual', 'up', 'down']]
-    ...:
+Функция `subprocess.run()` - основной способ работы с модулем subprocess.
 
-In [14]: pprint(interfaces)
-[['FastEthernet0/0', '15.0.15.1', 'YES', 'manual', 'up', 'up'],
- ['FastEthernet0/1', '10.0.1.1', 'YES', 'manual', 'up', 'up'],
- ['FastEthernet0/2', '10.0.2.1', 'YES', 'manual', 'up', 'down']]
-```
+```py
+In [1]: import subprocess
 
----
-### Модуль pprint
-
-Строка:
-```python
-In [18]: tunnel
-Out[18]: '\ninterface Tunnel0\n ip address 10.10.10.1 255.255.255.0\n ip mtu 1416\n ip ospf hello-interval 5\n tunnel source FastEthernet1/0\n tunnel protection ipsec profile DMVPN\n'
-
-In [19]: pprint(tunnel)
-('\n'
- 'interface Tunnel0\n'
- ' ip address 10.10.10.1 255.255.255.0\n'
- ' ip mtu 1416\n'
- ' ip ospf hello-interval 5\n'
- ' tunnel source FastEthernet1/0\n'
- ' tunnel protection ipsec profile DMVPN\n')
+In [2]: result = subprocess.run('ls')
+ipython_as_mngmt_console.md  README.md         version_control.md
+module_search.md             useful_functions
+naming_conventions           useful_modules
 
 ```
 
 ---
-### Ограничение вложенности
+### Функция `subprocess.run()`
 
-У функции pprint есть дополнительный параметр depth, который позволяет ограничивать глубину отображения структуры данных.
+В переменной result теперь содержится специальный объект CompletedProcess.
+Из этого объекта можно получить информацию о выполнении процесса, например, о коде возврата:
+```py
+In [3]: result
+Out[3]: CompletedProcess(args='ls', returncode=0)
 
-```python
-In [3]: result = {
-   ...:  'interface Tunnel0': [' ip unnumbered Loopback0',
-   ...:   ' tunnel mode mpls traffic-eng',
-   ...:   ' tunnel destination 10.2.2.2',
-   ...:   ' tunnel mpls traffic-eng priority 7 7',
-   ...:   ' tunnel mpls traffic-eng bandwidth 5000',
-   ...:   ' tunnel mpls traffic-eng path-option 10 dynamic',
-   ...:   ' no routing dynamic'],
-   ...:  'ip access-list standard LDP': [' deny   10.0.0.0 0.0.255.255',
-   ...:   ' permit 10.0.0.0 0.255.255.255'],
-   ...:  'router bgp 100': {' address-family vpnv4': ['  neighbor 10.2.2.2 activat
-   ...: e',
-   ...:    '  neighbor 10.2.2.2 send-community both',
-   ...:    '  exit-address-family'],
-   ...:   ' bgp bestpath igp-metric ignore': [],
-   ...:   ' bgp log-neighbor-changes': [],
-   ...:   ' neighbor 10.2.2.2 next-hop-self': [],
-   ...:   ' neighbor 10.2.2.2 remote-as 100': [],
-   ...:   ' neighbor 10.2.2.2 update-source Loopback0': [],
-   ...:   ' neighbor 10.4.4.4 remote-as 40': []},
-   ...:  'router ospf 1': [' mpls ldp autoconfig area 0',
-   ...:   ' mpls traffic-eng router-id Loopback0',
-   ...:   ' mpls traffic-eng area 0',
-   ...:   ' network 10.0.0.0 0.255.255.255 area 0']}
-   ...:
+In [4]: result.returncode
+Out[4]: 0
 ```
 
 ---
-### Ограничение вложенности
+### Функция `subprocess.run()`
 
-Можно отобразить только ключи, указав глубину равной 1:
-```python
-In [5]: pprint(result, depth=1)
-{'interface Tunnel0': [...],
- 'ip access-list standard LDP': [...],
- 'router bgp 100': {...},
- 'router ospf 1': [...]}
-```
-
-Скрытые уровни сложенности заменяются ```...```.
-
----
-### Ограничение вложенности
-
-Если указать глубину равной 2, отобразится следующий уровень:
-```python
-In [6]: pprint(result, depth=2)
-{'interface Tunnel0': [' ip unnumbered Loopback0',
-                       ' tunnel mode mpls traffic-eng',
-                       ' tunnel destination 10.2.2.2',
-                       ' tunnel mpls traffic-eng priority 7 7',
-                       ' tunnel mpls traffic-eng bandwidth 5000',
-                       ' tunnel mpls traffic-eng path-option 10 dynamic',
-                       ' no routing dynamic'],
- 'ip access-list standard LDP': [' deny   10.0.0.0 0.0.255.255',
-                                 ' permit 10.0.0.0 0.255.255.255'],
- 'router bgp 100': {' address-family vpnv4': [...],
-                    ' bgp bestpath igp-metric ignore': [],
-                    ' bgp log-neighbor-changes': [],
-                    ' neighbor 10.2.2.2 next-hop-self': [],
-                    ' neighbor 10.2.2.2 remote-as 100': [],
-                    ' neighbor 10.2.2.2 update-source Loopback0': [],
-                    ' neighbor 10.4.4.4 remote-as 40': []},
- 'router ospf 1': [' mpls ldp autoconfig area 0',
-                   ' mpls traffic-eng router-id Loopback0',
-                   ' mpls traffic-eng area 0',
-                   ' network 10.0.0.0 0.255.255.255 area 0']}
+Если необходимо вызвать команду с аргументами, её нужно передавать таким образом (как список):
+```py
+In [5]: result = subprocess.run(['ls', '-ls'])
+total 28
+4 -rw-r--r-- 1 vagrant vagrant   56 Jun  7 19:35 ipython_as_mngmt_console.md
+4 -rw-r--r-- 1 vagrant vagrant 1638 Jun  7 19:35 module_search.md
+4 drwxr-xr-x 2 vagrant vagrant 4096 Jun  7 19:35 naming_conventions
+4 -rw-r--r-- 1 vagrant vagrant  277 Jun  7 19:35 README.md
+4 drwxr-xr-x 2 vagrant vagrant 4096 Jun 16 05:11 useful_functions
+4 drwxr-xr-x 2 vagrant vagrant 4096 Jun 17 16:28 useful_modules
+4 -rw-r--r-- 1 vagrant vagrant   49 Jun  7 19:35 version_control.md
 
 ```
 
 ---
-### pformat
+### Функция `subprocess.run()`
 
-pformat - это функция, которая отображает результат в виде строки.
-Ее удобно использовать, если необходимо записать структуру данных в какой-то файл, например, для логирования.
+При попытке выполнить команду с использованием wildcard выражений, например, использовать `*`, возникнет ошибка:
+```py
+In [6]: result = subprocess.run(['ls', '-ls', '*md'])
+ls: cannot access *md: No such file or directory
 
-```python
-In [15]: from pprint import pformat
-
-In [16]: formatted_result = pformat(result)
-
-In [17]: print(formatted_result)
-{'interface Tunnel0': [' ip unnumbered Loopback0',
-                       ' tunnel mode mpls traffic-eng',
-                       ' tunnel destination 10.2.2.2',
-                       ' tunnel mpls traffic-eng priority 7 7',
-                       ' tunnel mpls traffic-eng bandwidth 5000',
-                       ' tunnel mpls traffic-eng path-option 10 dynamic',
-                       ' no routing dynamic'],
- 'ip access-list standard LDP': [' deny   10.0.0.0 0.0.255.255',
-                                 ' permit 10.0.0.0 0.255.255.255'],
- 'router bgp 100': {' address-family vpnv4': ['  neighbor 10.2.2.2 activate',
-                                              '  neighbor 10.2.2.2 '
-                                              'send-community both',
-                                              '  exit-address-family'],
-                    ' bgp bestpath igp-metric ignore': [],
-                    ' bgp log-neighbor-changes': [],
-                    ' neighbor 10.2.2.2 next-hop-self': [],
-                    ' neighbor 10.2.2.2 remote-as 100': [],
-                    ' neighbor 10.2.2.2 update-source Loopback0': [],
-                    ' neighbor 10.4.4.4 remote-as 40': []},
- 'router ospf 1': [' mpls ldp autoconfig area 0',
-                   ' mpls traffic-eng router-id Loopback0',
-                   ' mpls traffic-eng area 0',
-                   ' network 10.0.0.0 0.255.255.255 area 0']}
 ```
 
+---
+### Функция `subprocess.run()`
+
+Чтобы вызывать команды, в которых используются wildcard выражения, нужно добавлять аргумент shell и вызывать команду таким образом:
+```py
+In [7]: result = subprocess.run('ls -ls *md', shell=True)
+4 -rw-r--r-- 1 vagrant vagrant   56 Jun  7 19:35 ipython_as_mngmt_console.md
+4 -rw-r--r-- 1 vagrant vagrant 1638 Jun  7 19:35 module_search.md
+4 -rw-r--r-- 1 vagrant vagrant  277 Jun  7 19:35 README.md
+4 -rw-r--r-- 1 vagrant vagrant   49 Jun  7 19:35 version_control.md
+
+```
+
+---
+### Функция `subprocess.run()`
+
+Ещё одна особенность функции run() - она ожидает завершения выполнения команды.
+Если попробовать, например, запустить команду ping, то этот аспект будет заметен:
+```py
+In [8]: result = subprocess.run(['ping', '-c', '3', '-n', '8.8.8.8'])
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=43 time=55.1 ms
+64 bytes from 8.8.8.8: icmp_seq=2 ttl=43 time=54.7 ms
+64 bytes from 8.8.8.8: icmp_seq=3 ttl=43 time=54.4 ms
+
+--- 8.8.8.8 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2004ms
+rtt min/avg/max/mdev = 54.498/54.798/55.116/0.252 ms
+
+```
+
+---
+### Получение результата выполнения команды
+
+По умолчанию функция run возвращает результат выполнения команды на стандартный поток вывода.
+
+Если нужно получить результат выполнения команды, надо добавить аргумент stdout и указать ему значение subprocess.PIPE:
+```py
+In [9]: result = subprocess.run(['ls', '-ls'], stdout=subprocess.PIPE)
+```
+
+---
+### Получение результата выполнения команды
+
+Теперь можно получить результат выполнения команды таким образом:
+```py
+In [10]: print(result.stdout)
+b'total 28\n4 -rw-r--r-- 1 vagrant vagrant   56 Jun  7 19:35 ipython_as_mngmt_console.md\n4 -rw-r--r-- 1 vagrant vagrant 1638 Jun  7 19:35 module_search.md\n4 drwxr-xr-x 2 vagrant vagrant 4096 Jun  7 19:35 naming_conventions\n4 -rw-r--r-- 1 vagrant vagrant  277 Jun  7 19:35 README.md\n4 drwxr-xr-x 2 vagrant vagrant 4096 Jun 16 05:11 useful_functions\n4 drwxr-xr-x 2 vagrant vagrant 4096 Jun 17 16:30 useful_modules\n4 -rw-r--r-- 1 vagrant vagrant   49 Jun  7 19:35 version_control.md\n'
+
+```
+
+---
+### Получение результата выполнения команды
+
+Модуль вернул вывод в виде байтовой строки.
+
+Для перевода её в unicode есть два варианта:
+
+* выполнить decode полученной строки
+* указать аргумент encoding
+
+---
+### Получение результата выполнения команды
+
+Вариант с decode:
+```py
+In [11]: print(result.stdout.decode('utf-8'))
+total 28
+4 -rw-r--r-- 1 vagrant vagrant   56 Jun  7 19:35 ipython_as_mngmt_console.md
+4 -rw-r--r-- 1 vagrant vagrant 1638 Jun  7 19:35 module_search.md
+4 drwxr-xr-x 2 vagrant vagrant 4096 Jun  7 19:35 naming_conventions
+4 -rw-r--r-- 1 vagrant vagrant  277 Jun  7 19:35 README.md
+4 drwxr-xr-x 2 vagrant vagrant 4096 Jun 16 05:11 useful_functions
+4 drwxr-xr-x 2 vagrant vagrant 4096 Jun 17 16:30 useful_modules
+4 -rw-r--r-- 1 vagrant vagrant   49 Jun  7 19:35 version_control.md
+
+```
+
+---
+### Получение результата выполнения команды
+
+Вариант с encoding:
+```py
+In [12]: result = subprocess.run(['ls', '-ls'], stdout=subprocess.PIPE, encoding='utf-8')
+
+In [13]: print(result.stdout)
+total 28
+4 -rw-r--r-- 1 vagrant vagrant   56 Jun  7 19:35 ipython_as_mngmt_console.md
+4 -rw-r--r-- 1 vagrant vagrant 1638 Jun  7 19:35 module_search.md
+4 drwxr-xr-x 2 vagrant vagrant 4096 Jun  7 19:35 naming_conventions
+4 -rw-r--r-- 1 vagrant vagrant  277 Jun  7 19:35 README.md
+4 drwxr-xr-x 2 vagrant vagrant 4096 Jun 16 05:11 useful_functions
+4 drwxr-xr-x 2 vagrant vagrant 4096 Jun 17 16:31 useful_modules
+4 -rw-r--r-- 1 vagrant vagrant   49 Jun  7 19:35 version_control.md
+
+```
+
+---
+### Отключение вывода
+
+Иногда достаточно получения кода возврата и нужно отключить вывод результата выполнения на стандартный поток вывода, и при этом сам результат не нужен.
+
+Это можно сделать, передав функции run аргумент stdout со значением subprocess.DEVNULL:
+```py
+In [14]: result = subprocess.run(['ls', '-ls'], stdout=subprocess.DEVNULL)
+
+In [15]: print(result.stdout)
+None
+
+In [16]: print(result.returncode)
+0
+```
+
+
+---
+### Работа со стандартным потоком ошибок
+
+Если команда была выполнена с ошибкой или не отработала корректно, вывод команды попадет на стандартный поток ошибок.
+
+Получить этот вывод можно так же, как и стандартный поток вывода:
+```py
+In [17]: result = subprocess.run(['ping', '-c', '3', '-n', 'a'], stderr=subprocess.PIPE, encoding='utf-8')
+```
+
+---
+### Работа со стандартным потоком ошибок
+
+Теперь в result.stdout пустая строка, а в result.stderr находится стандартный поток вывода:
+```
+In [18]: print(result.stdout)
+None
+
+In [19]: print(result.stderr)
+ping: unknown host a
+
+
+In [20]: print(result.returncode)
+2
+
+```
+
+---
+### Примеры использования модуля
+
+Пример использования модуля subprocess (файл subprocess_run_basic.py):
+```py
+import subprocess
+
+reply = subprocess.run(['ping', '-c', '3', '-n', '8.8.8.8'])
+
+if reply.returncode == 0:
+    print('Alive')
+else:
+    print('Unreachable')
+
+```
+
+---
+### Примеры использования модуля
+
+Результат выполнения будет таким:
+```py
+$ python subprocess_run_basic.py
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=43 time=54.0 ms
+64 bytes from 8.8.8.8: icmp_seq=2 ttl=43 time=54.4 ms
+64 bytes from 8.8.8.8: icmp_seq=3 ttl=43 time=53.9 ms
+
+--- 8.8.8.8 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2005ms
+rtt min/avg/max/mdev = 53.962/54.145/54.461/0.293 ms
+Alive
+```
+
+---
+### Примеры использования модуля
+
+Функция ping_ip проверяет доступность IP-адреса и возвращает True и stdout, если адрес доступен, или False и stderr, если адрес недоступен (файл subprocess_ping_function.py):
+```py
+import subprocess
+
+
+def ping_ip(ip_address):
+    """
+    Ping IP address and return tuple:
+    On success:
+        * True
+        * command output (stdout)
+    On failure:
+        * False
+        * error output (stderr)
+    """
+    reply = subprocess.run(['ping', '-c', '3', '-n', ip_address],
+                           stdout=subprocess.PIPE,
+                           stderr=subprocess.PIPE,
+                           encoding='utf-8')
+    if reply.returncode == 0:
+        return True, reply.stdout
+    else:
+        return False, reply.stderr
+
+print(ping_ip('8.8.8.8'))
+print(ping_ip('a'))
+
+```
+
+---
+### Примеры использования модуля
+
+Результат выполнения будет таким:
+```
+$ python subprocess_ping_function.py
+(True, 'PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.\n64 bytes from 8.8.8.8: icmp_seq=1 ttl=43 time=63.8 ms\n64 bytes from 8.8.8.8: icmp_seq=2 ttl=43 time=55.6 ms\n64 bytes from 8.8.8.8: icmp_seq=3 ttl=43 time=55.9 ms\n\n--- 8.8.8.8 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2003ms\nrtt min/avg/max/mdev = 55.643/58.492/63.852/3.802 ms\n')
+(False, 'ping: unknown host a\n')
+
+```
 
