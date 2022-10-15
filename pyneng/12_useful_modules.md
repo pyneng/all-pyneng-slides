@@ -9,6 +9,7 @@
 * ipaddress
 * tabulate
 * subprocess
+* rich
 
 ---
 ## Модуль pprint
@@ -24,13 +25,7 @@
 ### Модуль pprint
 
 ```python
-In [6]: london_co = {'r1': {'hostname': 'london_r1', 'location': '21 New Globe Wal
-   ...: k', 'vendor': 'Cisco', 'model': '4451', 'IOS': '15.4', 'IP': '10.255.0.1'}
-   ...: , 'r2': {'hostname': 'london_r2', 'location': '21 New Globe Walk', 'vendor
-   ...: ': 'Cisco', 'model': '4451', 'IOS': '15.4', 'IP': '10.255.0.2'}, 'sw1': {'
-   ...: hostname': 'london_sw1', 'location': '21 New Globe Walk', 'vendor': 'Cisco
-   ...: ', 'model': '3850', 'IOS': '3.6.XE', 'IP': '10.255.0.101'}}
-   ...:
+london_co = {'r1': {'IOS': '15.4', 'IP': '10.255.0.1', 'hostname': 'london_r1', 'location': '21 New Globe Walk', 'model': '4451', 'vendor': 'Cisco'}, 'r2': {'IOS': '15.4', 'IP': '10.255.0.2', 'hostname': 'london_r2', 'location': '21 New Globe Walk', 'model': '4451', 'vendor': 'Cisco'}, 'sw1': {'IOS': '3.6.XE', 'IP': '10.255.0.101', 'hostname': 'london_sw1', 'location': '21 New Globe Walk', 'model': '3850', 'vendor': 'Cisco'}}
 
 In [7]: from pprint import pprint
 
