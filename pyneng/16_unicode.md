@@ -63,6 +63,11 @@ ASCII (American standard code for information interchange) - описывает 
 ![cp1252](http://rabbit.eng.miami.edu/info/cp1252.gif)
 
 ---
+### Standards
+
+![standards](https://imgs.xkcd.com/comics/standards.png)
+
+---
 
 ### Unicode &#129412;
 
