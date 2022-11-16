@@ -478,6 +478,30 @@ R3
 Самое заметное отличие в том, что telnetlib требует передачи байтовой строки, а не обычной.
 
 ---
+### Пример использования telnetlib
+
+```python
+t = telnetlib.Telnet(ip)
+
+t.read_until(b"Username:")
+t.write(b'cisco\n')
+
+t.read_until(b"Password:")
+t.write(b'cisco\n')
+t.write(b"enable\n")
+
+t.read_until(b"Password:")
+t.write(b'cisco\n')
+t.write(b"terminal length 0\n")
+t.write(b'sh ip int br\n')
+
+time.sleep(2)
+output = t.read_very_eager().decode('utf-8')
+print(output)
+```
+
+
+---
 ### Подключение
 
 Подключение выполняется таким образом:
@@ -800,48 +824,31 @@ pip install paramiko
 ---
 ### Модуль paramiko
 
-Пример использования Paramiko (файл 3_paramiko.py):
 ```python
-import paramiko
-import getpass
-import sys
-import time
+client = paramiko.SSHClient()
+client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-command = sys.argv[1]
-user = input("Username: ")
-password = getpass.getpass()
-enable_pass = getpass.getpass(prompt='Enter enable password: ')
+client.connect(
+    hostname=ip,
+    username=user,
+    password=password,
+    look_for_keys=False,
+    allow_agent=False
+)
+ssh = client.invoke_shell()
 
-devices_ip = ['192.168.100.1','192.168.100.2','192.168.100.3']
+ssh.send("enable\n")
+ssh.send(enable_pass + '\n')
+time.sleep(1)
 
-```
+ssh.send("terminal length 0\n")
+time.sleep(1)
+print(ssh.recv(1000).decode('utf-8'))
 
----
-### Модуль paramiko
-
-Пример использования Paramiko (файл 3_paramiko.py):
-```python
-for ip in devices_ip:
-    print("Connection to device {}".format(ip))
-    client = paramiko.SSHClient()
-    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-
-    client.connect(hostname=ip, username=user, password=password,
-                   look_for_keys=False, allow_agent=False)
-    ssh = client.invoke_shell()
-
-    ssh.send("enable\n")
-    ssh.send(enable_pass + '\n')
-    time.sleep(1)
-
-    ssh.send("terminal length 0\n")
-    time.sleep(1)
-    print(ssh.recv(1000).decode('utf-8'))
-
-    ssh.send(command + "\n")
-    time.sleep(2)
-    result = ssh.recv(5000).decode('utf-8')
-    print(result)
+ssh.send(command + "\n")
+time.sleep(2)
+result = ssh.recv(5000).decode('utf-8')
+print(result)
 
 ```
 
@@ -1108,7 +1115,6 @@ Netmiko поддерживает несколько типов устройст�
 Актуальный список можно посмотреть в [репозитории](https://github.com/ktbyers/netmiko) модуля.
 
 ---
-
 ## Словарь, определяющий параметры устройств
 
 В словаре могут указываться такие параметры:
@@ -1120,6 +1126,55 @@ cisco_router = {'device_type': 'cisco_ios',
                 'secret': 'enablepass',
                 'port': 20022,
                  }
+```
+
+---
+## Параметры подключения
+
+```python
+BaseConnection(
+    ip: str = '',
+    host: str = '',
+    username: str = '',
+    password: Union[str, NoneType] = None,
+    secret: str = '',
+    port: Union[int, NoneType] = None,
+    device_type: str = '',
+    verbose: bool = False,
+    global_delay_factor: float = 1.0,
+    global_cmd_verify: Union[bool, NoneType] = None,
+    use_keys: bool = False,
+    key_file: Union[str, NoneType] = None,
+    pkey: Union[paramiko.pkey.PKey, NoneType] = None,
+    passphrase: Union[str, NoneType] = None,
+    disabled_algorithms: Union[Dict[str, Any], NoneType] = None,
+    allow_agent: bool = False,
+    ssh_strict: bool = False,
+    system_host_keys: bool = False,
+    alt_host_keys: bool = False,
+    alt_key_file: str = '',
+    ssh_config_file: Union[str, NoneType] = None,
+    conn_timeout: int = 10,
+    auth_timeout: Union[int, NoneType] = None,
+    banner_timeout: int = 15,
+    blocking_timeout: int = 20,
+    timeout: int = 100,
+    session_timeout: int = 60,
+    read_timeout_override: Union[float, NoneType] = None,
+    keepalive: int = 0,
+    default_enter: Union[str, NoneType] = None,
+    response_return: Union[str, NoneType] = None,
+    serial_settings: Union[Dict[str, Any], NoneType] = None,
+    fast_cli: bool = True,
+    _legacy_mode: bool = False,
+    session_log: Union[netmiko.session_log.SessionLog, NoneType] = None,
+    session_log_record_writes: bool = False,
+    session_log_file_mode: str = 'write',
+    allow_auto_change: bool = False,
+    encoding: str = 'utf-8',
+    sock: Union[socket.socket, NoneType] = None,
+    auto_connect: bool = True,
+    delay_factor_compat: bool = False,
 ```
 
 ---
@@ -1184,6 +1239,55 @@ result = ssh.send_command("show ip int br")
 * ```strip_command``` - удалить саму команду из вывода
 
 В большинстве случаев, достаточно будет указать только команду.
+
+---
+### ```send_config_set```
+
+```python
+In [10]: r1.send_config_set?
+Signature:
+r1.send_config_set(
+    config_commands: Union[str, Sequence[str], Iterator[str], TextIO, NoneType] = None,
+    *,
+    exit_config_mode: bool = True,
+    read_timeout: Union[float, NoneType] = None,
+    delay_factor: Union[float, NoneType] = None,
+    max_loops: Union[int, NoneType] = None,
+    strip_prompt: bool = False,
+    strip_command: bool = False,
+    config_mode_command: Union[str, NoneType] = None,
+    cmd_verify: bool = True,
+    enter_config_mode: bool = True,
+    error_pattern: str = '',
+    terminator: str = '#',
+    bypass_commands: Union[str, NoneType] = None,
+) -> str
+Docstring:
+Send configuration commands down the SSH channel.
+
+config_commands is an iterable containing all of the configuration commands.
+The commands will be executed one after the other.
+
+Automatically exits/enters configuration mode.
+
+:param config_commands: Multiple configuration commands to be sent to the device
+:param exit_config_mode: Determines whether or not to exit config mode after complete
+:param delay_factor: Deprecated in Netmiko 4.x. Will be eliminated in Netmiko 5.
+:param max_loops: Deprecated in Netmiko 4.x. Will be eliminated in Netmiko 5.
+:param strip_prompt: Determines whether or not to strip the prompt
+:param strip_command: Determines whether or not to strip the command
+:param read_timeout: Absolute timer to send to read_channel_timing. Should be rarely needed.
+:param config_mode_command: The command to enter into config mode
+:param cmd_verify: Whether or not to verify command echo for each command in config_set
+:param enter_config_mode: Do you enter config mode before sending config commands
+:param error_pattern: Regular expression pattern to detect config errors in the
+output.
+:param terminator: Regular expression pattern to use as an alternate terminator in certain
+situations.
+:param bypass_commands: Regular expression pattern indicating configuration commands
+where cmd_verify is automatically disabled.
+
+```
 
 ---
 ### ```send_config_set```
@@ -1308,4 +1412,32 @@ for ip in devices_ip:
 * ```send_config_from_file()```
 * ```check_enable_mode()```
 * ```disconnect()```
+
+
+---
+### Исключения
+
+```
+Exception
+│
+├── NetmikoBaseException
+│   │
+│   ├── ConfigInvalidException
+│   │
+│   ├── ConnectionException
+│   │
+│   └── ReadException
+│       │
+│       └── ReadTimeout
+│
+├── paramiko.ssh_exception.SSHException
+│   │
+│   ├── netmiko.exceptions.NetmikoTimeoutException
+│   │
+│   └── paramiko.ssh_exception.AuthenticationException
+│       │
+│       └── netmiko.exceptions.NetmikoAuthenticationException
+│
+└── ValueError
+```
 
