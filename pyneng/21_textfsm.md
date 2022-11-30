@@ -20,13 +20,13 @@ pip install textfsm
 ### show ip interface brief
 
 ```
-Value INT (\S+)
-Value ADDR (\S+)
-Value STATUS (up|down|administratively down)
-Value PROTO (up|down)
+Value intf (\S+)
+Value ip (\S+)
+Value status (up|down|administratively down)
+Value protocol (up|down)
 
 Start
-  ^${INTF}\s+${ADDR}\s+\w+\s+\w+\s+${STATUS}\s+${PROTO} -> Record
+  ^${intf}\s+${ip}\s+\w+\s+\w+\s+${status}\s+${protocol} -> Record
 ```
 
 ```
@@ -336,21 +336,23 @@ __Record Action__ - опциональное действие, которое м
 Он не привязан к конкретному шаблону и выводу: шаблон и вывод команды будут передаваться как аргументы:
 ```python
 import sys
+from pprint import pprint
 import textfsm
 from tabulate import tabulate
 
 template = sys.argv[1]
 output_file = sys.argv[2]
 
-f = open(template)
-output = open(output_file).read()
+with open(output_file) as output:
+    cmd_output = output.read()
 
-re_table = textfsm.TextFSM(f)
-
-header = re_table.header
-result = re_table.ParseText(output)
-
-print(tabulate(result, headers=header))
+with open(template) as f:
+    re_table = textfsm.TextFSM(f)
+    header = re_table.header
+    result = re_table.ParseText(cmd_output)
+    pprint(result, width=120)
+    print()
+    print(tabulate(result, headers=header))
 ```
 
 ---
@@ -359,6 +361,25 @@ print(tabulate(result, headers=header))
 Пример запуска скрипта:
 ```
 $ python parse_output.py template command_output
+```
+
+```
+$ python basics_02_parse_output.py templates/sh_ip_int_br.txt output/sh_ip_int_br.txt
+[['FastEthernet0/0', '15.0.15.1', 'up', 'up'],
+ ['FastEthernet0/1', '10.0.12.1', 'up', 'up'],
+ ['FastEthernet0/2', '10.0.13.1', 'up', 'up'],
+ ['FastEthernet0/3', 'unassigned', 'up', 'up'],
+ ['Loopback0', '10.1.1.1', 'administratively down', 'down'],
+ ['Loopback100', '100.0.0.1', 'down', 'down']]
+
+interface        ipaddress    status                 protocol
+---------------  -----------  ---------------------  ----------
+FastEthernet0/0  15.0.15.1    up                     up
+FastEthernet0/1  10.0.12.1    up                     up
+FastEthernet0/2  10.0.13.1    up                     up
+FastEthernet0/3  unassigned   up                     up
+Loopback0        10.1.1.1     administratively down  down
+Loopback100      100.0.0.1    down                   down
 ```
 
 Обработка данных по шаблону всегда выполняется одинаково.
@@ -1131,8 +1152,8 @@ Po3        ['Fa0/11', 'Fa0/12', 'Fa0/13', 'Fa0/14', 'Fa0/15', 'Fa0/16']
 ---
 ### TextFSM CLI Table
 
-Благодаря TextFSM, можно обрабатывать вывод команд и получать структурированный результат. 
-Но, всё ещё надо вручную прописывать каким шаблоном обрабатывать команды show, каждый раз, когда используется TextFSM.
+Благодаря TextFSM, можно обрабатывать вывод команд и получать структурированный результат,
+но всё ещё надо вручную прописывать каким шаблоном обрабатывать команды show, каждый раз когда используется TextFSM.
 
 Было бы намного удобней иметь какое-то соответствие между командой и шаблоном.
 Чтобы можно было написать общий скрипт, который выполняет подключения к устройствам, отправляет команды, сам выбирает шаблон и парсит вывод в соответствиее с шаблоном.

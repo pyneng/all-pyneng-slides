@@ -18,9 +18,26 @@
 * Класс (Class) - элемент программы, который описывает какой-то тип данных. Класс описывает шаблон для создания объектов, как правило, указывает переменные этого объекта и действия, которые можно выполнять применимо к объекту.
 * Экземпляр класса (Instance) - объект, который является представителем класса.
 * Метод (Method) - функция, которая определена внутри класса и описывает какое-то действие, которое поддерживает класс
+* Переменная экземпляра (instance variable, а иногда и instance attribute) - данные, которые относятся к объекту
+* Переменная класса (class variable) - данные, которые относятся к классу и разделяются всеми экземплярами класса
+* Атрибут экземпляра (instance attribute) - переменные и методы, которые относятся к объектам (экземплярам) созданным на основании класса. У каждого объекта есть своя копия атрибутов.
 
 ---
 ### Создание класса
+
+---
+### Создание класса
+
+```python
+class Switch:
+    def __init__(self, hostname, model):
+        self.hostname = hostname
+        self.model = model
+
+    def info(self):
+        print('Hostname: {}\nModel: {}'.format(self.hostname, self.model))
+
+```
 
 ---
 ### Создание класса
@@ -64,10 +81,10 @@ Out[14]: 'Cisco 3750'
 ### Методы
 
 ```python
-In [15]: class Switch:
-    ...:     def info(self):
-    ...:         print('Hostname: {}\nModel: {}'.format(self.hostname, self.model))
-    ...:
+class Switch:
+    def info(self):
+        print('Hostname: {}\nModel: {}'.format(self.hostname, self.model))
+
 ```
 
 ---
@@ -89,14 +106,14 @@ Model: Cisco 3850
 ### `__init__`
 
 ```python
-In [32]: class Switch:
-    ...:     def __init__(self, hostname, model):
-    ...:         self.hostname = hostname
-    ...:         self.model = model
-    ...:
-    ...:     def info(self):
-    ...:         print('Hostname: {}\nModel: {}'.format(self.hostname, self.model))
-    ...:
+class Switch:
+    def __init__(self, hostname, model):
+        self.hostname = hostname
+        self.model = model
+
+    def info(self):
+        print('Hostname: {}\nModel: {}'.format(self.hostname, self.model))
+
 ```
 
 ---
@@ -131,15 +148,15 @@ Model: Cisco 3850
 ### self
 
 ```python
-In [40]: class Switch:
-    ...:     def __init__(self, hostname, model):
-    ...:         self.hostname = hostname
-    ...:         self.model = model
-    ...:
+class Switch:
+    def __init__(self, hostname, model):
+        self.hostname = hostname
+        self.model = model
 
-In [41]: def info(sw_obj):
-    ...:     print('Hostname: {}\nModel: {}'.format(sw_obj.hostname, sw_obj.model))
-    ...:
+
+def info(sw_obj):
+    print('Hostname: {}\nModel: {}'.format(sw_obj.hostname, sw_obj.model))
+
 
 In [42]: sw1 = Switch('sw1', 'Cisco 3850')
 
@@ -169,57 +186,13 @@ class Switch:
 ```
 
 ---
-### Два подчеркивания перед именем
-
-Два подчеркивания перед именем метода или аргумента используются не просто как договоренность. Такие имена трансформируются в формат "имя класса + имя метода". Это позволяет создавать уникальные методы и атрибуты классов.
-
-> Такое преобразование выполняется только в том случае, если в конце менее двух подчеркиваний или нет подчеркиваний
-
-
----
-### Два подчеркивания перед именем
-
-```python
-class Switch:
-    def __get_display_str(self):
-        hostname = getattr(self, 'hostname', None)
-        model = getattr(self, 'model', None)
-        return 'Hostname: {}, Model: {}'.format(hostname, model)
-
-    def __str__(self):
-        return self.__get_display_str()
-```
-
----
-### Два подчеркивания перед именем
-
-```python
-In [1]: sw1 = Switch()
-
-In [2]: dir(sw1)
-Out[2]:
-['_Switch__get_display_str',
- '__class__',
- '__delattr__',
- '__dict__',
- '__dir__',
- '__doc__',
-...
- '__weakref__']
-
-In [3]: print(sw1)
-Hostname: None, Model: None
-
-```
-
----
 ### Два подчеркивания перед и после имени
 
 Таким образом обозначаются специальные переменные и методы.
 
 Эти методы вызываются при использовании функций и операторов Python и позволяют реализовать определенный функционал.
 
-Как правило, такие методы не нужно вызывать напрямую. Но, например, при создании своего класса может понадобиться описать такой метод, чтобы объект поддерживал какие-то операции в Python.
+Как правило, такие методы не нужно вызывать напрямую. Например, при создании своего класса может понадобиться описать такой метод, чтобы объект поддерживал какие-то операции в Python.
 
 
 ---
@@ -260,11 +233,11 @@ NameError: name 'sw1' is not defined
 ### `__str__`
 
 ```python
-In [45]: class Switch:
-    ...:     def __init__(self, hostname, model):
-    ...:         self.hostname = hostname
-    ...:         self.model = model
-    ...:
+class Switch:
+    def __init__(self, hostname, model):
+        self.hostname = hostname
+        self.model = model
+
 
 In [46]: sw1 = Switch('sw1', 'Cisco 3850')
 
@@ -276,14 +249,14 @@ In [47]: print(sw1)
 ### `__str__`
 
 ```python
-In [52]: class Switch:
-    ...:     def __init__(self, hostname, model):
-    ...:         self.hostname = hostname
-    ...:         self.model = model
-    ...:
-    ...:     def __str__(self):
-    ...:         return 'Hostname: {}, Model: {}'.format(self.hostname, self.model)
-    ...:
+class Switch:
+    def __init__(self, hostname, model):
+        self.hostname = hostname
+        self.model = model
+
+    def __str__(self):
+        return 'Hostname: {}, Model: {}'.format(self.hostname, self.model)
+
 
 In [53]: sw1 = Switch('sw1', 'Cisco 3850')
 
@@ -304,13 +277,13 @@ Out[55]: 'Hostname: sw1, Model: Cisco 3850'
 Например, выражение `a + b` преобразуется в `a.__add__(b)`
 
 ```python
-In [5]: class MyNum:
-   ...:     def __init__(self, num):
-   ...:         self.num = num
-   ...:
-   ...:     def __add__(self, other):
-   ...:         return MyNum(self.num + other.num)
-   ...:
+class MyNum:
+    def __init__(self, num):
+        self.num = num
+
+    def __add__(self, other):
+        return MyNum(self.num + other.num)
+
 
 In [6]: a = MyNum(5)
 

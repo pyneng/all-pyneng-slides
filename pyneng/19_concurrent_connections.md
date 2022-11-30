@@ -384,6 +384,35 @@ ThreadPoolExecutor-0_0 root INFO: <=== 08:29:16.854344 Received:   192.168.100.1
 ---
 ### Метод submit
 
+```python
+from concurrent.futures import ThreadPoolExecutor
+
+
+def send_show(device, show):
+    with netmiko.ConnectHandler(**device) as ssh:
+        ssh.enable()
+        result = ssh.send_command(show)
+    return result
+
+
+with ThreadPoolExecutor(max_workers=3) as executor:
+    result = executor.map(send_show, devices, repeat('sh clock'))
+    for device, output in zip(devices, result):
+        print(device['ip'], output)
+
+
+with ThreadPoolExecutor(max_workers=2) as executor:
+    future_list = []
+    for device in devices:
+        future = executor.submit(send_show, device, 'sh clock')
+        future_list.append(future)
+    for f in as_completed(future_list):
+        print(f.result())
+```
+
+---
+### Метод submit
+
 Файл netmiko_threads_submit_basics.py:
 ```python
 from concurrent.futures import ThreadPoolExecutor, as_completed

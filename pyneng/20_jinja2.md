@@ -80,12 +80,13 @@ router ospf 1
 {% endif %}
 
 ```
----
-
-## Пример использования Jinja
-
 
 ---
+## Jinja2 API
+
+
+---
+### Jinja2 API
 
 Шаблон templates/router_template.txt это обычный текстовый файл:
 ```
@@ -106,29 +107,10 @@ router ospf {{ process_id | default(100) }}
 ```
 
 ---
+### Jinja2 API
 
-Файл с данными routers_info.yml
-```
-- id: '11'
-  int: Gi1/0/1
-  ip: 10.1.1.1
-  name: Liverpool
-- id: '21'
-  int: Gi1/0/2
-  ip: 10.2.2.1
-  name: London
-- int: Gi1/0/3
-  ip: 10.3.3.1
-  name: Coventry
-  process_id: 1
-```
-
----
-
-Скрипт для генерации конфигураций router_config_generator_ver2.py
 ```python
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
-import yaml
 
 
 env = Environment(
@@ -137,11 +119,8 @@ env = Environment(
 )
 templ = env.get_template("cfg_template.txt")
 
-with open("cfg_data.yaml") as f:
-    data = yaml.safe_load(f)
-
-for param in data:
-    print(templ.render(param))
+data = {"id": "11", "int": "Gi1/0/1", "ip": "10.1.1.1", "name": "Liverpool"}
+print(templ.render(data))
 ```
 
 
@@ -154,6 +133,58 @@ FileSystemLoader
 loader = FileSystemLoader("templates")
 loader = FileSystemLoader(["/override/templates", "/default/templates"])
 ```
+
+---
+### Jinja2 API
+
+```python
+Environment(
+    block_start_string: str = '{%',
+    block_end_string: str = '%}',
+    variable_start_string: str = '{{',
+    variable_end_string: str = '}}',
+    comment_start_string: str = '{#',
+    comment_end_string: str = '#}',
+    line_statement_prefix: Union[str, NoneType] = None,
+    line_comment_prefix: Union[str, NoneType] = None,
+    trim_blocks: bool = False,
+    lstrip_blocks: bool = False,
+    newline_sequence: "te.Literal['\\n', '\\r\\n', '\\r']" = '\n',
+    keep_trailing_newline: bool = False,
+    extensions: Sequence[Union[str, Type[ForwardRef('Extension')]]] = (),
+    optimized: bool = True,
+    undefined: Type[jinja2.runtime.Undefined] = <class 'jinja2.runtime.Undefined'>,
+    finalize: Union[Callable[..., Any], NoneType] = None,
+    autoescape: Union[bool, Callable[[Union[str, NoneType]], bool]] = False,
+    loader: Union[ForwardRef('BaseLoader'), NoneType] = None,
+    cache_size: int = 400,
+    auto_reload: bool = True,
+    bytecode_cache: Union[ForwardRef('BytecodeCache'), NoneType] = None,
+    enable_async: bool = False,
+)
+```
+
+---
+### Jinja2 API
+
+Environment
+
+```python
+from jinja2 import Environment, FileSystemLoader, StrictUndefined
+
+
+env = Environment(
+    loader=FileSystemLoader("~/path/to/templates"),
+    undefined=StrictUndefined,
+    trim_blocks=True,
+    lstrip_blocks=True,
+)
+templ = env.get_template("cfg_template.txt")
+
+data = {"id": "11", "int": "Gi1/0/1", "ip": "10.1.1.1", "name": "Liverpool"}
+print(templ.render(data))
+```
+
 
 ---
 
@@ -1065,11 +1096,31 @@ router ospf 1
 
 Фильтр dictsort позволяет сортировать словарь.
 По умолчанию, сортировка выполняется по ключам.
-Но, изменив параметры фильтра, можно выполнять сортировку по значениям.
+Изменив параметры фильтра, можно выполнять сортировку по значениям.
 
 Синтаксис фильтра:
 ```
-dictsort(value, case_sensitive=False, by='key')
+dictsort(
+    value: Mapping[K, V],
+    case_sensitive: bool = False,
+    by: 'te.Literal["key", "value"]' = 'key',
+    reverse: bool = False
+) → List[Tuple[K, V]]
+Sort a dict and yield (key, value) pairs. Python dicts may not be in the order you want to display them in, so sort them first.
+```
+
+```
+{% for key, value in mydict|dictsort %}
+    sort the dict by key, case insensitive
+
+{% for key, value in mydict|dictsort(reverse=true) %}
+    sort the dict by key, case insensitive, reverse order
+
+{% for key, value in mydict|dictsort(true) %}
+    sort the dict by key, case sensitive
+
+{% for key, value in mydict|dictsort(false, 'value') %}
+    sort the dict by value, case insensitive
 ```
 
 После того, как dictsort отсортировал словарь, он возвращает список кортежей, а не словарь.
@@ -1590,7 +1641,7 @@ logging 10.1.1.1
 
 При использовании наследования различают:
 * __базовый шаблон__ - это шаблон, в котором описывается каркас шаблона.
- * в этом шаблоне могут находится любые обычные выражения или текст. Но, кроме того, в этом шаблоне определяются специальные __блоки (block)__. 
+ * в этом шаблоне могут находится любые обычные выражения или текст. В этом шаблоне определяются специальные __блоки (block)__. 
 * __дочерний шаблон__ - шаблон, который расширяет базовый шаблон, заполняя обозначенные блоки.
  * дочерние шаблоны могут переписывать или дополнять блоки, определенные в базовом шаблоне.
 
