@@ -206,24 +206,6 @@ class Switch:
 
     def __str__(self):
         return 'Hostname: {}, Model: {}'.format(self.hostname, self.model)
-
-    def __del__(self):
-        print("Я умираю....")
-```
-
-```python
-In [2]: sw1 = Switch('sw1', 'cisco')
-
-In [3]: del sw1
-Я умираю....
-
-In [4]: sw1
----------------------------------------------------------------------------
-NameError                                 Traceback (most recent call last)
-<ipython-input-4-924218d7093c> in <module>()
-----> 1 sw1
-
-NameError: name 'sw1' is not defined
 ```
 
 ---
