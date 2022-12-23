@@ -25,24 +25,23 @@
 ---
 ## Бонусные лекции
 
-* [Работа с базами данных в Python](https://youtube.com/playlist?list=PLah0HUih_ZRlJp_yFqZp4qTCB0BL7V_Ci)
+На курсе добавятся
+
+* scrapli, pexpect
+* python package
+
+### Полезно знать
+
 * [Новые возможности в Python 3.x](https://youtube.com/playlist?list=PLah0HUih_ZRlmf6BeA-7Bx-1NvmqnSIOD)
 * [Руководство стилю кода PEP8](https://youtube.com/playlist?list=PLah0HUih_ZRnw7KP62J-z2cXmb6EeglvO)
-* [Основы Ansible 2.9 для сетевых инженеров](https://youtube.com/playlist?list=PLah0HUih_ZRnuI_K5-GV4FdAO9dVkRIGF)
-* [Основы scrapli](https://youtube.com/playlist?list=PLah0HUih_ZRlmi9YXa1YgXggTaw1BwZa4)
-* [vim](https://youtube.com/playlist?list=PLah0HUih_ZRkiQXDuElo_JW9OfmbEXRpj)
-* [tmux](https://youtube.com/playlist?list=PLah0HUih_ZRkSAPJyzlk_wU7iVLzGFMAi)
-
----
-### Бонусные лекции. Полезно знать
-
-* [Аннотация типов и основы mypy](https://www.youtube.com/playlist?list=PLah0HUih_ZRlrzKmbAwxyitvmXjCN4BM9)
 * [black](https://youtube.com/playlist?list=PLah0HUih_ZRnw7KP62J-z2cXmb6EeglvO)
+* [Аннотация типов и основы mypy](https://www.youtube.com/playlist?list=PLah0HUih_ZRlrzKmbAwxyitvmXjCN4BM9)
 * [Создание CLI с помощью Click](https://www.youtube.com/playlist?list=PLah0HUih_ZRkrS43bjaC8hxwQjcCZhNiM)
 * [Создание CLI с помощью Typer](https://www.youtube.com/playlist?list=PLah0HUih_ZRnp0HI2TxbQ549Ty-P8soUV)
 * [Модуль logging](https://www.youtube.com/playlist?list=PLah0HUih_ZRlYLjVt0i1fqirtcBQp89Ts)
 * [pdb](https://youtube.com/playlist?list=PLah0HUih_ZRnhRXJgPLKEJLtOBBkh6e8P)
 * [Модуль Rich - создание красивых приложений в CLI](https://www.youtube.com/playlist?list=PLah0HUih_ZRkzS7TouDvcgK79WiYZSgpk)
+* [Основы scrapli](https://youtube.com/playlist?list=PLah0HUih_ZRlmi9YXa1YgXggTaw1BwZa4)
 * [Import package](https://youtube.com/playlist?list=PLah0HUih_ZRljP9fwcz37LwFSAjzK0pFY)
 
 ---
@@ -52,6 +51,13 @@
 * [Декораторы](https://www.youtube.com/playlist?list=PLah0HUih_ZRlGw_CtgPvuvNC1IBNiDCGH)
 * [Декораторы методов: property, classmethod, staticmethod](https://www.youtube.com/playlist?list=PLah0HUih_ZRmHz77JQLpFXRoAwvUqNNZ4)
 * [Dataclass, namedtuple](https://www.youtube.com/playlist?list=PLah0HUih_ZRnyfizwF6clCjbW8tyUC-Z4)
+
+### Другое
+
+* [Основы Ansible 2.9 для сетевых инженеров](https://youtube.com/playlist?list=PLah0HUih_ZRnuI_K5-GV4FdAO9dVkRIGF)
+* [vim](https://youtube.com/playlist?list=PLah0HUih_ZRkiQXDuElo_JW9OfmbEXRpj)
+* [tmux](https://youtube.com/playlist?list=PLah0HUih_ZRkSAPJyzlk_wU7iVLzGFMAi)
+
 
 ---
 ## Продолжение обучения
@@ -155,9 +161,7 @@ John McGovern:
 ### Курсы
 
 * [MITx - 6.00.1x Introduction to Computer Science and Programming Using Python](https://www.edx.org/course/introduction-computer-science-mitx-6-00-1x-9) - очень хороший курспо Python. Отличный вариант для продолжения обучения после книги. В нем вы и повторите пройденный материал по основам Python, но под другим углом и узнаете много нового. В курсе много практических заданий и он достаточно интенсивный.
-* [Python от Computer Science Center](https://www.youtube.com/playlist?list=PLlb7e2G7aSpTTNp7HBYzCBByaE1h54ruW) - отличные видеолекции по Python. Тут есть и немного основ и более продвинутые темы
 
----
 ### Платные курсы:
 
 * [#100DaysOfCode in Python](https://training.talkpython.fm/courses/explore_100days_in_python/100-days-of-code-in-python)
@@ -172,7 +176,6 @@ John McGovern:
 * [CheckIO - online game for Python and JavaScript coders](https://checkio.org/)
 
 
----
 ### Полезные ресурсы
 
 * [Real Python](https://realpython.com/)
