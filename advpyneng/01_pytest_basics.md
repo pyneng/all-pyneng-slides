@@ -833,8 +833,6 @@ def test_password_min_length():
 ```
 $ pytest test_check_password_input.py
 ======================= test session starts ========================
-platform linux -- Python 3.7.3, pytest-5.2.0, py-1.8.0, pluggy-0.12.0
-rootdir: /home/vagrant/repos/advanced-pyneng-1/advpyneng-online-oct-nov-2019/examples/14_pytest_basics
 collected 1 item
 
 test_check_password_input.py F                               [100%]
@@ -870,7 +868,6 @@ Username:
 ```python
 def test_password_min_length(monkeypatch):
     monkeypatch.setattr('builtins.input', lambda x=None: 'nata')
-    monkeypatch.setattr('getpass.getpass', lambda x=None: '12345')
     assert check_passwd(min_length=3)
 
 
@@ -878,10 +875,8 @@ def test_password_min_length(monkeypatch):
     ('nata', '12345', True),
     ('nata', '12345nata', False)
 ])
-def test_password_min_length(monkeypatch,
-                             username, password, result):
+def test_password_min_length(monkeypatch, username, password, result):
     monkeypatch.setattr('builtins.input', lambda x=None: username)
-    monkeypatch.setattr('getpass.getpass', lambda x=None: password)
     assert result == check_passwd(min_length=3)
 ```
 
