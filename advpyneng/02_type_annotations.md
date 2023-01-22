@@ -61,6 +61,36 @@ Mypy выполняет статический анализ кода - пров�
 * [Python 3.10](https://docs.python.org/3/whatsnew/3.10.html#new-features-related-to-type-hints)
 * [Python 3.9](https://docs.python.org/3/whatsnew/3.9.html#type-hinting-generics-in-standard-collections)
 
+
+Python 3.8
+
+* TypedDict
+* Literal
+* Final
+* Protocol
+
+Python 3.9
+
+* вместо List/Dict/Tuple можно писать list/dict/tuple
+* typing.Annotated
+
+Python 3.10
+
+* добавлен синтаксис | вместо Union
+* тип Alias
+* Parameter Specification Variables
+* TypeGuard
+
+Python 3.11
+
+* Variadic generics
+* Marking individual TypedDict items as required or not-required
+* Self type
+* Arbitrary literal string type
+* Data class transforms
+* [typing.reveal_type](https://docs.python.org/3/library/typing.html#typing.reveal_type)
+
+
 ---
 ### Dataclasses
 

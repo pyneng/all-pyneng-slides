@@ -166,7 +166,7 @@ check_ip_functions.py:14: AssertionError
 * `F` FAILED
 * `s` SKIPPED
 * `E` ERROR
-* `x` XFAIL - должен был FAIL, но PASSED
+* `x` XFAIL
 * `X` XPASS
 
 ---
@@ -415,26 +415,21 @@ collected 9 items
 AAA (Arrange, Act, Assert)
 
 ```python
-def test_function_return_value(r1_test_connection, first_router_from_devices_yaml):
-    """
-    Тест проверяет работу функции send_show_command
-    first_router_from_devices_yaml - это первое устройство из файла devices.yaml
-    r1_test_connection - это сессия SSH с первым устройством из файла devices.yaml
-                         Используется для проверки вывода
-    """
-    correct_return_value = strip_empty_lines(
-        r1_test_connection.send_command("sh ip int br")
-    )
-    return_value = strip_empty_lines(
-        task_18_1.send_show_command(first_router_from_devices_yaml, "sh ip int br")
-    )
-    assert return_value != None, "Функция ничего не возвращает"
-    assert (
-        type(return_value) == str
-    ), f"По заданию функция должна возвращать строку, а возвращает {type(return_value).__name__}"
-    assert (
-        correct_return_value == return_value
-    ), "Функция возвращает неправильное значение"
+def test_topology_delete_link_mirror(topology_normalized):
+    top = Topology(topology_normalized)
+    original_len = len(top.topology)
+    top.delete_link(("SW1", "Eth0/1"), ("R1", "Eth0/0"))
+    assert ("R1", "Eth0/0") not in top.topology
+    assert len(top.topology) == original_len - 1
+
+
+def test_topology_delete_link_not_exists(topology_normalized, capsys):
+    top = Topology(topology_normalized)
+    original_len = len(top.topology)
+    top.delete_link(("SW13", "Eth0/1"), ("R1", "Eth0/0"))
+    out = capsys.readouterr().out
+    assert len(top.topology) == original_len
+    assert "соединения нет" in out
 ```
 
 ---
