@@ -55,6 +55,13 @@ Mypy выполняет статический анализ кода - пров�
 * желательно использовать Python 3.6+ чтобы были доступны все возможности, в идеале, последнюю версию Python.
 
 ---
+### What's new in Python3.x
+
+* [Python 3.11](https://docs.python.org/3/whatsnew/3.11.html#new-features-related-to-type-hints)
+* [Python 3.10](https://docs.python.org/3/whatsnew/3.10.html#new-features-related-to-type-hints)
+* [Python 3.9](https://docs.python.org/3/whatsnew/3.9.html#type-hinting-generics-in-standard-collections)
+
+---
 ### Dataclasses
 
 ```python
