@@ -51,7 +51,6 @@ Mypy выполняет статический анализ кода - пров�
 Нюансы:
 
 * как и с тестами, надо потратить время на написание аннотаций (хотя есть софт, который может в этом помочь)
-* на данный момент, надо делать довольно большое количество импортов
 * желательно использовать Python 3.6+ чтобы были доступны все возможности, в идеале, последнюю версию Python.
 
 ---
@@ -113,7 +112,7 @@ Out[13]: IPAddress(ip='10.1.1.1', mask=28)
 ### Typer
 
 ```python
-def main(ip_addresses: List[str], count: int = 3):
+def main(ip_addresses: list[str], count: int = 3):
     """
     Ping IP_ADDRESS
     """
@@ -181,9 +180,38 @@ summ: float = 5.5
 skip_line: bool = True
 line: str = "switchport mode access"
 ```
+---
+### Синтаксис: Списки, множества, словари
+
+Python >= 3.9:
+
+```python
+vlans: list[int] = [10, 20, 100]
+unique_vlans: set[int] = {1, 6, 10}
+book_price_map: dict[str, float] = {'Good Omens': 22.0}
+```
 
 ---
 ### Синтаксис: Списки, множества, словари
+
+Python >= 3.7
+```python
+from __future__ import annotations
+
+vlans: list[int] = [10, 20, 100]
+unique_vlans: set[int] = {1, 6, 10}
+book_price_map: dict[str, float] = {'Good Omens': 22.0}
+```
+
+Python >= 3.9:
+
+```python
+vlans: list[int] = [10, 20, 100]
+unique_vlans: set[int] = {1, 6, 10}
+book_price_map: dict[str, float] = {'Good Omens': 22.0}
+```
+
+Python < 3.7
 
 ```python
 from typing import List, Set, Dict
@@ -193,25 +221,17 @@ unique_vlans: Set[int] = {1, 6, 10}
 book_price_map: Dict[str, float] = {'Good Omens': 22.0}
 ```
 
-Начиная с Python 3.9:
-
-```python
-vlans: list[int] = [10, 20, 100]
-unique_vlans: set[int] = {1, 6, 10}
-book_price_map: dict[str, float] = {'Good Omens': 22.0}
-```
-
 ---
 ### Синтаксис: Кортежи
 
 Кортеж с фиксированным количеством элементов:
 ```python
-sw_info: Tuple[str, str, int] = ("sw1", "15.1(3)", 24)
+sw_info: tuple[str, str, int] = ("sw1", "15.1(3)", 24)
 ```
 
 Кортеж с произвольным количеством элементов:
 ```python
-vlans: Tuple[int, ...] = (1, 2, 3)
+vlans: tuple[int, ...] = (1, 2, 3)
 ```
 
 ---
@@ -243,8 +263,6 @@ def check_passwd(
 Если функция может возвращать какой-то результат или исключения, аннотация пишется только для результата:
 
 ```python
-from typing import Dict, Union, List, Any
-
 def summ(x: int, y: int) -> int:
     if isinstance(x, int) and isinstance(y, int):
         return x + y
@@ -267,6 +285,58 @@ class IPAddress:
         return f"IPAddress({self.ip}/{self.mask})"
 ```
 
+
+---
+### Union
+
+Python >= 3.10
+
+```python
+data: list[str | int] = [10, "test", 20]
+```
+
+Python < 3.10
+```python
+from typing import Union
+
+data: list[Union[str, int]] = [10, "test", 20]
+```
+
+Python < 3.10
+
+```python
+from __future__ import annotations
+
+data: list[str | int] = [10, "test", 20]
+```
+
+---
+### Optional
+
+```python
+from typing import Optional
+
+def dummy(number: Optional[int] = None) -> int:
+    if number is None:
+        number = 0
+    return number * 100
+```
+
+```python
+def dummy(number: int | None = None) -> int:
+    if number is None:
+        number = 0
+    return number * 100
+```
+
+```python
+from typing import Union
+
+def dummy(number: Union[int, None] = None) -> int:
+    if number is None:
+        number = 0
+    return number * 100
+```
 
 ---
 ### Аннотация в сложных случаях
@@ -456,17 +526,6 @@ def send_show(device_dict: DeviceParams, command: str) -> str:
         result = ssh.send_command(command)
     return result
 
-
-if __name__ == "__main__":
-    r1 = DeviceParams(
-        device_type="cisco_ios",
-        host="192.168.100.1",
-        username="cisco",
-        password="cisco",
-        secret="cisco",
-        port=20020,
-    )
-    print(send_show(r1, "sh clock"))
 
 ```
 
@@ -687,6 +746,85 @@ get_type_hints(ping_ip, include_extras=True)
 {'ip': typing.Annotated[str, 'IP address'], 'return': <class 'bool'>}
 ```
 
-> New in version 3.9.
+> New in Python 3.9.
 
 
+---
+### Nominal vs structural subtyping
+
+Mypy поддерживает два способа определения совместимости двух классов как типов:
+номинальное подтипирование и структурное подтипирование.
+
+Nominal subtyping - строго основано на иерархии классов. Если класс D
+наследует класс C, он также является подтипом C, и экземпляры D могут
+использоваться, когда ожидаются экземпляры C.
+
+Structural subtyping - класс D является структурным подтипом
+класса C, если первый имеет все атрибуты и методы второго и с совместимыми
+типами.
+
+---
+### Nominal subtyping
+
+```python
+class BaseSSH:
+    def send_command(self, command: str) -> str:
+        ...
+
+
+class CiscoSSH(BaseSSH):
+    ...
+
+
+def send_command(connection: BaseSSH, cmd: str) -> str:
+    output = connection.send_command(cmd)
+    return output
+```
+
+---
+### Structural subtyping
+
+```python
+from collections.abc import Iterable
+
+def convert_to_lower(items: Iterable[str]) -> list[str]:
+    result = []
+    for item in items:
+        result.append(item.lower())
+    return result
+
+
+if __name__ == "__main__":
+    print(convert_to_lower(["A", "B", "C"]))
+    print(convert_to_lower(("A", "B", "C")))
+    print(convert_to_lower({"A", "B", "C"}))
+    print(convert_to_lower("ABC"))
+
+```
+
+---
+### Protocol
+
+```python
+from typing import Iterable, Protocol
+
+
+class SupportsClose(Protocol):
+    def close(self) -> None:
+       ...
+
+
+class Resource:
+    def close(self) -> None:
+       self.resource.release()
+
+
+def close_all(items: Iterable[SupportsClose]) -> None:
+    for item in items:
+        item.close()
+
+
+close_all([Resource(), open('some/file')])  # Okay!
+```
+
+> New in Python 3.8.
