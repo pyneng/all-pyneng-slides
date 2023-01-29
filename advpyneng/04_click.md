@@ -21,6 +21,62 @@ Options:
   --help               Show this message and exit.
 ```
 
+```
+$ python example_05_pomodoro_timer.py --help
+Usage: example_05_pomodoro_timer.py [OPTIONS]
+
+Options:
+  -r, --pomodoros_to_run INTEGER  [default: 5]
+  -w, --work_minutes INTEGER      [default: 25]
+  -s, --short_break INTEGER       [default: 5]
+  -l, --long_break INTEGER        [default: 30]
+  -p, --set_size INTEGER          [default: 4]
+  --help                          Show this message and exit.
+```
+
+---
+## click
+
+```
+$ python example_09_parse_dhcp_snooping_click.py --help
+Usage: example_09_parse_dhcp_snooping_click.py [OPTIONS] COMMAND [ARGS]...
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  add     add data to db from FILENAME
+  create  create DB
+  get     get data from db
+```
+
+```
+$ python example_09_parse_dhcp_snooping_click.py add --help
+Usage: example_09_parse_dhcp_snooping_click.py add [OPTIONS] FILENAME...
+
+  add data to db from FILENAME
+
+Options:
+  -n, --db-filename TEXT  db filename
+  -s, --switch-data       add switch data if set, else add normal data
+  --help                  Show this message and exit.
+```
+
+```
+$ python example_09_parse_dhcp_snooping_click.py get --help
+Usage: example_09_parse_dhcp_snooping_click.py get [OPTIONS]
+
+  get data from db
+
+Options:
+  -n, --db-filename TEXT          db filename
+  -k, --key [mac|ip|vlan|interface|switch]
+                                  host key (parameter) to search
+  -v, --value TEXT                value of key
+  -a, --show-all                  show db content
+  --help                          Show this message and exit.
+```
+
 ---
 ### Альтернативы click
 
