@@ -194,15 +194,6 @@ book_price_map: dict[str, float] = {'Good Omens': 22.0}
 ---
 ### Синтаксис: Списки, множества, словари
 
-Python >= 3.7
-```python
-from __future__ import annotations
-
-vlans: list[int] = [10, 20, 100]
-unique_vlans: set[int] = {1, 6, 10}
-book_price_map: dict[str, float] = {'Good Omens': 22.0}
-```
-
 Python >= 3.9:
 
 ```python
@@ -300,14 +291,6 @@ Python < 3.10
 from typing import Union
 
 data: list[Union[str, int]] = [10, "test", 20]
-```
-
-Python < 3.10
-
-```python
-from __future__ import annotations
-
-data: list[str | int] = [10, "test", 20]
 ```
 
 ---
