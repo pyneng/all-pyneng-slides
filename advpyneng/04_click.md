@@ -208,7 +208,99 @@ if __name__ == '__main__':
 ```
 
 ---
+### Функция ping_ip
+
+```python
+def ping_ip(ip_address, count):
+    """
+    Ping IP address and return True/False
+    """
+    reply = subprocess.run(
+        f"ping -c {count} -n {ip_address}",
+        shell=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        encoding="utf-8",
+    )
+    if reply.returncode == 0:
+        return True
+    else:
+        return False
+```
+
+
+---
 ### click
+
+```
+$ python ping_ip_click.py --help
+Usage: ping_ip_click.py [OPTIONS] IP_ADDRESS
+
+Options:
+  -c, --count INTEGER  [default: 3]
+  --help               Show this message and exit.
+```
+
+```
+$ python example_05_pomodoro_timer.py --help
+Usage: example_05_pomodoro_timer.py [OPTIONS]
+
+Options:
+  -r, --pomodoros_to_run INTEGER  [default: 5]
+  -w, --work_minutes INTEGER      [default: 25]
+  -s, --short_break INTEGER       [default: 5]
+  -l, --long_break INTEGER        [default: 30]
+  -p, --set_size INTEGER          [default: 4]
+  --help                          Show this message and exit.
+```
+
+---
+## click
+
+```
+$ python example_09_parse_dhcp_snooping_click.py --help
+Usage: example_09_parse_dhcp_snooping_click.py [OPTIONS] COMMAND [ARGS]...
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  add     add data to db from FILENAME
+  create  create DB
+  get     get data from db
+```
+
+```
+$ python example_09_parse_dhcp_snooping_click.py add --help
+Usage: example_09_parse_dhcp_snooping_click.py add [OPTIONS] FILENAME...
+
+  add data to db from FILENAME
+
+Options:
+  -n, --db-filename TEXT  db filename
+  -s, --switch-data       add switch data if set, else add normal data
+  --help                  Show this message and exit.
+```
+
+```
+$ python example_09_parse_dhcp_snooping_click.py get --help
+Usage: example_09_parse_dhcp_snooping_click.py get [OPTIONS]
+
+  get data from db
+
+Options:
+  -n, --db-filename TEXT          db filename
+  -k, --key [mac|ip|vlan|interface|switch]
+                                  host key (parameter) to search
+  -v, --value TEXT                value of key
+  -a, --show-all                  show db content
+  --help                          Show this message and exit.
+```
+
+
+---
+### click
+
 
 В click описание интерфейса командной строки (CLI) построено на декораторах:
 
@@ -253,6 +345,34 @@ Click поддерживает два вида параметров: опции 
 
 
 ---
+## Аргументы vs опции
+
+```python
+@click.argument(name, type=None, required=True, default=None, nargs=None)
+```
+
+```python
+class click.Option(
+    param_decls=None,
+    show_default=False,
+    prompt=False,
+    confirmation_prompt=False,
+    hide_input=False,
+    is_flag=None,
+    flag_value=None,
+    multiple=False,
+    count=False,
+    allow_from_autoenv=True,
+    type=None,
+    help=None,
+    hidden=False,
+    show_choices=True,
+    show_envvar=False,
+    **attrs
+)
+```
+
+---
 ## Типы параметров
 
 По умолчанию тип параметра будет строкой str, но его можно задавать явно или получать косвенно с помощью значения по умолчанию.
@@ -267,6 +387,57 @@ Click поддерживает два вида параметров: опции 
 * click.DateTime - преобразует строку с датой в объект datetime
 
 Также можно создавать свои типы данных
+
+
+---
+## Типы параметров
+### bool / click.BOOL
+
+* True: "1", "true", "t", "yes", "y", "on"
+* False: "0", "false", "f", "no", "n", "off"
+
+---
+## Типы параметров
+### IntRange
+
+```python
+click.IntRange(min=None, max=None, min_open=False, max_open=False, clamp=False)
+```
+
+---
+## Типы параметров
+### Choice
+
+```python
+click.Choice(choices, case_sensitive=True)
+```
+
+---
+## Типы параметров
+### File
+
+```python
+click.File(mode='r', encoding=None, errors='strict', lazy=None, atomic=False)
+```
+
+
+---
+## Типы параметров
+### Path
+
+```python
+click.Path(
+    exists=False,
+    file_okay=True,
+    dir_okay=True,
+    writable=False,
+    readable=True,
+    resolve_path=False,
+    allow_dash=False,
+    path_type=None,
+    executable=False,
+)
+```
 
 ---
 ## Аргументы
@@ -335,11 +506,34 @@ IP-адрес 10.1.1.1        не пингуется
 ## Опции
 
 ```python
-class click.Option(
+click.Option(
+    param_decls: Optional[Sequence[str]] = None,
+    show_default: Union[bool, str, NoneType] = None,
+    prompt: Union[bool, str] = False,
+    confirmation_prompt: Union[bool, str] = False,
+    prompt_required: bool = True,
+    hide_input: bool = False,
+    is_flag: Optional[bool] = None,
+    flag_value: Optional[Any] = None,
+    multiple: bool = False,
+    count: bool = False,
+    allow_from_autoenv: bool = True,
+    type: Union[click.types.ParamType, Any, NoneType] = None,
+    help: Optional[str] = None,
+    hidden: bool = False,
+    show_choices: bool = True,
+    show_envvar: bool = False,
+    **attrs: Any,
+)
+```
+
+```python
+click.Option(
     param_decls=None,
-    show_default=False,
+    show_default=None,
     prompt=False,
     confirmation_prompt=False,
+    prompt_required=True,
     hide_input=False,
     is_flag=None,
     flag_value=None,
@@ -351,7 +545,7 @@ class click.Option(
     hidden=False,
     show_choices=True,
     show_envvar=False,
-    **attrs
+    **attrs: Any,
 )
 ```
 
