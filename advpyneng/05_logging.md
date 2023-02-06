@@ -5,28 +5,16 @@
 
 ```
 $ python ex08_logging_api_stderr_file_netmiko.py
-2021-10-15 14:21:12,990 - __main__ - DEBUG - START
-2021-10-15 14:21:12,991 - __main__ - INFO - ===>  Connection: 192.168.100.1
-2021-10-15 14:21:12,995 - __main__ - INFO - ===>  Connection: 192.168.100.2
-2021-10-15 14:21:13,946 - __main__ - DEBUG - <===  Received:   192.168.100.2
-2021-10-15 14:21:13,946 - __main__ - DEBUG - Получен вывод команды sh ip int br с 192.168.100.2
-2021-10-15 14:21:15,716 - __main__ - ERROR - Ошибка Authentication to device failed.
-2021-10-15 14:21:15,716 - __main__ - INFO - ===>  Connection: 192.168.100.3
-2021-10-15 14:21:16,541 - __main__ - DEBUG - <===  Received:   192.168.100.3
-2021-10-15 14:21:16,541 - __main__ - DEBUG - Получен вывод команды sh ip int br с 192.168.100.3
+2023-02-05 14:21:12,990 - __main__ - DEBUG - START
+2023-02-05 14:21:12,991 - __main__ - INFO - ===>  Connection: 192.168.100.1
+2023-02-05 14:21:12,995 - __main__ - INFO - ===>  Connection: 192.168.100.2
+2023-02-05 14:21:13,946 - __main__ - DEBUG - <===  Received:   192.168.100.2
+2023-02-05 14:21:13,946 - __main__ - DEBUG - Получен вывод команды sh ip int br с 192.168.100.2
+2023-02-05 14:21:15,716 - __main__ - ERROR - Ошибка Authentication to device failed.
+2023-02-05 14:21:15,716 - __main__ - INFO - ===>  Connection: 192.168.100.3
+2023-02-05 14:21:16,541 - __main__ - DEBUG - <===  Received:   192.168.100.3
+2023-02-05 14:21:16,541 - __main__ - DEBUG - Получен вывод команды sh ip int br с 192.168.100.3
 ```
-
----
-## Уровни
-
-| Уровень      |    | Когда используется                          |
-|--------------|----|------------------------------------------|
-| ``CRITICAL`` | 50 | Серьезная ошибка из-за которой программа не может подолжить работу |
-| ``ERROR``    | 40 | Возникла ошибка и из-за нее не получилось выполнить часть задач. |
-| ``WARNING``  | 30 | Случилось что-то неожиданное, но программа все еще работает. |
-|              |    | Также может использоваться для индикации о будущих проблемах. |
-| ``INFO``     | 20 | Подтверждение, что все работает как должно. |
-| ``DEBUG``    | 10 | Подробная информация для диагностики проблемы. |
 
 ---
 ## logging.basicConfig
@@ -88,6 +76,58 @@ logger.debug('Сообщение уровня debug')
 logger.info('Сообщение уровня info')
 logger.warning('Сообщение уровня warning')
 ```
+---
+## Logging в модуле
+
+```python
+import logging
+
+
+log = logging.getLogger(__name__)
+log.addHandler(logging.NullHandler())
+
+
+def send_show(device_dict, command):
+    ip = device_dict["host"]
+    log.info(f"===>  Connection: {ip}")
+```
+
+---
+### Настройка logging через словарь
+
+```yaml
+version: 1
+formatters:
+  simple:
+    format: '{asctime} - {name} - {levelname} - {message}'
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: DEBUG
+    formatter: simple
+    stream: ext://sys.stdout
+loggers:
+  simpleExample:
+    level: DEBUG
+    handlers: [console]
+    propagate: no
+root:
+  level: DEBUG
+  handlers: [console]
+```
+
+
+---
+## Уровни
+
+| Уровень      |    | Когда используется                          |
+|--------------|----|------------------------------------------|
+| ``CRITICAL`` | 50 | Серьезная ошибка из-за которой программа не может подолжить работу |
+| ``ERROR``    | 40 | Возникла ошибка и из-за нее не получилось выполнить часть задач. |
+| ``WARNING``  | 30 | Случилось что-то неожиданное, но программа все еще работает. |
+|              |    | Также может использоваться для индикации о будущих проблемах. |
+| ``INFO``     | 20 | Подтверждение, что все работает как должно. |
+| ``DEBUG``    | 10 | Подробная информация для диагностики проблемы. |
 
 ---
 ## logging.basicConfig
