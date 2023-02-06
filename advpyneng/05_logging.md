@@ -32,9 +32,88 @@ $ python ex08_logging_api_stderr_file_netmiko.py
 ## logging.basicConfig
 
 ```python
+logging.basicConfig(
+    format='{threadName} {name} {levelname}: {message}',
+    style="{",
+    level=logging.INFO
+)
+
+logging.debug('Сообщение уровня debug')
+logging.info('Сообщение уровня info')
+logging.warning('Сообщение уровня warning')
+```
+
+```python
+logging.basicConfig(
+    filename='mylog.log',
+    format='{threadName} {name} {levelname}: {message}',
+    style="{",
+    level=logging.DEBUG,
+)
+
+logging.debug('Сообщение уровня debug')
+logging.info('Сообщение уровня info')
+logging.warning('Сообщение уровня warning')
+```
+
+---
+## Запись в файл и вывод на stderr
+
+```python
 import logging
 
-logging.basicConfig(filename='mylog.log', level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+formatter = logging.Formatter(
+    '{asctime} - {name} - {levelname} - {message}', datefmt='%H:%M:%S', style='{'
+)
+
+### stderr
+console = logging.StreamHandler()
+console.setLevel(logging.DEBUG)
+console.setFormatter(formatter)
+
+logger.addHandler(console)
+
+### File
+logfile = logging.FileHandler('logfile3.log')
+logfile.setLevel(logging.WARNING)
+logfile.setFormatter(formatter)
+
+logger.addHandler(logfile)
+
+## messages
+logger.debug('Сообщение уровня debug')
+logger.info('Сообщение уровня info')
+logger.warning('Сообщение уровня warning')
+```
+
+---
+## logging.basicConfig
+
+---
+## logging.basicConfig
+
+```python
+logging.basicConfig(
+    format='{threadName} {name} {levelname}: {message}',
+    style="{",
+    level=logging.INFO
+)
+
+logging.debug('Сообщение уровня debug')
+logging.info('Сообщение уровня info')
+logging.warning('Сообщение уровня warning')
+```
+
+```python
+logging.basicConfig(
+    filename='mylog.log',
+    format='{threadName} {name} {levelname}: {message}',
+    style="{",
+    level=logging.DEBUG,
+)
 
 logging.debug('Сообщение уровня debug')
 logging.info('Сообщение уровня info')
@@ -56,13 +135,14 @@ logging.getLogger('paramiko').setLevel(logging.WARNING)
 logging.getLogger('netmiko').setLevel(logging.WARNING)
 
 logging.basicConfig(
-    format='%(threadName)s %(name)s %(levelname)s: %(message)s',
+    format='{threadName} {name} {levelname}: {message}',
+    style="{",
     level=logging.INFO
 )
 ```
 
 ---
-## [Параметры logging.basicConfig](https://docs.python.org/3.9/library/logging.html#logging.basicConfig)
+## [Параметры logging.basicConfig](https://docs.python.org/3/library/logging.html#logging.basicConfig)
 
 * filename  Specifies that a FileHandler be created, using the specified filename, rather than a StreamHandler.
 * filemode  Specifies the mode to open the file, if filename is specified (if filemode is unspecified, it defaults to 'a').
@@ -83,9 +163,13 @@ logging.basicConfig(
 import logging
 from rich.logging import RichHandler
 
-FORMAT = "%(message)s"
+
 logging.basicConfig(
-    level="NOTSET", format=FORMAT, datefmt="[%X]", handlers=[RichHandler()]
+    level=logging.DEBUG,
+    format="{message}",
+    style="{",
+    datefmt="%X",
+    handlers=[RichHandler(), lfile],
 )
 
 log = logging.getLogger("rich")
@@ -115,7 +199,7 @@ log.setLevel(logging.DEBUG)
 
 console = logging.StreamHandler()
 console.setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+formatter = logging.Formatter('{asctime} - {name} - {levelname} - {message}',
                               datefmt='%H:%M:%S')
 console.setFormatter(formatter)
 
@@ -373,7 +457,7 @@ def send_show(device_dict, command):
 version: 1
 formatters:
   simple:
-    format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    format: '{asctime} - {name} - {levelname} - {message}'
 handlers:
   console:
     class: logging.StreamHandler
