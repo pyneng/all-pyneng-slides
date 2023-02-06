@@ -527,6 +527,9 @@ click.Option(
 )
 ```
 
+---
+## Опции
+
 ```python
 click.Option(
     param_decls=None,
