@@ -194,7 +194,7 @@ def some_func():
     pass
 ```
 
-__init__.py
+``__init__.py``
 ```python
 from project1_basics.connect import *
 ```

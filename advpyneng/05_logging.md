@@ -16,6 +16,36 @@ $ python ex08_logging_api_stderr_file_netmiko.py
 2023-02-05 14:21:16,541 - __main__ - DEBUG - Получен вывод команды sh ip int br с 192.168.100.3
 ```
 
+```
+09:29:43 scrapli DEBUG: Scrapli factory initialized
+09:29:43 scrapli INFO: Driver '<class 'scrapli.driver.core.cisco_iosxe.sync_driver.IOSXEDriver'>' selected from scrapli core drivers
+09:29:43 scrapli.driver DEBUG: load core transport requested
+09:29:43 scrapli.driver DEBUG: core transport 'system' loaded successfully
+09:29:43 scrapli.driver DEBUG: generating combined network comms prompt pattern
+09:29:43 scrapli.driver DEBUG: setting 'comms_prompt_pattern' value to '(^[\w.\-@/:]{1,63}>$)|(^[\w.\-@/:]{1,63}#$)|(^[\w.\-@/:]{1,63}\([\w.\-@/:+]{0,32}\)#$)|(^([\w.\-@/+>:]+\(tcl\)[>#]|\+
+>)$)'
+09:29:43 scrapli.driver INFO: opening connection to '192.168.100.1' on port '22'
+09:29:43 scrapli.transport DEBUG: opening transport connection to '192.168.100.1' on port '22'
+09:29:43 scrapli.transport DEBUG: created transport 'open_cmd': '['ssh', '192.168.100.1', '-p', '22', '-o', 'ConnectTimeout=5', '-o', 'ServerAliveInterval=10', '-l', 'cisco', '-o', 'StrictH
+ostKeyChecking=no', '-o', 'UserKnownHostsFile=/dev/null', '-F', '/dev/null']'
+09:29:43 scrapli.transport DEBUG: transport connection to '192.168.100.1' on port '22' opened successfully
+09:29:43 scrapli.channel DEBUG: attempting in channel ssh authentication
+09:29:43 scrapli.channel DEBUG: read: b"Warning: Permanently added '192.168.100.1' (RSA) to the list of known hosts.\n"
+09:29:47 scrapli.channel DEBUG: read: b'Password: '
+09:29:47 scrapli.channel DEBUG: write: REDACTED
+09:29:47 scrapli.channel DEBUG: write: '\n'
+09:29:47 scrapli.channel DEBUG: read: b'\n\nR1>'
+09:29:47 scrapli.channel DEBUG: write: '\n'
+09:29:47 scrapli.channel DEBUG: read: b'\n'
+09:29:47 scrapli.channel DEBUG: read: b'R1>'
+09:29:47 scrapli.driver INFO: attempting to acquire 'privilege_exec' privilege level
+09:29:47 scrapli.driver DEBUG: determined current privilege level is one of '['exec']'
+09:29:47 scrapli.driver DEBUG: determined privilege escalation necessary
+09:29:47 scrapli.channel INFO: sending interactive input: enable; expecting: ^(?:enable\s){0,1}password:\s?$; hidden_input: False
+09:29:47 scrapli.channel DEBUG: write: 'enable'
+09:29:47 scrapli.channel DEBUG: read: b'e'
+```
+
 ---
 ## logging.basicConfig
 
@@ -116,6 +146,83 @@ root:
   handlers: [console]
 ```
 
+---
+## logging
+
+```python
+logging.basicConfig(
+    format='{threadName} {name} {levelname}: {message}',
+    datefmt='%H:%M:%S',
+    style="{",
+    level=logging.INFO
+)
+
+logging.debug('Сообщение уровня debug')
+logging.info('Сообщение уровня info')
+logging.warning('Сообщение уровня warning')
+```
+
+```python
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+formatter = logging.Formatter(
+    '{threadName} {name} {levelname}: {message}', datefmt='%H:%M:%S', style='{'
+)
+
+### stderr
+console = logging.StreamHandler()
+console.setLevel(logging.DEBUG)
+console.setFormatter(formatter)
+
+logger.addHandler(console)
+
+logger.debug('Сообщение уровня debug')
+logger.info('Сообщение уровня info')
+logger.warning('Сообщение уровня warning')
+```
+
+
+---
+## logging
+
+```python
+logging.basicConfig(
+    format='{threadName} {name} {levelname}: {message}',
+    datefmt='%H:%M:%S',
+    style="{",
+    level=logging.INFO
+)
+
+logging.debug('Сообщение уровня debug')
+logging.info('Сообщение уровня info')
+logging.warning('Сообщение уровня warning')
+```
+
+---
+## logging
+
+
+```python
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+formatter = logging.Formatter(
+    '{threadName} {name} {levelname}: {message}', datefmt='%H:%M:%S', style='{'
+)
+
+### stderr
+console = logging.StreamHandler()
+console.setLevel(logging.DEBUG)
+console.setFormatter(formatter)
+
+logger.addHandler(console)
+
+logger.debug('Сообщение уровня debug')
+logger.info('Сообщение уровня info')
+logger.warning('Сообщение уровня warning')
+```
+
 
 ---
 ## Уровни
@@ -128,6 +235,37 @@ root:
 |              |    | Также может использоваться для индикации о будущих проблемах. |
 | ``INFO``     | 20 | Подтверждение, что все работает как должно. |
 | ``DEBUG``    | 10 | Подробная информация для диагностики проблемы. |
+
+---
+## [LogRecord attributes](https://docs.python.org/3/library/logging.html#logrecord-attributes)
+
+| Attribute name  | Description                                   |
+|-----------------|-----------------------------------------------|
+| asctime         | Human-readable time when the                  |
+|                 | `LogRecord` was created.  By default   |
+|                 | this is of the form '2003-07-08 16:49:45,896' |
+| created         | Time when the `LogRecord` was created  |
+| filename        | Filename portion of ``pathname``.             |
+| funcName        | Name of function containing the logging call. |
+| levelname       | Text logging level for the message            |
+| levelno         | Numeric logging level for the message         |
+| lineno          | Source line number where the logging call was |
+|                 | issued (if available).                        |
+| message         | The logged message, computed as ``msg % args``  |
+|                 | This is set when `Formatter.format` is invoked. |
+| module          | Module (name portion of ``filename``).        |
+| msecs           | Millisecond portion of the time when the      |
+|                 | `LogRecord` was created.               |
+| name            | Name of the logger used to log the call.      |
+| pathname        | Full pathname of the source file where the    |
+|                 | logging call was issued (if available).       |
+| process         | Process ID (if available).                    |
+| processName     | Process name (if available).                  |
+| relativeCreated | Time in milliseconds when the LogRecord was   |
+|                 | created, relative to the time the logging     |
+|                 | module was loaded.                            |
+| thread          | Thread ID (if available).                     |
+| threadName      | Thread name (if available).                   |
 
 ---
 ## logging.basicConfig
@@ -146,6 +284,9 @@ logging.debug('Сообщение уровня debug')
 logging.info('Сообщение уровня info')
 logging.warning('Сообщение уровня warning')
 ```
+
+---
+## logging.basicConfig
 
 ```python
 logging.basicConfig(
