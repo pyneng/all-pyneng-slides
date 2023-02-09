@@ -273,6 +273,12 @@ logger.warning('Сообщение уровня warning')
 ---
 ## logging.basicConfig
 
+![basicConfig](https://raw.githubusercontent.com/natenka/advpyneng-book/master/docs/source/_static/basicconfig.png)
+
+
+---
+## logging.basicConfig
+
 ```python
 logging.basicConfig(
     format='{threadName} {name} {levelname}: {message}',
@@ -370,6 +376,10 @@ log.info("Hello, World!")
 | ``INFO``     | 20 | Подтверждение, что все работает как должно. |
 | ``DEBUG``    | 10 | Подробная информация для диагностики проблемы. |
 
+---
+## Компоненты модуля logging
+
+![logger](https://raw.githubusercontent.com/natenka/advpyneng-book/master/docs/source/_static/logger.png)
 
 ---
 ## Компоненты модуля logging
