@@ -5,15 +5,15 @@
 
 ```
 $ python ex08_logging_api_stderr_file_netmiko.py
-2023-02-05 14:21:12,990 - __main__ - DEBUG - START
-2023-02-05 14:21:12,991 - __main__ - INFO - ===>  Connection: 192.168.100.1
-2023-02-05 14:21:12,995 - __main__ - INFO - ===>  Connection: 192.168.100.2
-2023-02-05 14:21:13,946 - __main__ - DEBUG - <===  Received:   192.168.100.2
-2023-02-05 14:21:13,946 - __main__ - DEBUG - Получен вывод команды sh ip int br с 192.168.100.2
-2023-02-05 14:21:15,716 - __main__ - ERROR - Ошибка Authentication to device failed.
-2023-02-05 14:21:15,716 - __main__ - INFO - ===>  Connection: 192.168.100.3
-2023-02-05 14:21:16,541 - __main__ - DEBUG - <===  Received:   192.168.100.3
-2023-02-05 14:21:16,541 - __main__ - DEBUG - Получен вывод команды sh ip int br с 192.168.100.3
+2023-02-05 14:21:12,990 __main__ DEBUG START
+2023-02-05 14:21:12,991 __main__ INFO ===>  Connection: 192.168.100.1
+2023-02-05 14:21:12,995 __main__ INFO ===>  Connection: 192.168.100.2
+2023-02-05 14:21:13,946 __main__ DEBUG <===  Received:   192.168.100.2
+2023-02-05 14:21:13,946 __main__ DEBUG Получен вывод команды sh ip int br с 192.168.100.2
+2023-02-05 14:21:15,716 __main__ ERROR Ошибка Authentication to device failed.
+2023-02-05 14:21:15,716 __main__ INFO ===>  Connection: 192.168.100.3
+2023-02-05 14:21:16,541 __main__ DEBUG <===  Received:   192.168.100.3
+2023-02-05 14:21:16,541 __main__ DEBUG Получен вывод команды sh ip int br с 192.168.100.3
 ```
 
 ```
@@ -84,7 +84,7 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
 formatter = logging.Formatter(
-    '{asctime} - {name} - {levelname} - {message}', datefmt='%H:%M:%S', style='{'
+    '{asctime} {name} {levelname} {message}', datefmt='%H:%M:%S', style='{'
 )
 
 ### stderr
@@ -129,7 +129,7 @@ def send_show(device_dict, command):
 version: 1
 formatters:
   simple:
-    format: '{asctime} - {name} - {levelname} - {message}'
+    format: '{asctime} {name} {levelname} {message}'
 handlers:
   console:
     class: logging.StreamHandler
@@ -328,12 +328,12 @@ logging.basicConfig(
 * filename  Specifies that a FileHandler be created, using the specified filename, rather than a StreamHandler.
 * filemode  Specifies the mode to open the file, if filename is specified (if filemode is unspecified, it defaults to 'a').
 * format
-* datefmt - date/time format
-* style - ``%``, ``{``, ``$``
+* datefmt date/time format
+* style ``%``, ``{``, ``$``
 * level
-* stream - stream to initialize the StreamHandler. Incompatible with filename - if both are present, a ValueError is raised.
-* handlers - Incompatible with filename or stream
-* force - If this keyword is specified as true, any existing handlers attached
+* stream stream to initialize the StreamHandler. Incompatible with filename if both are present, a ValueError is raised.
+* handlers Incompatible with filename or stream
+* force If this keyword is specified as true, any existing handlers attached
   to the root logger are removed and closed, before carrying out the configuration
   as specified by the other arguments.
 
@@ -359,15 +359,52 @@ log.info("Hello, World!")
 
 
 ---
+## Уровни
+
+| Уровень      |    | Когда используется                          |
+|--------------|----|------------------------------------------|
+| ``CRITICAL`` | 50 | Серьезная ошибка из-за которой программа не может подолжить работу |
+| ``ERROR``    | 40 | Возникла ошибка и из-за нее не получилось выполнить часть задач. |
+| ``WARNING``  | 30 | Случилось что-то неожиданное, но программа все еще работает. |
+|              |    | Также может использоваться для индикации о будущих проблемах. |
+| ``INFO``     | 20 | Подтверждение, что все работает как должно. |
+| ``DEBUG``    | 10 | Подробная информация для диагностики проблемы. |
+
+
+---
 ## Компоненты модуля logging
 
 
-* Logger - это основной интерфейс для работы с модулем
-* Handler - отправляет log-сообщения конкретному получателю
-* Filter - позволяет фильтровать сообщения
-* Formatter - указывает формат сообщения
+* Logger это основной интерфейс для работы с модулем
+* Handler отправляет log-сообщения конкретному получателю
+* Filter позволяет фильтровать сообщения
+* Formatter указывает формат сообщения
 
 Log события передаются между logger, handlers, filters и  formatter в виде экземпляра LogRecord.
+
+```python
+import logging
+
+log = logging.getLogger(__name__)
+log.setLevel(logging.DEBUG)
+
+fmt = logging.Formatter(
+    '{asctime} {name} {levelname} {message}',
+    style='{',
+    datefmt='%H:%M:%S',
+)
+
+console = logging.StreamHandler()
+console.setLevel(logging.DEBUG)
+console.setFormatter(fmt)
+
+log.addHandler(console)
+
+# messages
+log.debug('Сообщение уровня debug %s', 'SOS')
+log.info('Сообщение уровня info')
+log.warning('Сообщение уровня warning')
+```
 
 ---
 ## Компоненты модуля logging
@@ -380,8 +417,11 @@ log.setLevel(logging.DEBUG)
 
 console = logging.StreamHandler()
 console.setLevel(logging.DEBUG)
-formatter = logging.Formatter('{asctime} - {name} - {levelname} - {message}',
-                              datefmt='%H:%M:%S')
+formatter = logging.Formatter(
+    '{asctime} {name} {levelname} {message}',
+    style='{',
+    datefmt='%H:%M:%S',
+)
 console.setFormatter(formatter)
 
 log.addHandler(console)
@@ -393,9 +433,44 @@ log.warning('Сообщение уровня warning')
 ```
 
 ---
+## Запись в файл и вывод на stderr
+
+```python
+import logging
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+fmt = logging.Formatter(
+    '{asctime} {name} {levelname} {message}',
+    style='{',
+)
+
+### stderr
+console = logging.StreamHandler()
+console.setLevel(logging.DEBUG)
+console.setFormatter(fmt)
+
+logger.addHandler(console)
+
+### File
+logfile = logging.FileHandler('logfile3.log')
+logfile.setLevel(logging.WARNING)
+logfile.setFormatter(fmt)
+
+logger.addHandler(logfile)
+
+## messages
+logger.debug('Сообщение уровня debug')
+logger.info('Сообщение уровня info')
+logger.warning('Сообщение уровня warning')
+```
+
+
+---
 ## Компоненты модуля logging
 
-[Logger](https://docs.python.org/3.10/library/logging.html#logging.Logger) - это основной интерфейс для работы с модулем.
+[Logger](https://docs.python.org/3.10/library/logging.html#logging.Logger) это основной интерфейс для работы с модулем.
 
 Rich inspect
 
@@ -430,7 +505,7 @@ Rich inspect
 ---
 ## Компоненты модуля logging
 
-[Handler](https://docs.python.org/3.10/library/logging.html#logging.Handler) - отправляет log-сообщения конкретному получателю
+[Handler](https://docs.python.org/3.10/library/logging.html#logging.Handler) отправляет log-сообщения конкретному получателю
 
 ```python
 <StreamHandler <stderr> (NOTSET)>
@@ -451,7 +526,7 @@ setFormatter = def setFormatter(fmt): Set the formatter for this handler.
 ---
 ## Компоненты модуля logging
 
-Formatter - указывает формат сообщения
+Formatter указывает формат сообщения
 
 ```python
 logging.Formatter.__init__(fmt=None, datefmt=None, style='%')
@@ -465,7 +540,7 @@ datefmt по умолчанию
 ---
 ## Компоненты модуля logging
 
-* Filter - позволяет фильтровать сообщения
+* Filter позволяет фильтровать сообщения
 
 ---
 ## Запись в файл и вывод на stderr
@@ -479,7 +554,7 @@ logger.setLevel(logging.DEBUG)
 ### stderr
 console = logging.StreamHandler()
 console.setLevel(logging.DEBUG)
-formatter = logging.Formatter('{asctime} - {name} - {levelname} - {message}',
+formatter = logging.Formatter('{asctime} {name} {levelname} {message}',
                               datefmt='%H:%M:%S', style='{')
 console.setFormatter(formatter)
 
@@ -488,7 +563,7 @@ logger.addHandler(console)
 ### File
 logfile = logging.FileHandler('logfile3.log')
 logfile.setLevel(logging.WARNING)
-formatter = logging.Formatter('{asctime} - {name} - {levelname} - {message}',
+formatter = logging.Formatter('{asctime} {name} {levelname} {message}',
                               datefmt='%H:%M:%S', style='{')
 logfile.setFormatter(formatter)
 
@@ -522,7 +597,7 @@ log.setLevel(logging.DEBUG)
 ### stderr
 console = RichHandler(level=logging.DEBUG)
 formatter = logging.Formatter(
-    "{name} - {message}", datefmt="%X", style="{"
+    "{name} {message}", datefmt="%X", style="{"
 )
 console.setFormatter(formatter)
 log.addHandler(console)
@@ -530,7 +605,7 @@ log.addHandler(console)
 ### File
 logfile = logging.FileHandler("logfile3.log")
 logfile.setLevel(logging.DEBUG)
-formatter = logging.Formatter("{asctime} - {name} - {levelname} - {message}", style="{")
+formatter = logging.Formatter("{asctime} {name} {levelname} {message}", style="{")
 logfile.setFormatter(formatter)
 
 log.addHandler(logfile)
@@ -556,7 +631,7 @@ log.addFilter(LevelFilter(logging.DEBUG))
 
 logfile = logging.FileHandler("logfile3.log")
 logfile.setLevel(logging.DEBUG)
-formatter = logging.Formatter("{asctime} - {name} - {levelname} - {message}", style="{")
+formatter = logging.Formatter("{asctime} {name} {levelname} {message}", style="{")
 logfile.setFormatter(formatter)
 
 log.addHandler(logfile)
@@ -584,7 +659,7 @@ logfile.setLevel(logging.DEBUG)
 logfile.addFilter(LevelFilter(logging.DEBUG))
 logfile.addFilter(MessageFilter("test"))
 
-formatter = logging.Formatter("{asctime} - {name} - {levelname} - {message}", style="{")
+formatter = logging.Formatter("{asctime} {name} {levelname} {message}", style="{")
 logfile.setFormatter(formatter)
 
 log.addHandler(logfile)
@@ -638,7 +713,7 @@ def send_show(device_dict, command):
 version: 1
 formatters:
   simple:
-    format: '{asctime} - {name} - {levelname} - {message}'
+    format: '{asctime} {name} {levelname} {message}'
 handlers:
   console:
     class: logging.StreamHandler
