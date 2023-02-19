@@ -325,56 +325,109 @@ Out[12]: 5
 ```
 
 ---
-## Замыкание (Closure)
+## Полезные встроенные функции
 
-Замыкание (closure) — функция, которая находится внутри другой функции
-и ссылается на переменные объявленные в теле внешней функции (свободные переменные).
-
-Внутренняя функция создается каждый раз во время выполнения внешней.
-Каждый раз при вызове внешней функции происходит создание нового 
-экземпляра внутренней функции, с новыми ссылками на переменные внешней функции.
-
-Ссылки на переменные внешней функции действительны внутри 
-вложенной функции до тех пор, пока работает вложенная функция, даже если внешняя 
-функция закончила работу, и переменные вышли из области видимости.
 
 ---
-### Замыкание (Closure)
+### callable
 
 ```python
-def multiply(num1):
-    var = 10
-    def inner(num2):
-        return num1 * num2
-    return inner
+In [1]: callable?
+Signature: callable(obj, /)
+Docstring:
+Return whether the object is callable (i.e., some kind of function).
+
+Note that classes are callable, as are instances of classes with a
+__call__() method.
+Type:      builtin_function_or_method
 ```
 
-Использование созданной функции:
-
-```python
-In [2]: mult_by_9 = multiply(9)
-```
 
 ---
-### Замыкание (Closure)
-
-Переменная mult_by_9 ссылается на внутреннюю функцию inner и при этом внутренняя функция
-помнит значение num1 = 9 и поэтому все числа будут умножаться на 9:
+### isinstance
 
 ```python
-In [3]: mult_by_9
-Out[3]: <function __main__.multiply.<locals>.inner(num2)>
+In [2]: isinstance?
+Signature: isinstance(obj, class_or_tuple, /)
+Docstring:
+Return whether an object is an instance of a class or of a subclass thereof.
 
-In [4]: mult_by_9.__closure__
-Out[4]: (<cell at 0xb0bd5f2c: int object at 0x836bf60>,)
+A tuple, as in ``isinstance(x, (A, B, ...))``, may be given as the target to
+check against. This is equivalent to ``isinstance(x, A) or isinstance(x, B)
+or ...`` etc.
+Type:      builtin_function_or_method
+```
 
-In [5]: mult_by_9.__closure__[0].cell_contents
-Out[5]: 9
 
-In [8]: mult_by_9(10)
-Out[8]: 90
+---
+### issubclass
 
-In [9]: mult_by_9(2)
-Out[9]: 18
+```python
+In [3]: issubclass?
+Signature: issubclass(cls, class_or_tuple, /)
+Docstring:
+Return whether 'cls' is derived from another class or is the same class.
+
+A tuple, as in ``issubclass(x, (A, B, ...))``, may be given as the target to
+check against. This is equivalent to ``issubclass(x, A) or issubclass(x, B)
+or ...``.
+Type:      builtin_function_or_method
+```
+
+
+---
+### hasattr
+
+```python
+In [4]: hasattr?
+Signature: hasattr(obj, name, /)
+Docstring:
+Return whether the object has an attribute with the given name.
+
+This is done by calling getattr(obj, name) and catching AttributeError.
+Type:      builtin_function_or_method
+```
+
+
+---
+### getattr
+
+```python
+In [5]: getattr?
+Docstring:
+getattr(object, name[, default]) -> value
+
+Get a named attribute from an object; getattr(x, 'y') is equivalent to x.y.
+When a default argument is given, it is returned when the attribute doesn't
+exist; without it, an exception is raised in that case.
+Type:      builtin_function_or_method
+```
+
+
+---
+### setattr
+
+```python
+In [6]: setattr?
+Signature: setattr(obj, name, value, /)
+Docstring:
+Sets the named attribute on the given object to the specified value.
+
+setattr(x, 'y', v) is equivalent to ``x.y = v''
+Type:      builtin_function_or_method
+```
+
+
+---
+### delattr
+
+```python
+In [7]: delattr?
+Signature: delattr(obj, name, /)
+Docstring:
+Deletes the named attribute from the given object.
+
+delattr(x, 'y') is equivalent to ``del x.y''
+Type:      builtin_function_or_method
 ```
 
