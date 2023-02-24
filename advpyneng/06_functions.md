@@ -261,12 +261,6 @@ template.format(*items)
 * сохранение функций в структурах данных
 
 ---
-### [Функции высшего порядка](https://ru.wikipedia.org/wiki/%D0%A4%D1%83%D0%BD%D0%BA%D1%86%D0%B8%D1%8F_%D0%B2%D1%8B%D1%81%D1%88%D0%B5%D0%B3%D0%BE_%D0%BF%D0%BE%D1%80%D1%8F%D0%B4%D0%BA%D0%B0) (higher-order function)
-
-Функция, принимающая в качестве аргументов другие функции или возвращающая
-другую функцию в качестве результата.
-
----
 ### Передача функций в качестве аргументов другим функциям
 
 ```python
@@ -390,7 +384,7 @@ Type:      builtin_function_or_method
 
 
 ---
-### getattr
+### getattr, settattr, delattr
 
 ```python
 In [5]: getattr?
@@ -403,10 +397,6 @@ exist; without it, an exception is raised in that case.
 Type:      builtin_function_or_method
 ```
 
-
----
-### setattr
-
 ```python
 In [6]: setattr?
 Signature: setattr(obj, name, value, /)
@@ -416,10 +406,6 @@ Sets the named attribute on the given object to the specified value.
 setattr(x, 'y', v) is equivalent to ``x.y = v''
 Type:      builtin_function_or_method
 ```
-
-
----
-### delattr
 
 ```python
 In [7]: delattr?
@@ -431,3 +417,104 @@ delattr(x, 'y') is equivalent to ``del x.y''
 Type:      builtin_function_or_method
 ```
 
+---
+### [Функции высшего порядка](https://ru.wikipedia.org/wiki/%D0%A4%D1%83%D0%BD%D0%BA%D1%86%D0%B8%D1%8F_%D0%B2%D1%8B%D1%81%D1%88%D0%B5%D0%B3%D0%BE_%D0%BF%D0%BE%D1%80%D1%8F%D0%B4%D0%BA%D0%B0) (higher-order function)
+
+Функция, принимающая в качестве аргументов другие функции или возвращающая
+другую функцию в качестве результата.
+
+
+
+---
+### Функция map
+
+Функция map применяет функцию к каждому элементу последовательности и
+возвращает итератор с результатами.
+
+```python
+In [1]: list_of_words = ['one', 'two', 'list', '', 'dict']
+
+In [2]: map(str.upper, list_of_words)
+Out[2]: <map at 0xb45eb7ec>
+
+In [3]: list(map(str.upper, list_of_words))
+Out[3]: ['ONE', 'TWO', 'LIST', '', 'DICT']
+```
+
+---
+### Функция map
+
+Конвертация в числа:
+
+```python
+In [3]: list_of_str = ['1', '2', '5', '10']
+
+In [4]: list(map(int, list_of_str))
+Out[4]: [1, 2, 5, 10]
+```
+
+Вместе с map удобно использовать лямбда-выражения:
+
+```python
+In [5]: vlans = [100, 110, 150, 200, 201, 202]
+
+In [6]: list(map(lambda x: 'vlan {}'.format(x), vlans))
+Out[6]: ['vlan 100', 'vlan 110', 'vlan 150', 'vlan 200', 'vlan 201', 'vlan 202']
+```
+
+---
+## Функция filter
+
+Функция ``filter`` применяет функцию ко всем элементам последовательности
+и возвращает итератор с теми объектами, для которых функция вернула
+True.
+
+```python
+In [1]: list_of_strings = ['one', 'two', 'list', '', 'dict', '100', '1', '50']
+
+In [2]: filter(str.isdigit, list_of_strings)
+Out[2]: <filter at 0xb45eb1cc>
+
+In [3]: list(filter(str.isdigit, list_of_strings))
+Out[3]: ['100', '1', '50']
+```
+
+---
+## Функция filter
+
+Из списка чисел оставить только нечетные:
+
+```python
+In [3]: list(filter(lambda x: x % 2 == 1, [10, 111, 102, 213, 314, 515]))
+Out[3]: [111, 213, 515]
+```
+
+Аналогично, только четные:
+
+```python
+In [4]: list(filter(lambda x: x % 2 == 0, [10, 111, 102, 213, 314, 515]))
+Out[4]: [10, 102, 314]
+```
+
+---
+### Анонимная функция (лямбда-выражение)
+
+В Python лямбда-выражение позволяет создавать анонимные функции - функции, которые не привязаны к имени.
+
+В анонимной функции:
+
+* может содержаться только одно выражение
+* могут передаваться сколько угодно аргументов
+
+Стандартная функция:
+
+```python
+def sum_arg(a, b):
+    return a + b
+```
+
+Аналогичная анонимная функция, или лямбда-функция:
+
+```python
+sum_arg = lambda a, b: a + b
+```

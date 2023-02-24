@@ -1,4 +1,4 @@
-# Декораторы (повторение)
+# Декораторы
 
 ---
 ## Декоратор
@@ -20,27 +20,8 @@ def f(...):
 ```
 
 ---
-## functools.wraps
+## Декоратор
 
-При использовании декораторов, информация исходной функции
-заменяется внутренней функцией декоратора:
-
-```python
-In [2]: lower
-Out[2]: <function __main__.verbose.<locals>.wrapper(*args, **kwargs)>
-
-In [4]: lower?
-Signature: lower(*args, **kwargs)
-Docstring: <no docstring>
-File:      ~/repos/experiments/netdev_try/<ipython-input-1-32089045b87b>
-Type:      function
-```
-
----
-## functools.wraps
-
-Чтобы исправить это необходимо воспользоваться декоратором wraps
-из модуля functools:
 
 ```python
 from functools import wraps
@@ -54,18 +35,8 @@ def verbose(func):
 
 
 @verbose
-def lower(string):
-    return string.lower()
-
-
-In [7]: lower
-Out[7]: <function __main__.lower(string)>
-
-In [8]: lower?
-Signature: lower(string)
-Docstring: <no docstring>
-File:      ~/repos/experiments/netdev_try/<ipython-input-6-13e6266ce16f>
-Type:      function
+def upper(string):
+    return string.upper()
 ```
 
 ---
