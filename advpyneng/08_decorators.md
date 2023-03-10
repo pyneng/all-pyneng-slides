@@ -328,6 +328,20 @@ Out[13]: IPAddress(ip='10.1.1.1', mask=28)
 ---
 ### functools.cache
 
+```python
+@functools.cache(user_function)
+```
+
+```python
+@cache
+def factorial(n):
+    return n * factorial(n-1) if n else 1
+```
+
+---
+### functools.cache
+
+
 ```
 4! 1*2*3*4 = 24
 5! 1*2*3*4*5 = 120
@@ -392,6 +406,35 @@ factorial(6)=720
 ### functools lru_cache
 
 ```python
+@functools.lru_cache(user_function)
+@functools.lru_cache(maxsize=128, typed=False)
+```
+
+```python
+@lru_cache
+def count_vowels(sentence):
+    return sum(sentence.count(vowel) for vowel in 'AEIOUaeiou')
+
+
+@lru_cache(maxsize=32)
+def get_pep(num):
+    'Retrieve text of a Python Enhancement Proposal'
+    resource = 'https://peps.python.org/pep-%04d/' % num
+    try:
+        with urllib.request.urlopen(resource) as s:
+            return s.read()
+    except urllib.error.HTTPError:
+        return 'Not Found'
+
+>>> for n in 8, 290, 308, 320, 8, 218, 320, 279, 289, 320, 9991:
+...     pep = get_pep(n)
+...     print(n, len(pep))
+```
+
+---
+### functools lru_cache
+
+```python
 from functools import lru_cache
 
 
@@ -445,6 +488,24 @@ def send_show_command(host, username, password, secret, device_type, show_comman
         print(f"Вызываю команду {show_command}")
         result = ssh.send_command(show_command)
     return result
+```
+---
+### functools singledispatch
+
+```python
+@singledispatch
+def send_commands(command, device):
+    raise ValueError(f"Тип {type(command).__name__} не поддерживается")
+
+
+@send_commands.register
+def _(config_commands: Iterable, device):
+    print("config")
+
+
+@send_commands.register
+def _(show_command: str, device):
+    print("show")
 ```
 
 ---

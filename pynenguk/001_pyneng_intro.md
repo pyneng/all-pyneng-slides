@@ -32,7 +32,7 @@ if a > b:
     print("A більше B")
     print(a - b)
 else:
-    print("B більше чи рівне A")
+    print("A менше чи рівне B")
     print(b - a)
 
 print("The End")
@@ -143,6 +143,158 @@ In [9]: print('one', 'two', 'three')
 one two three
 ```
 
+
+---
+## Рядки (Strings)
+
+---
+### Рядки
+
+Рядок в Python:
+
+* послідовність символів у лапках
+* незмінний упорядкований тип даних
+
+```python
+In [9]: 'Hello'
+Out[9]: 'Hello'
+
+In [10]: "Hello"
+Out[10]: 'Hello'
+```
+
+---
+### Рядки
+
+```python
+tunnel = """
+interface Tunnel0
+ ip address 10.10.10.1 255.255.255.0
+ ip mtu 1416
+ ip ospf hello-interval 5
+ tunnel source FastEthernet1/0
+ tunnel protection ipsec profile DMVPN
+"""
+
+In [12]: tunnel
+Out[12]: '\ninterface Tunnel0\n ip address 10.10.10.1 255.255.255.0\n ip mtu 1416\n ip ospf hello-interval 5\n tunnel source FastEthernet1/0\n tunnel protection ipsec profile DMVPN\n'
+
+In [13]: print(tunnel)
+
+interface Tunnel0
+ ip address 10.10.10.1 255.255.255.0
+ ip mtu 1416
+ ip ospf hello-interval 5
+ tunnel source FastEthernet1/0
+ tunnel protection ipsec profile DMVPN
+```
+
+---
+### Методи для роботи з рядками
+
+```python
+In [1]: line = "test"
+
+In [2]: line.
+          capitalize   find         isdecimal    istitle      partition    rstrip       translate
+          casefold     format       isdigit      isupper      replace      split        upper
+          center       format_map   isidentifier join         rfind        splitlines   zfill
+          count        index        islower      ljust        rindex       startswith
+          encode       isalnum      isnumeric    lower        rjust        strip
+          endswith     isalpha      isprintable  lstrip       rpartition   swapcase
+          expandtabs   isascii      isspace      maketrans    rsplit       title
+```
+
+---
+## Список (List)
+
+---
+### Список
+
+Список у Python це:
+
+* послідовність елементів, розділених між собою комою та укладених у квадратні дужки
+* змінюваний упорядкований тип даних
+
+```python
+In [1]: list1 = [10, 20, 30, 77]
+
+In [2]: list2 = ['one', 'dog', 'seven']
+
+In [3]: list3 = [1, 20, 4.0, 'word']
+```
+
+---
+### Список
+
+Так як список - це впорядкований тип даних, то, як і в рядках, у списках можна звертатися до елемента за номером, робити зрізи:
+
+```python
+In [4]: list3 = [1, 20, 4.0, 'word']
+
+In [5]: list3[1]
+Out[5]: 20
+
+In [6]: list3[1::]
+Out[6]: [20, 4.0, 'word']
+
+In [7]: list3[-1]
+Out[7]: 'word'
+
+In [8]: list3[::-1]
+Out[8]: ['word', 4.0, 20, 1]
+```
+
+---
+### Список
+
+Оскільки список є змінним типом даних, елементи списку можна змінювати:
+
+```python
+In [13]: list3
+Out[13]: [1, 20, 4.0, 'word']
+
+In [14]: list3[0] = 'test'
+
+In [15]: list3
+Out[15]: ['test', 20, 4.0, 'word']
+```
+
+---
+### Список
+
+Можна також створювати список списків. І, як і у звичайному списку, можна звертатися до елементів у вкладених списках:
+
+```python
+interfaces = [
+    ['FastEthernet0/0', '15.0.15.1', 'YES', 'manual', 'up', 'up'],
+    ['FastEthernet0/1', '10.0.1.1', 'YES', 'manual', 'up', 'up'],
+    ['FastEthernet0/2', '10.0.2.1', 'YES', 'manual', 'up', 'down']
+]
+
+In [17]: interfaces[0][0]
+Out[17]: 'FastEthernet0/0'
+
+In [18]: interfaces[2][0]
+Out[18]: 'FastEthernet0/2'
+
+In [19]: interfaces[2][1]
+Out[19]: '10.0.2.1'
+```
+
+---
+### Методи списків
+
+```
+In [2]: vlans = [1, 2, 3, 4, 10, 11, 12, 100]
+
+In [3]: vlans.
+               append()  count()   insert()  reverse()
+               clear()   extend()  pop()     sort()
+               copy()    index()   remove()
+```
+
+
 ---
 
 ## if/elif/else
@@ -155,9 +307,38 @@ a = 9
 
 if a == 10:
     print('a дорівнює 10')
+```
+
+
+```python
+a = 9
+
+if a == 10:
+    print('a дорівнює 10')
+else:
+    print('a не дорівнює 10')
+```
+
+
+```python
+a = 9
+
+if a == 10:
+    print('a дорівнює 10')
 elif a < 10:
     print('a менше 10')
 else:
+    print('a більше 10')
+```
+
+```python
+a = 9
+
+if a == 10:
+    print('a дорівнює 10')
+elif a < 10:
+    print('a менше 10')
+elif a > 10:
     print('a більше 10')
 ```
 
@@ -277,6 +458,25 @@ else:
 ---
 ### for
 
+У цьому прикладі цикл проходить за списком VLAN:
+
+```python
+In [3]: vlans = [10, 20, 30, 40, 100]
+
+In [4]: for vlan in vlans:
+   ...:     print(vlan)
+   ...:     
+10
+20
+30
+40
+100
+```
+
+
+---
+### for
+
 ```python
 In [1]: for letter in 'Test string':
    ...:     print(letter)
@@ -300,7 +500,7 @@ g
 Приклад циклу for з функцією range:
 
 ```python
-In [2]: for i in range(10):
+In [2]: for i in [0, 1, 2, 3, 4, 5, 6, 7]:
    ...:     print('interface FastEthernet0/' + str(i))
    ...:     
 interface FastEthernet0/0
@@ -311,8 +511,6 @@ interface FastEthernet0/4
 interface FastEthernet0/5
 interface FastEthernet0/6
 interface FastEthernet0/7
-interface FastEthernet0/8
-interface FastEthernet0/9
 ```
 
 ---

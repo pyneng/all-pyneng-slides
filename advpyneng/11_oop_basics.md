@@ -42,37 +42,6 @@ class Switch:
         return self._get_display_str()
 ```
 
----
-## Два подчеркивания перед именем
-
-Два подчеркивания перед именем метода или аргумента используются не просто как договоренность. Такие имена трансформируются в формат "имя класса + имя метода". Это позволяет создавать уникальные методы и атрибуты классов.
-
-> Такое преобразование выполняется только в том случае, если в конце менее двух подчеркиваний или нет подчеркиваний
-
-
----
-### Два подчеркивания перед именем
-
-```python
-class Switch:
-    def __get_display_str(self):
-        hostname = getattr(self, 'hostname', None)
-        model = getattr(self, 'model', None)
-        return 'Hostname: {}, Model: {}'.format(hostname, model)
-
-    def __str__(self):
-        return self.__get_display_str()
-```
-
----
-### Два подчеркивания перед именем
-
-```python
-In [1]: sw1 = Switch()
-
-In [2]: dir(sw1)
-Out[2]:
-```
 
 ---
 ## [Специальные методы](https://rszalski.github.io/magicmethods/)
