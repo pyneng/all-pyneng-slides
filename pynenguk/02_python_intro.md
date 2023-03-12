@@ -72,20 +72,20 @@ $ pip --version
 pip 9.0.1 from /usr/local/lib/python2.7/dist-packages (python 2.7)
 ```
 
-Варіант, коли pip3 відповідає Python 3.10:
+Варіант, коли pip3 відповідає Python 3.11:
 
 ```
 $ pip3 --version
-pip 21.2.3 from /usr/local/lib/python3.10/site-packages/pip (python 3.10)
+pip 21.2.3 from /usr/local/lib/python3.11/site-packages/pip (python 3.11)
 ```
 
 ---
-### pip или pip3
+### pip/pip3
 
 Також можна використати альтернативний варіант виклику pip:
 
 ```
-$ python3.10 -m pip install tabulate
+$ python3.11 -m pip install tabulate
 ```
 
 Таким чином, завжди зрозуміло для якої версії Python встановлюється пакет.
@@ -106,19 +106,19 @@ $ python3.10 -m pip install tabulate
 ---
 ### Вбудований модуль venv
 
-Створення нового віртуального оточення, в якому Python 3.10 використовується за замовчуванням:
+Створення нового віртуального оточення, в якому Python 3.11 використовується за замовчуванням:
 ```
-$ python3.10 -m venv ~/.venv/pyneng-course-3-10
+$ python3.11 -m venv ~/.venv/pyneng-course-3.11
 ```
 
 Для переходу у віртуальне оточення треба виконати команду (Linux/Mac):
 ```
-$ source ~/.venv/pyneng-course-3-10/bin/activate
+$ source ~/.venv/pyneng-course-3.11/bin/activate
 ```
 
 Windows
 ```
-C:\Users\nata\.venv\pyneng-course-3-10\Scripts\activate.bat
+C:\Users\nata\.venv\pyneng-course-3.11\Scripts\activate.bat
 ```
 
 Для виходу з віртуального оточення використовується команда deactivate:
