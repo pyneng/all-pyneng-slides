@@ -288,6 +288,98 @@ class Network:
 ---
 ### Менеджер контекста
 
+
+```python
+with open(filename) as f:
+    content = f.read()
+```
+
+
+```python
+with ConnectHandler(**device) as ssh:
+    ssh.enable()
+    result = ssh.send_command(command)
+```
+
+
+---
+### Менеджер контекста
+
+```python
+with pytest.raises(TypeError):
+    check_ip(100)
+```
+
+```python
+with click.progressbar(devices, label="Подключение к устройствам:") as bar:
+    for device in bar:
+```
+
+```python
+with ThreadPoolExecutor(max_workers=30) as executor:
+    result = executor.map(connect_ssh, devices, repeat(command))
+```
+
+---
+### Менеджер контекста
+
+```python
+con = sqlite3.connect('sw_inventory3.db')
+
+with con:
+    query = 'INSERT into switch values (?, ?, ?, ?)'
+    con.executemany(query, data)
+```
+
+```python
+with threading.Lock:
+    value = counter
+```
+
+---
+### Менеджер контекста
+
+```python
+with pytest.raises(TypeError):
+    check_ip(100)
+```
+
+```python
+with click.progressbar(devices, label="Подключение к устройствам:") as bar:
+    for device in bar:
+```
+
+```python
+with open(filename) as f:
+    content = f.read()
+```
+
+```python
+with con:
+    query = 'INSERT into switch values (?, ?, ?, ?)'
+    con.executemany(query, data)
+```
+
+```python
+with ConnectHandler(**device) as ssh:
+    ssh.enable()
+    result = ssh.send_command(command)
+```
+
+```python
+with ThreadPoolExecutor(max_workers=30) as executor:
+    result = executor.map(connect_ssh, devices, repeat(command))
+```
+
+```python
+with threading.Lock:
+    value = counter
+```
+
+
+---
+### Менеджер контекста
+
 ```python
 class CiscoSSH:
     def __init__(self, **device_params):
@@ -308,10 +400,10 @@ class CiscoSSH:
 ### Менеджер контекста
 
 ```python
-In [8]: with CiscoSSH(**DEVICE_PARAMS) as r1:
-   ...:     print('Внутри with')
-   ...:     print(r1.ssh.send_command('sh ip int br'))
-   ...:
+with CiscoSSH(**DEVICE_PARAMS) as r1:
+    print('Внутри with')
+    print(r1.ssh.send_command('sh ip int br'))
+
 CiscoSSH __init__ called
 CiscoSSH __enter__ called
 Внутри with
@@ -331,11 +423,11 @@ CiscoSSH __exit__ called
 
 Если внутри блока with возникает исключение, оно будет сгенерировано после выполнения метода `__exit__`:
 ```python
-In [10]: with CiscoSSH(**DEVICE_PARAMS) as r1:
-    ...:     print('Внутри with')
-    ...:     print(r1.ssh.send_command('sh ip int br'))
-    ...:     raise ValueError('Ошибка')
-    ...:
+with CiscoSSH(**DEVICE_PARAMS) as r1:
+    print('Внутри with')
+    print(r1.ssh.send_command('sh ip int br'))
+    raise ValueError('Ошибка')
+
 CiscoSSH __init__ called
 CiscoSSH __enter__ called
 Внутри with
@@ -383,11 +475,11 @@ class CiscoSSH:
 ### Менеджер контекста
 
 ```python
-In [17]: with CiscoSSH(**DEVICE_PARAMS) as r1:
-    ...:     print('Внутри with')
-    ...:     print(r1.ssh.send_command('sh ip int br'))
-    ...:     raise ValueError('Ошибка')
-    ...:
+with CiscoSSH(**DEVICE_PARAMS) as r1:
+    print('Внутри with')
+    print(r1.ssh.send_command('sh ip int br'))
+    raise ValueError('Ошибка')
+
 CiscoSSH __init__ called
 CiscoSSH __enter__ called
 Внутри with
