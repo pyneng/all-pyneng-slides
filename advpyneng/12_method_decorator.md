@@ -1,6 +1,164 @@
 # Декораторы методов: classmethod, staticmethod, property
 
 ---
+# Декораторы методов
+
+* staticmethod
+* classmethod
+* property
+
+---
+## staticmethod
+
+Статический метод - это метод, который не привязан к состоянию 
+экземпляра или класса. Для создания статического метода 
+используется декоратор staticmethod.
+
+Преимущества использования staticmethod:
+
+* Это подсказка для тех, кто читает код, которая указывает на то, 
+  что метод не зависит от состояния экземпляра класса.
+
+
+---
+## staticmethod
+
+```python
+import time
+from textfsm import clitable
+from base_ssh import BaseSSH
+
+class CiscoSSH(BaseSSH):
+    def __init__(self, ip, username, password, enable_password,
+                 disable_paging=True):
+        super().__init__(ip, username, password)
+        self._ssh.send('enable\n')
+        self._ssh.send(enable_password + '\n')
+        if disable_paging:
+            self._ssh.send('terminal length 0\n')
+        time.sleep(1)
+        self._ssh.recv(self._MAX_READ)
+        self._mgmt_ip = None
+
+    @staticmethod
+    def _parse_show(command, command_output,
+                   index_file='index', templates='templates'):
+        attributes = {'Command': command,
+                      'Vendor': 'cisco_ios'}
+        cli_table = clitable.CliTable(index_file, templates)
+        cli_table.ParseCmd(command_output, attributes)
+        return [dict(zip(cli_table.header, row)) for row in cli_table]
+
+    def send_show_command(self, command, parse=True):
+        command_output = super().send_show_command(command)
+        if not parse:
+            return command_output
+        return self._parse_show(command, command_output)
+```
+
+---
+## classmethod
+
+Иногда нужно реализовать несколько способов создания экземпяра,
+при этом в Python можно создавать только один метод ``__init__``.
+Конечно, можно реализовать все варианты в одном ``__init__``,
+но при этом часто параметры ``__init__`` становятся или слишком общими,
+или их слишком много.
+
+Существует другой вариант решения проблемы - создать альтернативный
+конструктор с помощью декоратора classmethod.
+
+---
+### classmethod
+### dict.fromkeys
+
+Пример альтернативного конструктора в стандартной библиотеке:
+
+```python
+In [25]: r1 = {
+    ...:     'hostname': 'R1',
+    ...:     'OS': 'IOS',
+    ...:     'Vendor': 'Cisco'
+    ...: }
+
+In [28]: dict.fromkeys(['hostname', 'os', 'vendor'])
+Out[28]: {'hostname': None, 'os': None, 'vendor': None}
+
+In [29]: dict.fromkeys(['hostname', 'os', 'vendor'], '')
+Out[29]: {'hostname': '', 'os': '', 'vendor': ''}
+```
+
+---
+### classmethod
+### [datetime](https://github.com/python/cpython/blob/3.10/Lib/datetime.py)
+
+```python
+class datetime(date):
+    @classmethod
+    def fromtimestamp(cls, t, tz=None):
+        """Construct a datetime from a POSIX timestamp (like time.time()).
+        A timezone info object may be passed in as well.
+        """
+        _check_tzinfo_arg(tz)
+
+        return cls._fromtimestamp(t, tz is not None, tz)
+
+    @classmethod
+    def utcfromtimestamp(cls, t):
+        """Construct a naive UTC datetime from a POSIX timestamp."""
+        return cls._fromtimestamp(t, True, None)
+
+    @classmethod
+    def now(cls, tz=None):
+        "Construct a datetime from time.time() and optional time zone info."
+        t = _time.time()
+        return cls.fromtimestamp(t, tz)
+
+    @classmethod
+    def utcnow(cls):
+        "Construct a UTC datetime from time.time()."
+        t = _time.time()
+        return cls.utcfromtimestamp(t)
+```
+
+---
+### property
+
+property позволяет:
+
+* создавать атрибуты только для чтения
+* создавать атрибуты при обращении к которым динамически вычисляется значение
+* добавлять проверки при установке значения атрибута
+* сохранять API модуля изменяя код
+
+---
+### property
+
+```python
+class IPAddress:
+    def __init__(self, address, mask):
+        self._address = address
+        self.mask = int(mask)
+
+    @property
+    def mask(self):
+        return self._mask
+
+    @mask.setter
+    def mask(self, mask):
+        if not isinstance(mask, int):
+            raise TypeError("Маска должна быть числом")
+        if not mask in range(8, 32):
+            raise ValueError("Маска должна быть в диапазоне от 8 до 32")
+        self._mask = mask
+
+
+ip1 = IPAddress("10.1.1.1", 24)
+ip1.mask = 25
+```
+
+
+---
 ## property
 
 ---
