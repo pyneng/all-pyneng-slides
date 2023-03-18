@@ -21,9 +21,9 @@ Thonny - хороший редактор для початківців:
 Зберігання коду та змін:
 
 1. replit.com
-2. Git/GitHub
-3. Git/GitHub + replit.com
-4. просто файли
+2. просто файли
+3. Git/GitHub
+4. Git/GitHub + replit.com
 
 Git/GitHub:
 
