@@ -23,6 +23,7 @@ Thonny - хороший редактор для початківців:
 1. replit.com
 2. Git/GitHub
 3. Git/GitHub + replit.com
+4. просто файли
 
 Git/GitHub:
 
