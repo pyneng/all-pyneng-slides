@@ -245,9 +245,119 @@ __iadd__(self, other)
 
 
 Итератор (iterator) - это объект, который возвращает свои элементы по одному за раз.
-С точки зрения Python - это любой объект, у которого есть метод __next__. Этот метод возвращает следующий элемент, если он есть, или возвращает исключение StopIteration, когда элементы закончились.
+С точки зрения Python - это любой объект, у которого есть метод ``__next__``. Этот метод возвращает следующий элемент, если он есть, или возвращает исключение ``StopIteration``, когда элементы закончились.
 Кроме того, итератор запоминает, на каком объекте он остановился в последнюю итерацию.
-Также у каждого итератора присутствует метод __iter__ - то есть, любой итератор является итерируемым объектом. Этот метод возвращает сам итератор.
+Также у каждого итератора присутствует метод ``__iter__`` - то есть, любой итератор является итерируемым объектом. Этот метод возвращает сам итератор.
+
+---
+### Iterable
+
+An object capable of returning its members one at a time. Examples of iterables
+include all sequence types (such as list, str, and tuple) and some non-sequence
+types like dict, file objects, and objects of any classes you define with an
+``__iter__`` method or with a ``__getitem__`` method that implements sequence
+semantics.
+
+Iterables can be used in a for loop and in many other places where a sequence
+is needed (``zip``, ``map``, …). When an iterable object is passed as an argument
+to the built-in function ``iter``, it returns an iterator for the object. This
+iterator is good for one pass over the set of values. When using iterables, it
+is usually not necessary to call ``iter()`` or deal with iterator objects yourself.
+The for statement does that automatically for you, creating a temporary unnamed
+variable to hold the iterator for the duration of the loop. See also iterator,
+sequence, and generator.
+
+### Iterator
+
+An object representing a stream of data. Repeated calls to the iterator’s
+``__next__`` method (or passing it to the built-in function ``next``) return
+successive items in the stream. When no more data are available a StopIteration
+exception is raised instead. At this point, the iterator object is exhausted
+and any further calls to its ``__next__`` method just raise StopIteration again.
+
+Iterators are required to have an ``__iter__`` method that returns the iterator
+object itself so every iterator is also iterable and may be used in most places
+where other iterables are accepted. One notable exception is code which
+attempts multiple iteration passes. A container object (such as a list)
+produces a fresh new iterator each time you pass it to the ``iter`` function or
+use it in a for loop. Attempting this with an iterator will just return the
+same exhausted iterator object used in the previous iteration pass, making it
+appear like an empty container.
+
+
+CPython implementation detail: CPython does not consistently apply the
+requirement that an iterator define ``__iter__``.
+
+---
+### Iterable
+
+```python
+class TodoList:
+    def __init__(self, tasks=None):
+        if tasks is None:
+            self._tasks = []
+        else:
+            self._tasks = list(tasks)
+
+    def __getitem__(self, index):
+        return self._tasks[index]
+```
+
+---
+### Iterable
+
+```python
+class TodoList:
+    def __init__(self, tasks=None):
+        if tasks is None:
+            self._tasks = []
+        else:
+            self._tasks = list(tasks)
+
+    def __iter__(self):
+        return iter(self._tasks)
+```
+
+### Iterator
+
+```python
+class MyRepeat:
+    def __init__(self, value):
+        self.value = value
+
+    def __next__(self):
+        return self.value
+
+    def __iter__(self):
+        return self
+```
+
+---
+## Итератор itertools.repeat
+
+```python
+from concurrent.futures import ThreadPoolExecutor
+from itertools import repeat
+
+
+def send_show(device_dict, command):
+    host = device_dict["host"]
+    with Netmiko(**device_dict) as conn:
+        conn.enable()
+        output = conn.send_command(command)
+        return output
+
+
+def send_show_to_devices(device_list, command, output_file, threads=5):
+    host_output_dict = {}
+    with ThreadPoolExecutor(max_workers=threads) as ex:
+        all_results = ex.map(send_show, device_list, repeat(command))
+        for device, out in zip(device_list, all_results):
+            host = device["host"]
+            host_output_dict[host] = out
+    return host_output_dict
+
+```
 
 ---
 ### Протокол последовательности

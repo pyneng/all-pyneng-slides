@@ -75,11 +75,11 @@ class CiscoSSH(BaseSSH):
 Пример альтернативного конструктора в стандартной библиотеке:
 
 ```python
-In [25]: r1 = {
-    ...:     'hostname': 'R1',
-    ...:     'OS': 'IOS',
-    ...:     'Vendor': 'Cisco'
-    ...: }
+r1 = {
+    'hostname': 'R1',
+    'os': 'IOS',
+    'vendor': 'Cisco'
+}
 
 In [28]: dict.fromkeys(['hostname', 'os', 'vendor'])
 Out[28]: {'hostname': None, 'os': None, 'vendor': None}
@@ -171,6 +171,104 @@ property позволяет:
 * добавлять проверки при установке значения атрибута
 * сохранять API модуля изменяя код
 
+---
+### property
+
+```python
+class C:
+    def __init__(self):
+        self._x = None
+
+    def getx(self):
+        return self._x
+
+    def setx(self, value):
+        self._x = value
+
+    x = property(getx, setx)
+```
+
+```python
+c1 = C()
+c1.x
+c1.x = 42
+```
+
+---
+### property
+
+```python
+class C:
+    def __init__(self):
+        self._x = None
+
+    def getx(self):
+        return self._x
+
+    def setx(self, value):
+        self._x = value
+
+    x = property(getx, setx)
+```
+
+```python
+class C:
+    def __init__(self):
+        self._x = None
+
+    @property
+    def x(self):
+        return self._x
+
+    @x.setter
+    def x(self, value):
+        self._x = value
+```
+
+```python
+c1 = C()
+c1.x
+c1.x = 42
+```
+
+---
+### property
+
+```python
+class C:
+    def __init__(self):
+        self._x = None
+
+    def getx(self):
+        return self._x
+
+    def setx(self, value):
+        self._x = value
+
+    def delx(self):
+        del self._x
+
+    x = property(getx, setx, delx, "I'm the 'x' property.")
+```
+
+```python
+class C:
+    def __init__(self):
+        self._x = None
+
+    @property
+    def x(self):
+        """I'm the 'x' property."""
+        return self._x
+
+    @x.setter
+    def x(self, value):
+        self._x = value
+
+    @x.deleter
+    def x(self):
+        del self._x
+```
 
 ---
 ### property
@@ -580,11 +678,11 @@ class Book:
 Пример альтернативного конструктора в стандартной библиотеке:
 
 ```python
-In [25]: r1 = {
-    ...:     'hostname': 'R1',
-    ...:     'OS': 'IOS',
-    ...:     'Vendor': 'Cisco'
-    ...: }
+r1 = {
+    'hostname': 'R1',
+    'os': 'IOS',
+    'vendor': 'Cisco'
+}
 
 In [28]: dict.fromkeys(['hostname', 'os', 'vendor'])
 Out[28]: {'hostname': None, 'os': None, 'vendor': None}
