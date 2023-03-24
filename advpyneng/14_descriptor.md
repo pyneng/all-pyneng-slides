@@ -3,7 +3,70 @@
 ---
 ## Дескриптор
 
-Дескрипторы позволяют объектам настраивать получение, запись и удаление атрибутов.
+Дескриптор (descriptor) - любой объект, который определяет методы ``__get__``, ``__set__`` или ``__delete__``.
+
+Когда атрибут класса является дескриптором, запускается особое поведение
+при поиске атрибута. 
+
+Обычно использование obj.attr для получения, установки или удаления атрибута
+ищет объект с именем attr в словаре класса для obj, но если attr является
+дескриптором, вызывается соответствующий метод дескриптора.  
+
+Дескрипторы являются основой большого количества функционала в Python, включая функции,
+методы, property, classmethod, staticmethod.
+
+---
+## Дескриптор
+
+```python
+class Integer:
+    def __set_name__(self, owner, name):
+        print("Integer __set_name__")
+        print(f"__setname__ {self=} {owner=} {name=}")
+        self.name = name
+
+    def __get__(self, instance, cls):
+        print(f"__get__ {self=} {instance=} {cls=}")
+        return instance.__dict__[f"_{self.name}"]
+
+    def __set__(self, instance, value):
+        if not isinstance(value, int):
+            raise ValueError("Значение должно быть числом")
+        print(f"__set__ {self=} {instance=} {value=}")
+        instance.__dict__[f"_{self.name}"] = value
+
+
+class IPAddress:
+    mask = Integer()
+
+    def __init__(self, ip, mask):
+        self.ip = ip
+        self.mask = mask
+```
+
+---
+### property
+
+```python
+class C:
+    def __init__(self):
+        self._x = None
+
+    def getx(self):
+        return self._x
+
+    def setx(self, value):
+        self._x = value
+
+    x = property(getx, setx)
+```
+
+```python
+c1 = C()
+c1.x
+c1.x = 42
+```
+
 
 ---
 ## obj.attr
