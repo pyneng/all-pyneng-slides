@@ -67,6 +67,33 @@ c1.x
 c1.x = 42
 ```
 
+---
+## Descriptor protocol
+
+```python
+descr.__get__(self, obj, type=None) -> value
+descr.__set__(self, obj, value) -> None
+descr.__delete__(self, obj) -> None
+```
+
+---
+## [Descriptor protocol](https://docs.python.org/3/howto/descriptor.html#descriptor-protocol)
+
+If an object defines ``__set__`` or ``__delete__``, it is considered a data
+descriptor. Descriptors that only define ``__get__`` are called non-data
+descriptors (they are often used for methods but other uses are possible).
+
+Data and non-data descriptors differ in how overrides are calculated with
+respect to entries in an instance’s dictionary. If an instance’s dictionary has
+an entry with the same name as a data descriptor, the data descriptor takes
+precedence. If an instance’s dictionary has an entry with the same name as a
+non-data descriptor, the dictionary entry takes precedence.
+
+To make a read-only data descriptor, define both ``__get__`` and ``__set__`` with
+the ``__set__`` raising an AttributeError when called. Defining the ``__set__``
+method with an exception raising placeholder is enough to make it a data
+descriptor.
+
 
 ---
 ## obj.attr
@@ -83,23 +110,34 @@ c1.x = 42
 ``object.__getattribute__()``
 
 ```python
-def getattribute(instance, name):
+def find_name_in_mro(cls, name, default):
+    "Emulate _PyType_Lookup() in Objects/typeobject.c"
+    for base in cls.__mro__:
+        if name in vars(base):
+            return vars(base)[name]
+    return default
+
+
+def object_getattribute(obj, name):
     "Emulate PyObject_GenericGetAttr() in Objects/object.c"
     null = object()
-    cls = type(instance)
-    cls_var = getattr(cls, name, null)
+    objtype = type(obj)
+    cls_var = find_name_in_mro(objtype, name, null)
     descr_get = getattr(type(cls_var), '__get__', null)
     if descr_get is not null:
-        if (hasattr(type(cls_var), '__set__')
-            or hasattr(type(cls_var), '__delete__')):
-            return descr_get(cls_var, instance, cls)     # data descriptor
-    if hasattr(instance, '__dict__') and name in vars(instance):
-        return vars(instance)[name]                          # instance variable
+        if (
+            hasattr(type(cls_var), '__set__')
+            or hasattr(type(cls_var), '__delete__')
+        ):
+            return descr_get(cls_var, obj, objtype)     # data descriptor
+    if hasattr(obj, '__dict__') and name in vars(obj):
+        return vars(obj)[name]                          # instance variable
     if descr_get is not null:
-        return descr_get(cls_var, instance, cls)         # non-data descriptor
+        return descr_get(cls_var, obj, objtype)         # non-data descriptor
     if cls_var is not null:
         return cls_var                                  # class variable
     raise AttributeError(name)
+
 ```
 
 ---
