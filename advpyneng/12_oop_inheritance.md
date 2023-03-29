@@ -11,20 +11,6 @@
 В Python синтаксис наследования используется с абстрактными классами
 для наследования интерфейса/протокола. Кроме того, синтаксис наследования используется с Mixin.
 
----
-## Композиция (Composition)
-
-```python
-from jinja2 import Environment, FileSystemLoader
-
-env = Environment(loader=FileSystemLoader('templates'))
-template = env.get_template('router_template.txt')
-```
----
-## Unified Modeling Language (UML)
-
-![uml](https://resources.jetbrains.com/help/img/idea/2021.2/py_diagram_editor.png)
-
 
 ---
 ## Примеры использования наследования
