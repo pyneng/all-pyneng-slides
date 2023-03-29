@@ -34,7 +34,6 @@ template = env.get_template('router_template.txt')
 ## netmiko
 
 ```
-
 BaseConnection
     ^
     |
@@ -48,6 +47,38 @@ CiscoIosBase <--------+
     |                 |
     |                 |
 CiscoIosSSH     CiscoIosTelnet
+```
+
+
+```
+NoEnable  BaseConnection
+   ^        ^
+   |        |         
+   |        |
+  JuniperBase <--------+
+       ^                |
+       |                |
+       |                |
+   JuniperSSH     JuniperTelnet
+```
+
+---
+## netmiko
+
+```
+                       BaseConnection
+                       ^            ^
+                       |            |
+          NoEnable     |            |
+                ^      |        CiscoBaseConnection
+                |      |            ^
+                |      |            |
+                |      |            |
+       +----> JuniperBase       CiscoIosBase <--------+
+       |             ^              ^                 |
+       |             |              |                 |
+       |             |              |                 |
+  JuniperSSH     JuniperTelnet  CiscoIosSSH     CiscoIosTelnet
 ```
 
 ---
