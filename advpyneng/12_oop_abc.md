@@ -197,11 +197,19 @@ class AsyncTransport(BaseTransport, ABC):
 |Generator   |Iterator     |send, throw            | close, ``__iter__``, ``__next__`` |
 |Sized       |             | ``__len__``
 |Callable    |             | ``__call__``
-|Collection  |Sized,       | ``__contains__``,
-|            |Iterable,    | ``__iter__``,
+|            |             |       |       |
+|Collection  |Sized,       | ``__contains__`` 
+|            |Iterable,    | ``__iter__`` 
 |            |Container    | ``__len__``
-|Sequence    |Reversible,  | ``__getitem__``,      | ``__contains__``, ``__iter__``, ``__reversed__``, |
+|            |             |       |       |
+|Sequence    |Reversible,  | ``__getitem__``       | ``__contains__``, ``__iter__``, ``__reversed__``, |
 |            |Collection   | ``__len__``           |index, count
+|            |             |       |       |
+|MutableSequence |Sequence | ``__getitem__``       | Inherited Sequence methods and append     |
+|            |             | ``__setitem__``       | reverse, extend, pop, remove, ``__iadd__`` |
+|            |             | ``__delitem__``       |       |
+|            |             | ``__len__``       |       |
+|            |             | ``insert``      |       |
 
 ---
 ## collections.abc UML
