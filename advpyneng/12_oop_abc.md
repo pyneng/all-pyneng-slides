@@ -348,3 +348,20 @@ Out[15]: 2
 In [16]: net1.count('10.1.1.197')
 Out[16]: 1
 ```
+
+---
+## Virtual subclasses
+
+```python
+class D:
+    def __init__(self): ...
+    def __getitem__(self, index):  ...
+    def __len__(self):  ...
+    def count(self, value): ...
+    def index(self, value): ...
+
+Sequence.register(D)
+
+d1 = D()
+isinstance(d1, Sequence) # True
+```
