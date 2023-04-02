@@ -70,7 +70,7 @@ TypeError: Can't instantiate abstract class Child with abstract methods get_info
 
 ```python
 class Child(Parent):
-    def ``__init__(self):
+    def __init__(self):
         self._parameters = {}
 
     def get_info(self, parameter):
@@ -110,7 +110,7 @@ ParamikoTransport  TelnetTransport    AsynctelnetTransport  AsyncSSH
 
 ```python
 class BaseTransport(ABC):
-    def ``__init__(self, base_transport_args: BaseTransportArgs) -> None:
+    def __init__(self, base_transport_args: BaseTransportArgs) -> None:
         self._base_transport_args = base_transport_args
 
         self.logger = get_instance_logger(
