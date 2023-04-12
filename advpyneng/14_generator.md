@@ -220,28 +220,34 @@ iterator resumes, it picks up where it left off (in contrast to functions which 
 При вызове, эта функция возвращает объект генератор. 
 
 ```python
-import re
+def work_with_items(items):
+    result = []
+    for item in items:
+        result.append('Changed {}'.format(item))
+    return result
 
-def filter_lines(filename, regex):
-    with open(filename) as f:
-        for line in f:
-            if re.search(regex, line):
-                yield line.rstrip()
+```
 
+```python
+def yield_items(items):
+    for item in items:
+        yield 'Changed {}'.format(item)
+```
 
-In [6]: filtered = filter_lines('config_r1.txt', '^interface'):
-
-In [7]: for line in filtered:
-   ...:     print(line)
-   ...:
-interface Loopback0
-interface Tunnel0
-interface Ethernet0/0
-interface Ethernet0/1
-interface Ethernet0/2
-interface Ethernet0/3
-interface Ethernet0/3.100
-interface Ethernet1/0
+```python
+In [15]: for i in work_with_items(range(10)):
+    ...:     print(i)
+    ...:
+Changed 0
+Changed 1
+Changed 2
+Changed 3
+Changed 4
+Changed 5
+Changed 6
+Changed 7
+Changed 8
+Changed 9
 ```
 
 ---
