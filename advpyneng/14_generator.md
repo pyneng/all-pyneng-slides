@@ -1,6 +1,87 @@
 # Генераторы
 
 ---
+### Генератор
+
+Функция-генератор - функция, которая позволяет легко создавать свои итераторы.
+В отличии от обычных функций, функция-генератор не просто возвращает значение
+и завершает работу, а возвращает объект генератор (итератор).
+Функция-генератор это generator factory.
+
+
+С точки зрения синтаксиса, функция-генератор выглядит как обычная функция,
+но, вместо return, используется оператор ``yield``.
+Каждый раз, когда внутри функции встречается yield, генератор приостанавливается и возвращает значение.
+При следующем запросе, генератор начинает работать с того же места, где он завершил работу в прошлый раз.
+Так как yield не завершает работу генератора, он может использоваться несколько раз.
+
+```python
+def yield_items_as_str(items):
+    for item in items:
+        yield str(item)
+```
+
+---
+## Генератор
+## Генератор как менеджер контекста
+
+```python
+import time
+
+
+class Timed:
+    def __enter__(self):
+        self.start = time.time()
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        end = time.time()
+        print("время выполнения", end - self.start)
+
+
+In [4]: with Timed():
+   ...:     time.sleep(2)
+   ...:
+время выполнения 2.0024032592773438
+```
+
+```python
+from contextlib import contextmanager
+
+@contextmanager
+def gen_timed():
+    start = time.time()
+    yield
+    end = time.time()
+    print("время выполнения", end - start)
+
+
+In [7]: with gen_timed():
+   ...:     time.sleep(2)
+   ...:
+время выполнения 2.003124713897705
+```
+
+---
+## Генератор как fixture
+
+```python
+@pytest.fixture(scope='module')
+def ssh_test_connection(first_router_from_devices_yaml):
+    ssh = ConnectHandler(**first_router_from_devices_yaml)
+    ssh.enable()
+    yield ssh
+    ssh.disconnect()
+```
+
+```python
+@pytest.fixture(scope='module')
+def ssh_test_connection(first_router_from_devices_yaml):
+    with ConnectHandler(**first_router_from_devices_yaml) as ssh:
+        ssh.enable()
+        yield ssh
+```
+
+---
 ## Итератор и итерируемый объект
 
 ---
@@ -214,40 +295,28 @@ state (including local variables and pending try-statements). When the generator
 iterator resumes, it picks up where it left off (in contrast to functions which start fresh on every invocation).
 
 ---
-### Создание генератора с помощью функции генератора
-
-Функция-генератор - это функция, в которой присутствует ключевое слово yield.
-При вызове, эта функция возвращает объект генератор. 
+### Генератор
 
 ```python
-def work_with_items(items):
+def filter_items(items):
     result = []
     for item in items:
-        result.append('Changed {}'.format(item))
+        if "something" in item:
+            result.append(f'Changed {item}')
     return result
 
 ```
 
 ```python
-def yield_items(items):
+def filter_items(items):
     for item in items:
-        yield 'Changed {}'.format(item)
+        if "something" in item:
+            yield f'Changed {item}'
 ```
 
 ```python
-In [15]: for i in work_with_items(range(10)):
-    ...:     print(i)
-    ...:
-Changed 0
-Changed 1
-Changed 2
-Changed 3
-Changed 4
-Changed 5
-Changed 6
-Changed 7
-Changed 8
-Changed 9
+for i in filter_items(...):
+    print(i)
 ```
 
 ---
@@ -316,6 +385,64 @@ def my_cycle(values):
         for item in values:
             yield item
 ```
+
+---
+### Генератор
+
+```python
+import re
+
+
+def read_file(filename):
+    with open(filename) as f:
+        for line in f:
+            line = line.rstrip()
+            yield line
+
+
+def filter_lines(iterable, regex):
+    for line in iterable:
+        if re.search(regex, line):
+            yield line
+
+
+def convert_to_lower(iterable):
+    for line in iterable:
+        yield line.lower()
+
+
+if __name__ == "__main__":
+    file_i = read_file("config_r1.txt")
+    filt_i = filter_lines(file_i, "^interface")
+    lower = map(str.lower, filt_i)
+    for line in lower:
+        print(line)
+```
+---
+## Генератор
+```python
+import csv
+
+# "status","network","netmask","nexthop","metric","locprf","weight","path","origin"
+# "*","1.0.0.0","24","200.219.145.45",NA,NA,0,"28135 18881 3549 15169","i"
+# "*>","1.0.0.0","24","200.219.145.23",NA,NA,0,"53242 7738 15169","i"
+# "*","1.0.4.0","24","200.219.145.45",NA,NA,0,"28135 18881 3549 1299 7545 56203","i"
+# "*>","1.0.4.0","24","200.219.145.23",NA,NA,0,"53242 12956 174 7545 56203","i"
+
+
+def read_file(filename):
+    with open(filename) as f:
+        for line in f:
+            ...
+
+
+def read_csv(filename):
+    with open(filename) as f:
+        reader = csv.reader(f)
+        for line in reader:
+            ...
+```
+
 
 ---
 ### Генератор это итератор
