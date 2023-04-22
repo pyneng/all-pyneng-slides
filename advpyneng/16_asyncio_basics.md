@@ -349,6 +349,7 @@ End   2021-03-16 09:58:14.821104
 ## Запуск нескольких awaitables
 
 * asyncio.gather
+* asyncio.TaskGroup
 * asyncio.as_completed
 * asyncio.wait
 
@@ -372,43 +373,73 @@ asyncio.gather(*aws, return_exceptions=False)
 ## asyncio.gather
 
 ```python
-async def connect_ssh(ip, command):
-    print(f'Подключаюсь к {ip}')
-    await asyncio.sleep(ip)
-    print(f'Отправляю команду {command} на устройство {ip}')
-    await asyncio.sleep(1)
-    return f"{command} {ip}"
+async def delay_msg(delay, message):
+    print(f"START delay_msg {message}")
+    await asyncio.sleep(delay)
+    print(f"STOP  delay_msg {message}")
+    return message
 
 
-async def send_command_to_devices(ip_list, command):
-    coroutines = map(connect_ssh, ip_list, repeat(command))
+async def main():
+    coroutines = [delay_message(2, f"message {i}") for i in range(1, 11)]
     result = await asyncio.gather(*coroutines)
     return result
+
+
+asyncio.run(main())
 ```
 
 ---
 ## asyncio.gather
 
 Если все объекты отработали корректно, asyncio.gather вернет список со значениями,
-которые вернули объекты. Порядок значений в списке соответствует порядку объектов:
+которые вернули объекты. Порядок значений в списке соответствует порядку объектов.
+
+return_exceptions:
+
+* ``return_exceptions = False`` (по умолчанию), первое возникшее исключение распространяется возникает в месте где написано await gather. Другие ожидаемые объекты в последовательности aws не будут отменены и продолжат выполняться.
+* ``return_exceptions = True``, исключения обрабатываются так же, как и успешные результаты, и объединяются в списке результатов.
+
+Отмена:
+
+* Если gather() отменено, все awaitables (которые еще не завершены) также отменяются.
+* Если Task или Future из последовательности aws отменяется, она обрабатывается так, как будто возникло исключение CancelledError — в этом случае вызов gather() не отменяется. Это сделано для того, чтобы отмена одной отправленной Task/Future не привела к отмене других Task/Future.
+
+---
+## asyncio.TaskGroup
+
+---
+## asyncio.TaskGroup
 
 ```python
-In [2]: ip_list = [5, 2, 3, 7]
-
-In [3]: result = asyncio.run(send_command_to_devices(ip_list, 'test'))
-Подключаюсь к 5
-Подключаюсь к 2
-Подключаюсь к 3
-Подключаюсь к 7
-Отправляю команду test на устройство 2
-Отправляю команду test на устройство 3
-Отправляю команду test на устройство 5
-Отправляю команду test на устройство 7
-
-In [4]: result
-Out[4]: ['test 5', 'test 2', 'test 3', 'test 7']
+async def main():
+    async with asyncio.TaskGroup() as tg:
+        task1 = tg.create_task(some_coro(...))
+        task2 = tg.create_task(another_coro(...))
+    print("Both tasks have completed now.")
 ```
 
+---
+## asyncio.TaskGroup
+
+```python
+async def delay_msg(delay, message):
+    print(f"START delay_msg {message}")
+    await asyncio.sleep(delay)
+    print(f"STOP  delay_msg {message}")
+    return message
+
+
+async def main():
+    async with asyncio.TaskGroup() as tg:
+        tasks = [tg.create_task(delay_msg(2, f"message {i}")) for i in range(1, 11)]
+
+    results = [t.result() for t in tasks]
+    return results
+
+
+asyncio.run(main())
+```
 
 ---
 ## asyncio.as_completed
@@ -431,42 +462,17 @@ asyncio.as_completed(aws, *, timeout=None)
 ## asyncio.as_completed
 
 ```python
-async def delay_print(task_name):
-    delay = round(random.random() * 10, 2)
-    print(f'>>> start {task_name} sleep {delay}')
+async def delay_msg(delay, message):
+    print(f"START delay_msg {message}")
     await asyncio.sleep(delay)
-    print(f'<<< end   {task_name}')
-    return task_name
+    print(f"STOP  delay_msg {message}")
+    return message
 
 
 async def main():
-    coroutines = [delay_print(f"task {i}") for i in range(1, 6)]
+    coroutines = [delay_msg(2, f"task {i}") for i in range(1, 6)]
     for cor in asyncio.as_completed(coroutines):
         cor_result = await cor
         print(f"DONE {cor_result}")
 ```
 
----
-## asyncio.as_completed
-
-Результаты возвращаются в порядке отрабатывания сопрограм, а не в порядке их запуска:
-
-```python
-
-In [27]: asyncio.run(main())
->>> start task 2 sleep 8.93
->>> start task 1 sleep 0.03
->>> start task 4 sleep 8.33
->>> start task 5 sleep 3.43
->>> start task 3 sleep 5.09
-<<< end   task 1
-DONE task 1
-<<< end   task 5
-DONE task 5
-<<< end   task 3
-DONE task 3
-<<< end   task 4
-DONE task 4
-<<< end   task 2
-DONE task 2
-```
