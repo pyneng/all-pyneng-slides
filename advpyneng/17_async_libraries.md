@@ -78,7 +78,7 @@ Scrapli это модуль, который
 
 * system - используется встроенный SSH клиент, подразумевается использование клиента на Linux/MacOS
 * paramiko - модуль paramiko
-* ssh2 - используется модуль ssh2-python (обертка вокруг C библиотеки libssh2)
+* ssh2 - используется модуль ssh2-python
 * telnet - будет использоваться telnetlib
 * asyncssh - модуль asyncssh
 * asynctelnet - telnet клиент написанный с использованием asyncio
@@ -142,10 +142,10 @@ r1 = {
 
 In [2]: ssh = AsyncScrapli(**r1)
 
-In [3]: ssh.open()
+In [5]: await ssh.open()
 
-In [4]: await ssh.get_prompt()
-Out[4]: 'R1#'
+In [6]: await ssh.get_prompt()
+Out[6]: 'R1#'
 
 In [5]: ssh.close()
 ```
@@ -199,7 +199,7 @@ Response позволяет получить не только вывод ком
 In [15]: reply = await ssh.send_command("sh clock")
 
 In [16]: reply
-Out[16]: Response <Success: True>
+Out[16]: Response(host='192.168.139.1',channel_input='sh clock',textfsm_platform='cisco_iosxe',genie_platform='iosxe',failed_when_contains=['% Ambiguous command', '% Incomplete command', '% Invalid input detected', '% Unknown command'])
 ```
 
 ---
@@ -248,7 +248,7 @@ Out[22]: datetime.datetime(2021, 4, 1, 7, 11, 6, 111291)
 Метод ``send_command`` позволяет отправить одну команду на устройство.
 
 ```python
-In [14]: reply = ssh.send_command("sh clock")
+In [14]: reply = await ssh.send_command("sh clock")
 ```
 
 ---
@@ -266,10 +266,10 @@ In [14]: reply = ssh.send_command("sh clock")
 ### Метод send_command
 
 ```python
-In [15]: reply = ssh.send_command("sh clock")
+In [15]: reply = await ssh.send_command("sh clock")
 
 In [16]: reply
-Out[16]: Response <Success: True>
+Out[16]: Response(host='192.168.139.1',channel_input='sh clock',textfsm_platform='cisco_iosxe',genie_platform='iosxe',failed_when_contains=['% Ambiguous command', '% Incomplete command', '% Invalid input detected', '% Unknown command'])
 ```
 
 ---
@@ -278,19 +278,19 @@ Out[16]: Response <Success: True>
 Параметр timeout_ops указывает сколько ждать выполнения команды:
 
 ```python
-In [19]: ssh.send_command("ping 8.8.8.8", timeout_ops=20)
-Out[19]: Response <Success: True>
+In [18]: await ssh.send_command("ping 8.8.8.8", timeout_ops=20)
+Out[18]: Response(host='192.168.139.1',channel_input='ping 8.8.8.8',textfsm_platform='cisco_iosxe',genie_platform='iosxe',failed_when_contains=['% Ambiguous command', '% Incomplete command', '% Invalid input detected', '% Unknown command'])
 ```
 
 Если команда не выполнилась за указанное время, сгенерируется исключение
 ScrapliTimeout (вывод сокращен):
 
 ```python
-In [20]: ssh.send_command("ping 8.8.8.8", timeout_ops=2)
+In [20]: await ssh.send_command("ping 8.8.8.8", timeout_ops=2)
 ---------------------------------------------------------------------------
-ScrapliTimeout                            Traceback (most recent call last)
-<ipython-input-20-e062fb19f0e6> in <module>
-----> 1 ssh.send_command("ping 8.8.8.8", timeout_ops=2)
+CancelledError                            Traceback (most recent call last)
+File /usr/local/lib/python3.11/asyncio/tasks.py:490, in wait_for(fut, timeout)
+ScrapliTimeout: timed out sending input to device
 ```
 
 ---
@@ -300,26 +300,14 @@ ScrapliTimeout                            Traceback (most recent call last)
 структурированный вывод, например, с помощью метода textfsm_parse_output:
 
 ```python
-In [21]: reply = ssh.send_command("sh ip int br")
+In [21]: reply = await ssh.send_command("sh ip int br")
 
 In [22]: reply.textfsm_parse_output()
 Out[22]:
-[{'intf': 'Ethernet0/0',
-  'ipaddr': '192.168.100.1',
-  'status': 'up',
-  'proto': 'up'},
- {'intf': 'Ethernet0/1',
-  'ipaddr': '192.168.200.1',
-  'status': 'up',
-  'proto': 'up'},
- {'intf': 'Ethernet0/2',
-  'ipaddr': 'unassigned',
-  'status': 'up',
-  'proto': 'up'},
- {'intf': 'Ethernet0/3',
-  'ipaddr': '192.168.130.1',
-  'status': 'up',
-  'proto': 'up'}]
+In [27]: pprint(reply.textfsm_parse_output())
+[{'intf': 'FastEthernet0/0', 'ipaddr': '192.168.139.1', 'proto': 'up', 'status': 'up'},
+ {'intf': 'FastEthernet0/1', 'ipaddr': 'unassigned', 'proto': 'down', 'status': 'administratively down'},
+ {'intf': 'Loopback11', 'ipaddr': '11.1.1.1', 'proto': 'up', 'status': 'up'}]
 ```
 
 ---
@@ -346,13 +334,10 @@ Out[21]:
 ошибкой и False, если без ошибки:
 
 ```python
-In [23]: reply = ssh.send_command("sh clck")
+In [23]: reply = await ssh.send_command("sh clck")
 
 In [24]: reply.result
 Out[24]: "        ^\n% Invalid input detected at '^' marker."
-
-In [25]: reply
-Out[25]: Response <Success: False>
 
 In [26]: reply.failed
 Out[26]: True
@@ -364,7 +349,7 @@ Out[26]: True
 Метод ``send_config`` позволяет отправить одну команду конфигурационного режима.
 
 ```python
-In [33]: r = ssh.send_config("username user1 password password1")
+In [33]: r = await ssh.send_config("username user1 password password1")
 ```
 
 ---
@@ -382,7 +367,7 @@ Out[34]: ''
 Параметр ``strip_prompt=False``:
 
 ```python
-In [37]: r = ssh.send_config("username user1 password password1", strip_prompt=False)
+In [37]: r = await ssh.send_config("username user1 password password1", strip_prompt=False)
 
 In [38]: r.result
 Out[38]: 'R1(config)#'
@@ -397,32 +382,33 @@ Out[38]: 'R1(config)#'
 в целом воспринимать как список Response, по одному для каждой команды.
 
 ```python
-In [44]: reply = ssh.send_commands(["sh clock", "sh ip int br"])
+In [44]: reply = await ssh.send_commands(["sh clock", "sh ip int br"])
 
-In [45]: reply
-Out[45]: MultiResponse <Success: True; Response Elements: 2>
+In [39]: reply
+Out[39]:
+MultiResponse([Response(host='192.168.139.1',channel_input='sh clock',textfsm_platform='cisco_iosxe',genie_platform='iosxe',failed_when_contains=['% Ambiguous command', '% Incomplete command', '% Invalid input detected', '% Unknown command']),
+               Response(host='192.168.139.1',channel_input='sh ip int br',textfsm_platform='cisco_iosxe',genie_platform='iosxe',failed_when_contains=['% Ambiguous command', '% Incomplete command', '% Invalid input detected', '% Unknown command'])])
 
 In [46]: for r in reply:
     ...:     print(r)
     ...:     print(r.result)
     ...:
 Response <Success: True>
-*08:38:20.115 UTC Thu Apr 1 2021
+*12:11:36.779 UTC Mon Apr 24 2023
 Response <Success: True>
 Interface                  IP-Address      OK? Method Status                Protocol
-Ethernet0/0                192.168.100.1   YES NVRAM  up                    up
-Ethernet0/1                192.168.200.1   YES NVRAM  up                    up
-Ethernet0/2                unassigned      YES NVRAM  up                    up
-Ethernet0/3                192.168.130.1   YES NVRAM  up                    up
+FastEthernet0/0            192.168.139.1   YES NVRAM  up                    up
+FastEthernet0/1            unassigned      YES NVRAM  administratively down down
+Loopback11                 11.1.1.1        YES manual up                    up
 
 In [47]: reply.result
 Out[47]: 'sh clock\n*08:38:20.115 UTC Thu Apr 1 2021sh ip int br\nInterface                  IP-Address      OK? Method Status                Protocol\nEthernet0/0                192.168.100.1   YES NVRAM  up                    up\nEthernet0/1                192.168.200.1   YES NVRAM  up                    up\nEthernet0/2                unassigned      YES NVRAM  up                    up\nEthernet0/3                192.168.130.1   YES NVRAM  up                    up'
 
-In [48]: reply[0]
-Out[48]: Response <Success: True>
+In [43]: reply[0]
+Out[43]: Response(host='192.168.139.1',channel_input='sh clock',textfsm_platform='cisco_iosxe',genie_platform='iosxe',failed_when_contains=['% Ambiguous command', '% Incomplete command', '% Invalid input detected', '% Unknown command'])
 
-In [49]: reply[1]
-Out[49]: Response <Success: True>
+In [44]: reply[1]
+Out[44]: Response(host='192.168.139.1',channel_input='sh ip int br',textfsm_platform='cisco_iosxe',genie_platform='iosxe',failed_when_contains=['% Ambiguous command', '% Incomplete command', '% Invalid input detected', '% Unknown command'])
 
 In [50]: reply[0].result
 Out[50]: '*08:38:20.115 UTC Thu Apr 1 2021'
@@ -435,7 +421,7 @@ Out[50]: '*08:38:20.115 UTC Thu Apr 1 2021'
 ошибки в какой-то команде, следующие команды не будут выполняться:
 
 ```python
-In [59]: reply = ssh.send_commands(["ping 192.168.100.2", "sh clck", "sh ip int br"], stop_on_failed=True)
+In [59]: reply = await ssh.send_commands(["ping 192.168.100.2", "sh clck", "sh ip int br"], stop_on_failed=True)
 
 In [60]: reply
 Out[60]: MultiResponse <Success: False; Response Elements: 2>
