@@ -200,6 +200,9 @@ In [15]: reply = await ssh.send_command("sh clock")
 
 In [16]: reply
 Out[16]: Response(host='192.168.139.1',channel_input='sh clock',textfsm_platform='cisco_iosxe',genie_platform='iosxe',failed_when_contains=['% Ambiguous command', '% Incomplete command', '% Invalid input detected', '% Unknown command'])
+
+In [17]: print(reply)
+Response <Success: True>
 ```
 
 ---
