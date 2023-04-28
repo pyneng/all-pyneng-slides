@@ -536,8 +536,6 @@ if __name__ == "__main__":
 ---
 ## list/dict/set comprehensions
 
-В примере выше в list comp используется именно ``async for`` потому что выполняется
-перебор асинхронного итератора:
 
 ```python
 results = [out async for out in check]
@@ -580,6 +578,9 @@ async def send_show(device, command):
             return result.result
     except ScrapliException as error:
         print(error, device["host"])
+
+
+# send_show = timecode(send_show)
 ```
 
 ---
@@ -604,6 +605,33 @@ def timecode(function):
 
 > Измерение времени выполнения сопрограммы неоднозначное занятие, так как оно
 > зависит не только от самой сопрограммы, но и от того что еще работает в цикле событий.
+
+---
+## Декораторы для сопрограмм
+
+```python
+def verbose(func):
+    if inspect.iscoroutinefunction(func):
+        @wraps(func)
+        async def inner(*args, verbose=False, **kwargs):
+            if verbose:
+                print(f"{args=}")
+                print(f"{kwargs=}")
+            result = await func(*args, **kwargs)
+            return result
+        return inner
+    else:
+        @wraps(func)
+        def inner(*args, verbose=False, **kwargs):
+            if verbose:
+                print(f"{args=}")
+                print(f"{kwargs=}")
+            result = func(*args, **kwargs)
+            return result
+        return inner
+
+# send_show = verbose(send_show)
+```
 
 ---
 ## Встроенные декораторы
@@ -700,8 +728,8 @@ coroutine asyncio.create_subprocess_shell(cmd, stdin=None, stdout=None, stderr=N
 
 ```python
 async def ping(ip):
-    reply = await asyncio.create_subprocess_shell(
-        f"ping -c 3 -n {ip}",
+    reply = await asyncio.create_subprocess_exec(
+        f"ping -c 3 -n {ip}".split(),
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE,
     )
