@@ -709,6 +709,8 @@ class PingIP:
                 ping_not_ok.append(ip)
         return ping_ok, ping_not_ok
 ```
+---
+## Запуск синхронного кода
 
 ---
 ## asyncio subprocess
@@ -778,7 +780,7 @@ asyncio.run(main())
 ## Запуск синхронного кода в потоках
 
 Эта сопрограмма появилась в Python 3.9, до этого использовалась ``loop.run_in_executor``.
-При этом to_thread это по сути `обертка вокруг loop.run_in_executor
+При этом to_thread это по сути обертка вокруг loop.run_in_executor
 с использованием ThreadPoolExecutor по умолчанию, с максимальным количеством потоков
 по умолчанию.
 
@@ -787,6 +789,26 @@ asyncio.run(main())
 
 ---
 ## Semaphore
+
+---
+## Semaphore
+
+```python
+sem = asyncio.Semaphore(10)
+
+async with sem:
+    # ...
+```
+
+```python
+sem = asyncio.Semaphore(10)
+
+await sem.acquire()
+try:
+    # ...
+finally:
+    sem.release()
+```
 
 ---
 ## Semaphore
