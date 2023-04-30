@@ -804,10 +804,8 @@ async with sem:
 sem = asyncio.Semaphore(10)
 
 await sem.acquire()
-try:
-    ...
-finally:
-    sem.release()
+...
+sem.release()
 ```
 
 ---
