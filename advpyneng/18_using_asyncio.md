@@ -797,7 +797,7 @@ asyncio.run(main())
 sem = asyncio.Semaphore(10)
 
 async with sem:
-    # ...
+    ...
 ```
 
 ```python
@@ -805,7 +805,7 @@ sem = asyncio.Semaphore(10)
 
 await sem.acquire()
 try:
-    # ...
+    ...
 finally:
     sem.release()
 ```
