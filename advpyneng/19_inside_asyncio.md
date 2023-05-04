@@ -1,4 +1,65 @@
-## Использование asyncio
+## asyncio
+
+---
+## Терминология
+## Coroutine (сопрограмма)
+
+Как и с генераторами, различают:
+
+* функцию сопрограмму - функция, которая создается с помощью ``async def`` (асинхронная функция)
+* объект сопрограмму - объект, который возвращается при вызове функции сопрограммы
+
+Функции-сопрограммы возвращают объекты сопрограммы, которые запускаются 
+менеджером (циклом событий). Сопрограмма может периодически прерывать выполнение
+и отдавать управление менеджеру, но при этом она не теряет состояние.
+
+Создать сопрограмму недостаточно для того чтобы она запускалась
+параллельно с другими сопрограммами - для управления сопрограммами нужен
+менеджер - event loop. Также по умолчанию в сопрограмме код выполняется последовательно
+и надо явно указывать в каких местах можно переключаться - await.
+
+## Task (задача)
+
+Объекты класса Task используются для запуска сопрограмм в цикле событий и для отслеживания
+их состояния. Как только сопрограмма "обернута" в Task, например, с помощью функции
+``asyncio.create_task``, сопрограмма автоматически запущена для выполнения.
+
+## asyncio.Future
+
+Future - это специальный низкоуровневый объект, который представляет отложенное 
+вычисление асинхронных операций. Чаще всего, при работе с модулем asyncio, нет 
+необходимости создавать Future напрямую, но некоторые функции могут возвращать Future.
+Task является подклассом Future.
+Менеджер может следить за future и ожидать их завершения.
+
+
+---
+## asyncio API
+
+Модуль asyncio можно разделить на две части: высокоуровневый интерфейс для пользователей,
+которые пишут программы и низкоуровневый интерфейс для авторов модулей, библиотек
+и фреймворков на основе asyncio.
+
+## [High-level API Index](https://docs.python.org/3.10/library/asyncio-api-index.html)
+### Tasks
+
+|           |                                                     |
+|-----------|-----------------------------------------------------|
+| ``run()`` | Create event loop, run a coroutine, close the loop. |
+| ``create_task()`` | Start an asyncio Task. |
+| ``await sleep()`` | Sleep for a number of seconds. |
+| ``await gather()`` | Schedule and wait for things concurrently. |
+| ``await wait_for()`` | Run with a timeout. |
+| ``await shield()`` | Shield from cancellation. |
+| ``await wait()`` | Monitor for completion. |
+| ``current_task()`` | Return the current Task. |
+| ``all_tasks()`` | Return all tasks for an event loop. |
+| ``Task`` | Task object. |
+| ``to_thread()`` | Asynchronously run a function in a separate OS thread. |
+| ``run_coroutine_threadsafe()`` | Schedule a coroutine from another OS thread. |
+| ``for in as_completed()`` | Monitor for completion with a for loop. |
+
+
 
 ---
 ## Использование asyncio
