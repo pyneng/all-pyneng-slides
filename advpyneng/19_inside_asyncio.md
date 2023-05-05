@@ -40,26 +40,32 @@ Task является подклассом Future.
 которые пишут программы и низкоуровневый интерфейс для авторов модулей, библиотек
 и фреймворков на основе asyncio.
 
-## [High-level API Index](https://docs.python.org/3.10/library/asyncio-api-index.html)
+## [High-level API Index](https://docs.python.org/3/library/asyncio-api-index.html)
 ### Tasks
 
 |           |                                                     |
 |-----------|-----------------------------------------------------|
 | ``run()`` | Create event loop, run a coroutine, close the loop. |
+| ``Task`` | Task object. |
 | ``create_task()`` | Start an asyncio Task. |
+| ``current_task()`` | Return the current Task. |
+| ``all_tasks()`` | Return all tasks for an event loop. |
 | ``await sleep()`` | Sleep for a number of seconds. |
 | ``await gather()`` | Schedule and wait for things concurrently. |
 | ``await wait_for()`` | Run with a timeout. |
 | ``await shield()`` | Shield from cancellation. |
 | ``await wait()`` | Monitor for completion. |
-| ``current_task()`` | Return the current Task. |
-| ``all_tasks()`` | Return all tasks for an event loop. |
-| ``Task`` | Task object. |
 | ``to_thread()`` | Asynchronously run a function in a separate OS thread. |
 | ``run_coroutine_threadsafe()`` | Schedule a coroutine from another OS thread. |
 | ``for in as_completed()`` | Monitor for completion with a for loop. |
 
+New in Python 3.11
 
+|           |                                                     |
+|-----------|-----------------------------------------------------|
+| ``Runner`` | A context manager that simplifies multiple async function calls. |
+| ``TaskGroup()`` | A context manager that holds a group of tasks. |
+| ``timeout()`` | Run with a timeout. Useful in cases when wait_for is not suitable. |
 
 ---
 ## Использование asyncio
@@ -303,7 +309,7 @@ to prevent the cancellation of one submitted Task/Future to cause other Tasks/Fu
 * ``asyncio.wait_for``
 * ``async.wait``
 * ``asyncio.as_completed``
-* [``async-timeout``](https://github.com/aio-libs/async-timeout)
+* ``asyncio.timeout`` (для Python < 3.11 [``async-timeout``](https://github.com/aio-libs/async-timeout))
 
 ---
 ## asyncio.wait_for
