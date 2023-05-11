@@ -34,12 +34,6 @@ Task является подклассом Future.
 
 
 ---
-## asyncio API
-
-Модуль asyncio можно разделить на две части: высокоуровневый интерфейс для пользователей,
-которые пишут программы и низкоуровневый интерфейс для авторов модулей, библиотек
-и фреймворков на основе asyncio.
-
 ## [High-level API Index](https://docs.python.org/3/library/asyncio-api-index.html)
 ### Tasks
 
@@ -73,6 +67,61 @@ New in Python 3.11
 * Цикл событий
 * Отмена задач
 * Работа с таймаутами
+
+---
+### asyncio.Task
+
+```python
+
+In [5]: inspect(asyncio.Task, methods=True)
+╭──────────────────────────────────────── <class '_asyncio.Task'> ────────────────────────────────────────╮
+│ class Task(coro, *, loop=None, name=None, context=None):                                                │
+│                                                                                                         │
+│ A coroutine wrapped in a Future.                                                                        │
+│                                                                                                         │
+│    add_done_callback = def add_done_callback(...) Add a callback to be run when the future becomes      │
+│                        done.                                                                            │
+│               cancel = def cancel(self, /, msg=None): Request that this task cancel itself.             │
+│            cancelled = def cancelled(self, /): Return True if the future was cancelled.                 │
+│           cancelling = def cancelling(self, /): Return the count of the task's cancellation requests.   │
+│                 done = def done(self, /): Return True if the future is done.                            │
+│            exception = def exception(self, /): Return the exception that was set on this future.        │
+│             get_coro = def get_coro(self, /):                                                           │
+│             get_loop = def get_loop(self, /): Return the event loop the Future is bound to.             │
+│             get_name = def get_name(self, /):                                                           │
+│            get_stack = def get_stack(self, /, *, limit=None): Return the list of stack frames for this  │
+│                        task's coroutine.                                                                │
+│          print_stack = def print_stack(self, /, *, limit=None, file=None): Print the stack or traceback │
+│                        for this task's coroutine.                                                       │
+│ remove_done_callback = def remove_done_callback(self, fn, /): Remove all instances of a callback from   │
+│                        the "call when done" list.                                                       │
+│               result = def result(self, /): Return the result this future represents.                   │
+│        set_exception = def set_exception(self, exception, /): Mark the future done and set an           │
+│                        exception.                                                                       │
+│             set_name = def set_name(self, value, /):                                                    │
+│           set_result = def set_result(self, result, /): Mark the future done and set its result.        │
+│             uncancel = def uncancel(self, /): Decrement the task's count of cancellation requests.      │
+╰─────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+```
+
+---
+### asyncio.Task
+
+```python
+
+In [5]: inspect(asyncio.Task, methods=True)
+╭──────────────────────────────────────── <class '_asyncio.Task'> ────────────────────────────────────────╮
+│ class Task(coro, *, loop=None, name=None, context=None):                                                │
+│                                                                                                         │
+│ A coroutine wrapped in a Future.                                                                        │
+│                                                                                                         │
+│                 done = def done(self, /): Return True if the future is done.                            │
+│            exception = def exception(self, /): Return the exception that was set on this future.        │
+│               result = def result(self, /): Return the result this future represents.                   │
+│               cancel = def cancel(self, /, msg=None): Request that this task cancel itself.             │
+│            cancelled = def cancelled(self, /): Return True if the future was cancelled.                 │
+╰─────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+```
 
 ---
 ## Event Loop
@@ -135,8 +184,6 @@ def run(main, *, debug=None):
     loop = events.new_event_loop()
     try:
         events.set_event_loop(loop)
-        if debug is not None:
-            loop.set_debug(debug)
         return loop.run_until_complete(main)
     finally:
         try:
@@ -203,6 +250,25 @@ if __name__ == "__main__":
 ---
 ## Работа с циклом событий
 
+```python
+async def main(devices):
+    loop = asyncio.get_running_loop()
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        coroutines = [
+            loop.run_in_executor(executor, netmiko_connect, dev) for dev in devices
+        ]
+        results = await asyncio.gather(*coroutines)
+    return results
+
+
+if __name__ == "__main__":
+    output = asyncio.run(main(devices))
+    pprint(output)
+```
+
+---
+## Работа с циклом событий
+
 Когда может понадобится:
 
 * старая версия Python: нет какой-то высокоуровневой функции, например, ``asyncio.to_thread`` или asyncio.run
@@ -218,7 +284,6 @@ if __name__ == "__main__":
 * ``asyncio.set_event_loop()`` - установить цикл событий как текущий
 * ``asyncio.new_event_loop()`` - создать новый цикл событий
 
-> Deprecated since version 3.10: ``asyncio.get_event_loop()``
 
 ---
 ## Работа с циклом событий
@@ -285,6 +350,18 @@ awaitable asyncio.shield(aw)
 > something() is not cancelled. From the point of view of something(), the cancellation
 > did not happen. Although its caller is still cancelled, so the “await” expression still raises a CancelledError.
 
+---
+### Запуск сопрограмм и отмена задач
+
+---
+### Запуск сопрограмм и отмена задач
+
+* ``gather``
+* ``as_completed``
+* ``wait``
+* ``wait_for``
+* ``timeout`` (для Python < 3.11 [``async-timeout``](https://github.com/aio-libs/async-timeout))
+* ``timeout_at``
 
 ---
 ### gather
@@ -293,37 +370,30 @@ awaitable asyncio.shield(aw)
 awaitable asyncio.gather(*aws, return_exceptions=False)
 ```
 
-If gather() is cancelled, all submitted awaitables (that have not completed yet) are also cancelled.
+Если return_exceptions=False (по умолчанию), первое сгенерированное исключение
+немедленно распространяется на задачу ``await gather``. Другие awaitables
+объекты в последовательности aws не будут отменены и продолжат выполняться.
 
-If any Task or Future from the aws sequence is cancelled, it is treated as if it
-raised CancelledError – the gather() call is not cancelled in this case. This is
-to prevent the cancellation of one submitted Task/Future to cause other Tasks/Futures to be cancelled.
+Если return_exceptions=True, исключения обрабатываются так же, как и успешные
+результаты, и объединяются в списке результатов.
 
+Если gather отменяется, все awaitables (которые еще не завершены) также отменяются.
 
----
-## Работа с таймаутами
-
----
-## Работа с таймаутами
-
-* ``asyncio.wait_for``
-* ``async.wait``
-* ``asyncio.as_completed``
-* ``asyncio.timeout`` (для Python < 3.11 [``async-timeout``](https://github.com/aio-libs/async-timeout))
+Если какая-либо Task/Future из последовательности aws отменяется, она
+обрабатывается так, как будто вызвала CancelledError — в этом случае вызов
+gather не отменяется. Это сделано для того, чтобы отмена одной отправленной
+Task/Future не привела к отмене других Task/Future.
 
 ---
-## asyncio.wait_for
+## asyncio.as_completed
+
 
 ```python
-coroutine asyncio.wait_for(aw, timeout)
+asyncio.as_completed(aws, *, timeout=None)
 ```
 
-* If a timeout occurs, it cancels the task and raises asyncio.TimeoutError.
-* To avoid the task cancellation, wrap it in shield().
-* The function will wait until the future is actually cancelled, so the total wait time may exceed the timeout.
-* If an exception happens during cancellation, it is propagated.
-* If the wait_for is cancelled, the future aw is also cancelled.
-
+* если случился timeout, задачи не отменяются
+* если какая-то задача отработала с исключением, остальные не отменяются
 
 ---
 ## asyncio.wait
@@ -345,13 +415,15 @@ done, pending = await asyncio.wait(aws)
 * ALL_COMPLETED The function will return when all futures finish or are cancelled.
 
 ---
-## asyncio.as_completed
-
+## asyncio.wait_for
 
 ```python
-asyncio.as_completed(aws, *, timeout=None)
+coroutine asyncio.wait_for(aw, timeout)
 ```
 
-Raises asyncio.TimeoutError if the timeout occurs before all Futures are done.
-
+* If a timeout occurs, it cancels the task and raises asyncio.TimeoutError.
+* To avoid the task cancellation, wrap it in shield().
+* The function will wait until the future is actually cancelled, so the total wait time may exceed the timeout.
+* If an exception happens during cancellation, it is propagated.
+* If the wait_for is cancelled, the future aw is also cancelled.
 
