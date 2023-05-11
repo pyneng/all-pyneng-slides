@@ -345,6 +345,7 @@ awaitable asyncio.shield(aw)
 * ``wait``
 * ``wait_for``
 * ``timeout`` (для Python < 3.11 [``async-timeout``](https://github.com/aio-libs/async-timeout))
+* ``TaskGroup`` (New in Python 3.11)
 
 ---
 ### gather
@@ -466,3 +467,17 @@ async def main():
 
     print("This statement will run regardless.")
 ```
+
+---
+## asyncio.timeout
+
+```python
+async def main():
+    async with asyncio.TaskGroup() as tg:
+        task1 = tg.create_task(some_coro(...))
+        task2 = tg.create_task(another_coro(...))
+    print("Both tasks have completed now.")
+```
+
+
+При первом исключении, отличным от asyncio.CancelledError, оставшиеся задачи в группе отменяются.
