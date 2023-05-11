@@ -326,18 +326,6 @@ Tasks/Futures:
 
 ---
 ## Отмена задач
-## Task
-
-```python
-class asyncio.Task(coro, *, loop=None, name=None)
-```
-
-To cancel a running Task use the cancel() method. Calling it will cause the Task
-to throw a CancelledError exception into the wrapped coroutine. If a coroutine is
-awaiting on a Future object during cancellation, the Future object will be cancelled.
-
-cancelled() can be used to check if the Task was cancelled. The method returns True if
-the wrapped coroutine did not suppress the CancelledError exception and was actually cancelled.
 
 ---
 ### shield
@@ -345,10 +333,6 @@ the wrapped coroutine did not suppress the CancelledError exception and was actu
 ```python
 awaitable asyncio.shield(aw)
 ```
-
-> except that if the coroutine containing it is cancelled, the Task running in
-> something() is not cancelled. From the point of view of something(), the cancellation
-> did not happen. Although its caller is still cancelled, so the “await” expression still raises a CancelledError.
 
 ---
 ### Запуск сопрограмм и отмена задач
@@ -361,7 +345,6 @@ awaitable asyncio.shield(aw)
 * ``wait``
 * ``wait_for``
 * ``timeout`` (для Python < 3.11 [``async-timeout``](https://github.com/aio-libs/async-timeout))
-* ``timeout_at``
 
 ---
 ### gather
@@ -384,6 +367,13 @@ awaitable asyncio.gather(*aws, return_exceptions=False)
 gather не отменяется. Это сделано для того, чтобы отмена одной отправленной
 Task/Future не привела к отмене других Task/Future.
 
+```python
+async def send_command_to_devices(devices, command):
+    coroutines = [send_show(device, command) for device in devices]
+    result = await asyncio.gather(*coroutines)
+    return result
+```
+
 ---
 ## asyncio.as_completed
 
@@ -394,6 +384,16 @@ asyncio.as_completed(aws, *, timeout=None)
 
 * если случился timeout, задачи не отменяются
 * если какая-то задача отработала с исключением, остальные не отменяются
+
+```python
+async def send_command_to_devices(devices, command):
+    coroutines = [connect_ssh(dev, command) for dev in devices]
+    results = []
+    for future in asyncio.as_completed(coroutines):
+        res = await future
+        results.append(res)
+    return results
+```
 
 ---
 ## asyncio.wait
@@ -414,6 +414,18 @@ done, pending = await asyncio.wait(aws)
 * FIRST_EXCEPTION The function will return when any future finishes by raising an exception. If no future raises an exception then it is equivalent to ALL_COMPLETED.
 * ALL_COMPLETED The function will return when all futures finish or are cancelled.
 
+```python
+async def run_all(devices, command):
+    tasks = [asyncio.create_task(send_show(dev, command)) for dev in devices]
+    done_set, pending_set = await asyncio.wait(
+        tasks, timeout=5, return_when=asyncio.ALL_COMPLETED
+    )
+    [t.cancel() for t in pending_set]
+    results = [await t for t in tasks if t not in pending_set]
+    return results
+```
+
+
 ---
 ## asyncio.wait_for
 
@@ -421,9 +433,36 @@ done, pending = await asyncio.wait(aws)
 coroutine asyncio.wait_for(aw, timeout)
 ```
 
-* If a timeout occurs, it cancels the task and raises asyncio.TimeoutError.
-* To avoid the task cancellation, wrap it in shield().
-* The function will wait until the future is actually cancelled, so the total wait time may exceed the timeout.
-* If an exception happens during cancellation, it is propagated.
-* If the wait_for is cancelled, the future aw is also cancelled.
+* если происходит timeout, wait_for отменяет задачу и генерирует TimeoutError
+* чтобы избежать отмены задачи, оберните ее в shield
+* wait_for будет ждать до тех пор, пока задача не будет фактически отменена, поэтому общее время ожидания может превысить timeout
+* если wait_for отменяется, awaitable также отменяется
 
+---
+## asyncio.timeout
+
+```python
+coroutine asyncio.timeout(delay)
+```
+
+
+```python
+async def main():
+    async with asyncio.timeout(10):
+        await long_running_task()
+```
+
+Если для выполнения long_running_task требуется более 10 секунд, context manager отменит текущую задачу и обработает полученную ошибку
+asyncio.CancelledError, преобразуя ее в ошибку asyncio.TimeoutError, которую
+можно перехватить и обработать (только за пределами with).
+
+```python
+async def main():
+    try:
+        async with asyncio.timeout(10):
+            await long_running_task()
+    except TimeoutError:
+        print("The long operation timed out, but we've handled it.")
+
+    print("This statement will run regardless.")
+```
