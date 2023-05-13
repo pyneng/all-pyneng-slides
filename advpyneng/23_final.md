@@ -58,7 +58,7 @@
 ---
 ## Python Testing with pytest
 
-[Python Testing with pytest: Simple, Rapid, Effective, and Scalable (2nd edition)](https://pragprog.com/titles/bopytest2/python-testing-with-pytest-second-edition/)
+[Python Testing with pytest: Simple, Rapid, Effective, and Scalable (2nd edition)](https://pragprog.com/titles/bopytest2/python-testing-with-pytest-second-edition/bopytest2-250.jpg)
 
 ![](https://pragprog.com/titles/bopytest2/python-testing-with-pytest-second-edition/bopytest2.jpg)
 
