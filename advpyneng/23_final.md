@@ -58,9 +58,9 @@
 ---
 ## Python Testing with pytest
 
-[Python Testing with pytest: Simple, Rapid, Effective, and Scalable (2nd edition)](https://pragprog.com/titles/bopytest2/python-testing-with-pytest-second-edition/bopytest2-250.jpg)
+[Python Testing with pytest: Simple, Rapid, Effective, and Scalable (2nd edition)](https://www.pragprog.com/titles/bopytest2/python-testing-with-pytest-second-edition/)
 
-![](https://pragprog.com/titles/bopytest2/python-testing-with-pytest-second-edition/bopytest2.jpg)
+![](https://pragprog.com/titles/bopytest2/python-testing-with-pytest-second-edition/bopytest2-250.jpg)
 
 ---
 ## Python Concurrency with asyncio
