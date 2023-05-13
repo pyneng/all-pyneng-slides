@@ -390,8 +390,8 @@ asyncio.as_completed(aws, *, timeout=None)
 async def send_command_to_devices(devices, command):
     coroutines = [connect_ssh(dev, command) for dev in devices]
     results = []
-    for future in asyncio.as_completed(coroutines):
-        res = await future
+    for coro in asyncio.as_completed(coroutines):
+        res = await coro
         results.append(res)
     return results
 ```
@@ -452,6 +452,8 @@ async def main():
     async with asyncio.timeout(10):
         await long_running_task()
 ```
+---
+## asyncio.timeout
 
 Если для выполнения long_running_task требуется более 10 секунд, context manager отменит текущую задачу и обработает полученную ошибку
 asyncio.CancelledError, преобразуя ее в ошибку asyncio.TimeoutError, которую
@@ -469,15 +471,25 @@ async def main():
 ```
 
 ---
-## asyncio.timeout
+## asyncio.TaskGroup
 
 ```python
 async def main():
-    async with asyncio.TaskGroup() as tg:
-        task1 = tg.create_task(some_coro(...))
-        task2 = tg.create_task(another_coro(...))
+    async with asyncio.TaskGroup() as group:
+        task1 = group.create_task(some_coro(...))
+        task2 = group.create_task(another_coro(...))
     print("Both tasks have completed now.")
 ```
 
-
 При первом исключении, отличным от asyncio.CancelledError, оставшиеся задачи в группе отменяются.
+
+---
+## asyncio.TaskGroup
+```python
+async def get_show_from_devices(devices, command):
+    async with asyncio.TaskGroup() as group:
+        tasks = [group.create_task(send_show(dev, command)) for dev in devices]
+    results = [t.result() for t in tasks]
+    return results
+```
+
