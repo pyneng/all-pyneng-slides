@@ -87,22 +87,20 @@
 ---
 ## Курсы
 
-* [Python от Computer Science Center](https://www.youtube.com/playlist?list=PLlb7e2G7aSpTTNp7HBYzCBByaE1h54ruW) - отличные видеолекции по Python. Тут есть и немного основ и более продвинутые темы
-
 ---
 ## Платные курсы
 
 * [Python Programming Language by David Beazley](https://www.oreilly.com/library/view/python-programming-language/9780134217314/)
+* [Async Techniques and Examples in Python](https://training.talkpython.fm/courses/explore_async_python/async-in-python-with-threading-and-multiprocessing)
 * [Write Pythonic Code Like a Seasoned Developer](https://training.talkpython.fm/courses/explore_pythonic_code/write-pythonic-code-like-a-seasoned-developer)
 * [#100DaysOfCode in Python](https://training.talkpython.fm/courses/explore_100days_in_python/100-days-of-code-in-python)
 * [#100DaysOfWeb in Python](https://training.talkpython.fm/courses/explore_100days_web/100-days-of-web-in-python)
-* [Async Techniques and Examples in Python](https://training.talkpython.fm/courses/explore_async_python/async-in-python-with-threading-and-multiprocessing)
 
 ---
 ## Сайты с задачами
 
-* [Bites of Py](https://codechalleng.es/bites/) - очень хороший сайт на котором много заданий разного уровня сложности. На нем вполне можно набить руку и на базовых вещах, но в то же время есть куда расти
-* [HackerRank](https://www.hackerrank.com/) - на этом сайте задачи разбиты по областям: алгоритмы, регулярные выражения, базы данных и другие. Но есть и базовые задачи 
+* [Bites of Py](https://codechalleng.es/bites/)
+* [HackerRank](https://www.hackerrank.com/)
 * [CheckIO - online game for Python and JavaScript coders](https://checkio.org/)
 
 ---
@@ -116,7 +114,7 @@
 ---
 ## PyCon
 
-* [PyCon 2021-2023](https://www.youtube.com/@PyConUS)
+* [PyCon 2020-2022](https://www.youtube.com/@PyConUS)
 * [PyCon 2019](https://www.youtube.com/channel/UCxs2IIVXaEHHA4BtTiWZ2mQ/videos?view=0&sort=p&flow=grid)
 * [PyCon 2018](https://www.youtube.com/channel/UCsX05-2sVSH7Nx3zuk3NYuQ/videos?view=0&sort=p&flow=grid)
 
@@ -130,7 +128,7 @@
 ## Twitter
 
 По python + сети
-* [dmfigol](https://twitter.com/dmfigol)
+
 * [carlrmontanari](https://twitter.com/carlrmontanari)
 * [IPvZero](https://twitter.com/IPvZero)
 * [kirkbyers](https://twitter.com/kirkbyers)
@@ -138,22 +136,22 @@
 
 Чистый python
 
-* https://twitter.com/pybites
-* https://twitter.com/mkennedy
-* https://twitter.com/realpython
-* https://twitter.com/llanga - python core developer
-* https://twitter.com/pyblogsal release manager python 3.10/3.11
-* https://twitter.com/willmcgugan
-* https://twitter.com/tiangolo
-* https://twitter.com/easyaspython
-* https://twitter.com/reuvenmlerner
-* https://twitter.com/nicoddemus
-* https://twitter.com/miguelgrinberg
-* https://twitter.com/raymondh
-* https://twitter.com/brianokken
-* https://twitter.com/dabeaz
-* https://twitter.com/nedbat
-* https://twitter.com/haxor
+* [pybites](https://twitter.com/pybites)
+* [mkennedy](https://twitter.com/mkennedy)
+* [realpython](https://twitter.com/realpython)
+* [llanga](https://twitter.com/llanga)
+* [pyblogsal](https://twitter.com/pyblogsal)
+* [willmcgugan](https://twitter.com/willmcgugan)
+* [tiangolo](https://twitter.com/tiangolo)
+* [easyaspython](https://twitter.com/easyaspython)
+* [reuvenmlerner](https://twitter.com/reuvenmlerner)
+* [nicoddemus](https://twitter.com/nicoddemus)
+* [miguelgrinberg](https://twitter.com/miguelgrinberg)
+* [raymondh](https://twitter.com/raymondh)
+* [brianokken](https://twitter.com/brianokken)
+* [dabeaz](https://twitter.com/dabeaz)
+* [nedbat](https://twitter.com/nedbat)
+* [haxor](https://twitter.com/haxor)
 
 ---
 ## Люди
@@ -171,13 +169,4 @@
 [Raymond Hettinger](https://rhettinger.wordpress.com/category/python/), [twitter](https://twitter.com/raymondh)
 
 ![](https://rahmonov.me/static/images/post-images/python-decorators/raymondhettinger.jpg)
-
----
-## Люди
-
-* [Yury Selivanov](https://twitter.com/1st1)
-* [Andrew Svetlov](https://twitter.com/andrew_svetlov)
-* [Dane Hillard](https://twitter.com/easyaspython)
-* [Corey Schafer](https://twitter.com/coreymschafer)
-* [Олег Молчанов](https://www.youtube.com/user/zaemiel)
 
