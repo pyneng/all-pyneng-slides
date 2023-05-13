@@ -22,7 +22,7 @@
 ---
 ## Fluent Python
 
-[Fluent Python 2nd edition](https://www.amazon.com/Fluent-Python-Concise-Effective-Programming/dp/1492056359/) (May 17, 2022)
+[Fluent Python 2nd edition](https://www.amazon.com/Fluent-Python-Concise-Effective-Programming/dp/1492056359/)
 
 ![](https://images-na.ssl-images-amazon.com/images/I/412Er-QBlAL._SX379_BO1,204,203,200_.jpg)
 
@@ -58,9 +58,9 @@
 ---
 ## Python Testing with pytest
 
-[Python Testing with pytest: Simple, Rapid, Effective, and Scalable (2nd edition)](https://pragprog.com/titles/bopytest2/python-testing-with-pytest-second-edition/) публикация Feb 2022
+[Python Testing with pytest: Simple, Rapid, Effective, and Scalable (2nd edition)](https://pragprog.com/titles/bopytest2/python-testing-with-pytest-second-edition/)
 
-![](https://pragprog.com/titles/bopytest2/python-testing-with-pytest-second-edition/bopytest2-beta-250.jpg)
+![](https://pragprog.com/titles/bopytest2/python-testing-with-pytest-second-edition/bopytest2.jpg)
 
 ---
 ## Python Concurrency with asyncio
@@ -79,7 +79,7 @@
 ---
 ## Problem Solving with Algorithms and Data Structures using Python
 
-[Problem Solving with Algorithms and Data Structures using Python](https://runestone.academy/runestone/static/pythonds/index.html) - отличная книга по структурам данных и алгоритмам. Много примеров и домашних заданий. [На русском](http://aliev.me/runestone/)
+[Problem Solving with Algorithms and Data Structures using Python](https://runestone.academy/runestone/static/pythonds/index.html) - отличная книга по структурам данных и алгоритмам. Много примеров и домашних заданий
 
 ![](https://images-na.ssl-images-amazon.com/images/I/71cLnzwRH0L._AC_UL600_SR489,600_.jpg)
 
@@ -116,7 +116,7 @@
 ---
 ## PyCon
 
-* [PyCon 2020](https://www.youtube.com/c/PyCon2020/videos?view=0&sort=p&flow=grid)
+* [PyCon 2021-2023](https://www.youtube.com/@PyConUS)
 * [PyCon 2019](https://www.youtube.com/channel/UCxs2IIVXaEHHA4BtTiWZ2mQ/videos?view=0&sort=p&flow=grid)
 * [PyCon 2018](https://www.youtube.com/channel/UCsX05-2sVSH7Nx3zuk3NYuQ/videos?view=0&sort=p&flow=grid)
 
