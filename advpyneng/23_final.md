@@ -87,14 +87,16 @@
 ---
 ## Курсы
 
----
-## Платные курсы
 
 * [Python Programming Language by David Beazley](https://www.oreilly.com/library/view/python-programming-language/9780134217314/)
 * [Async Techniques and Examples in Python](https://training.talkpython.fm/courses/explore_async_python/async-in-python-with-threading-and-multiprocessing)
 * [Write Pythonic Code Like a Seasoned Developer](https://training.talkpython.fm/courses/explore_pythonic_code/write-pythonic-code-like-a-seasoned-developer)
 * [#100DaysOfCode in Python](https://training.talkpython.fm/courses/explore_100days_in_python/100-days-of-code-in-python)
 * [#100DaysOfWeb in Python](https://training.talkpython.fm/courses/explore_100days_web/100-days-of-web-in-python)
+
+Текстовый курс:
+
+* [Practical Python Programming](https://dabeaz-course.github.io/practical-python/Notes/Contents.html)
 
 ---
 ## Сайты с задачами
